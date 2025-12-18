@@ -1,0 +1,11 @@
+0000000000000000000000000000000000000000 8816c3c2973bfc089416fa48b64cb2dee0bf9fc2 Developer <dev@esther.local> 1766093888 -0300	commit (initial): refactor: complete modularization with motion/parallax, deprecate Hero.js, fix Historia tracking types
+8816c3c2973bfc089416fa48b64cb2dee0bf9fc2 09c494392f005d6ea4d46c9999c7b18725a9d434 Developer <dev@esther.local> 1766094104 -0300	commit: docs: add GitHub README with project documentation
+09c494392f005d6ea4d46c9999c7b18725a9d434 31996f70c253aed0e5ae1d83929188a7d95364f2 Developer <dev@esther.local> 1766095063 -0300	commit: refactor: update component styles for improved responsiveness and consistency across sections
+31996f70c253aed0e5ae1d83929188a7d95364f2 3b13d9b0a2e94cef60c2c10acfc80f26e49035ae Developer <dev@esther.local> 1766096864 -0300	commit: feat: Revamp ProvaSocial section with dynamic testimonials and improved styling
+3b13d9b0a2e94cef60c2c10acfc80f26e49035ae cf982c690a0116dbdfb784411f3056001727aa70 Developer <dev@esther.local> 1766097634 -0300	commit: feat: implement smooth scrolling and scroll progress indicator; add scroll reveal animations
+cf982c690a0116dbdfb784411f3056001727aa70 211aeb37b054a7467f6076d95a34a5ea1d1259e0 Developer <dev@esther.local> 1766098833 -0300	commit: feat: Implement smooth scrolling behavior across the application
+211aeb37b054a7467f6076d95a34a5ea1d1259e0 e6b66cfffe22321561cfd625af883b25d9436992 Developer <dev@esther.local> 1766098986 -0300	commit: refactor: clean up LandingPage component by removing unused ROI Calculator section and updating .gitignore
+e6b66cfffe22321561cfd625af883b25d9436992 ad2388a451784b77ec0d8afa49ae1c1e7fe4e1e9 Developer <dev@esther.local> 1766099115 -0300	commit: Remove node_modules from git tracking
+ad2388a451784b77ec0d8afa49ae1c1e7fe4e1e9 211aeb37b054a7467f6076d95a34a5ea1d1259e0 Developer <dev@esther.local> 1766099145 -0300	reset: moving to 211aeb3
+211aeb37b054a7467f6076d95a34a5ea1d1259e0 33ad3d11cbbc07ce9750db4cc18fd36e8594883c Developer <dev@esther.local> 1766099293 -0300	commit: Clean project without node_modules
+33ad3d11cbbc07ce9750db4cc18fd36e8594883c af952d60c4e6b60f245cffb6b8570d9eb71ebb67 Developer <dev@esther.local> 1766099293 -0300	filter-branch: rewrite
