@@ -163,7 +163,10 @@ export default function Footer({ onTrack }: Props) {
                 >
                   Política de Privacidade
                 </a>
-                <a href='#' className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'>
+                <a
+                  href='/termos-de-uso.html'
+                  className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'
+                >
                   Termos de Uso
                 </a>
               </div>
