@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import fs from 'fs/promises'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
@@ -119,6 +120,60 @@ async function sendToN8n(data: LeadEntry) {
   }
 }
 
+// ========================================
+// ENCAMINHAR PARA GESTÃO CLIENTES
+// ========================================
+async function sendToGestaoClientes(data: LeadEntry) {
+  const gestaoUrl = process.env.GESTAO_CLIENTES_WEBHOOK_URL
+  const secret = process.env.GESTAO_CLIENTES_WEBHOOK_SECRET
+
+  if (!gestaoUrl) return { sent: false, reason: 'missing_webhook' }
+
+  try {
+    const payload = JSON.stringify({
+      event: 'lead_submission',
+      from: data.whatsapp,
+      name: data.name,
+      email: data.email,
+      plan: data.plan,
+      bestTime: data.bestTime,
+      utmSource: data.utmSource,
+      utmMedium: data.utmMedium,
+      utmCampaign: data.utmCampaign,
+      origin: data.origin,
+      timestamp: data.timestamp,
+    })
+
+    let signature: string | undefined
+    if (secret) {
+      signature = crypto
+        .createHmac('sha256', secret)
+        .update(payload)
+        .digest('hex')
+    }
+
+    const resp = await fetch(gestaoUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(signature ? { 'X-Signature': signature } : {}),
+      },
+      body: payload,
+    })
+
+    if (resp.ok) {
+      console.log('[Submit] ✅ Lead encaminhado para Gestão:', data.name)
+      return { sent: true }
+    } else {
+      console.warn('[Submit] ⚠️ Gestão retornou:', resp.status)
+      return { sent: false, reason: `status_${resp.status}` }
+    }
+  } catch (e) {
+    console.error('[Submit] Erro ao encaminhar para Gestão:', e)
+    return { sent: false, reason: 'exception' }
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -214,6 +269,7 @@ export default async function handler(
       sendToActiveCampaign(entry),
       sendToRDStation(entry),
       sendToN8n(entry),
+      sendToGestaoClientes(entry),
     ]).catch((e) => console.error('Error sending to external systems:', e))
 
     return res.status(200).json({ success: true })

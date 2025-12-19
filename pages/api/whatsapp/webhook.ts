@@ -61,26 +61,62 @@ export default async function handler(
       }
 
       async function forwardToExternalApp(payload: any) {
-        const url = process.env.GESTAO_CLIENTES_WEBHOOK_URL
-        if (!url) return
+        // ========================================
+        // ENCAMINHAR PARA GESTÃO DE CLIENTES
+        // ========================================
+        const gestaoUrl = process.env.GESTAO_CLIENTES_WEBHOOK_URL
+        const secret = process.env.WHATSAPP_WEBHOOK_SECRET
+
+        if (!gestaoUrl) {
+          console.log(
+            '[Webhook LP] ⚠️ GESTAO_CLIENTES_WEBHOOK_URL não configurada'
+          )
+          return
+        }
+
         try {
-          const secret = process.env.GESTAO_CLIENTES_WEBHOOK_SECRET || ''
-          const signature = secret
-            ? crypto
-                .createHmac('sha256', secret)
-                .update(JSON.stringify(payload))
-                .digest('hex')
-            : undefined
-          await fetch(url, {
+          console.log('[Webhook LP] 🚀 Encaminhando para Gestão:', gestaoUrl)
+
+          const payloadString = JSON.stringify(payload)
+
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+          }
+
+          // Adicionar assinatura HMAC se secret configurado
+          if (secret) {
+            const signature = crypto
+              .createHmac('sha256', secret)
+              .update(payloadString)
+              .digest('hex')
+            headers['X-Signature'] = signature
+            console.log('[Webhook LP] ✅ Assinatura HMAC adicionada')
+          } else {
+            console.log(
+              '[Webhook LP] ⚠️ WHATSAPP_WEBHOOK_SECRET não configurado'
+            )
+          }
+
+          const response = await fetch(gestaoUrl, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...(signature ? { 'x-signature': signature } : {}),
-            },
-            body: JSON.stringify(payload),
-          }).catch((e) => console.error('Forward webhook failed:', e))
+            headers,
+            body: payloadString,
+          })
+
+          if (response.ok) {
+            console.log(
+              '[Webhook LP] ✅ Encaminhado com sucesso!',
+              payload.event
+            )
+          } else {
+            console.error(
+              '[Webhook LP] ❌ Erro:',
+              response.status,
+              await response.text()
+            )
+          }
         } catch (e) {
-          console.error('Forward external app exception:', e)
+          console.error('[Webhook LP] ❌ Erro ao encaminhar:', e)
         }
       }
       // Processar eventos
