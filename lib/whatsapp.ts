@@ -372,22 +372,21 @@ export async function sendInternalLeadAlert(params: {
     timeZone: 'America/Sao_Paulo',
   })
 
-  // Formatar o telefone para exibição
-  const formatPhone = (phone?: string) => {
+  // Limpar telefone (apenas números, sem formatação)
+  const cleanPhone = (phone?: string) => {
     if (!phone) return 'Não informado'
-    const clean = phone.replace(/\D/g, '')
-    if (clean.length === 13 && clean.startsWith('55')) {
-      return `${clean.slice(0, 2)} ${clean.slice(2, 4)} ${clean.slice(
-        4,
-        9
-      )}-${clean.slice(9)}`
-    }
-    return phone
+    return phone.replace(/\D/g, '') || 'Não informado'
   }
 
   // Tenta usar template primeiro - TODOS os 10 parâmetros são obrigatórios
+  // Ordem conforme template no Meta:
+  // {{1}} Nome, {{2}} Email, {{3}} WhatsApp (sem formatação!),
+  // {{4}} Plano, {{5}} Melhor horário, {{6}} Melhor horário (repetido),
+  // {{7}} UTM Medium, {{8}} UTM Campaign, {{9}} URL, {{10}} Data/hora
   if (templateName) {
-    return sendWhatsAppMessage({
+    console.log('[WhatsApp] 🔍 Tentando enviar template interno:', templateName)
+
+    const templateResult = await sendWhatsAppMessage({
       phone: to,
       message: '',
       type: 'template',
@@ -395,16 +394,25 @@ export async function sendInternalLeadAlert(params: {
       templateParams: [
         params.name || 'Nome não informado',
         params.email || 'Email não informado',
-        formatPhone(params.whatsapp),
+        cleanPhone(params.whatsapp), // SEM formatação!
         params.plan || 'Não especificado',
         params.bestTime || 'Não informado',
-        params.utmSource || 'Direto',
-        params.utmMedium || '-',
-        params.utmCampaign || '-',
+        params.bestTime || 'Não informado', // {{6}} parece ser repetido
+        params.utmMedium || 'direto', // {{7}} é Medium, não Source!
+        params.utmCampaign || 'organico', // {{8}} Campaign
         params.origin || 'Landing Page',
         now,
       ],
     })
+
+    // Se o template funcionou, retorna sucesso
+    if (templateResult.success) {
+      console.log('[WhatsApp] ✅ Template interno enviado com sucesso')
+      return templateResult
+    }
+
+    // Se falhou, loga e tenta fallback
+    console.warn('[WhatsApp] ⚠️ Template falhou, usando mensagem de texto')
   }
 
   // Fallback: mensagem de texto

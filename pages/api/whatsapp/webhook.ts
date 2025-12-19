@@ -155,6 +155,8 @@ export default async function handler(
                   name: senderName,
                   type: message.type,
                   text: message.text?.body || null,
+                  body: message.text?.body || null, // Adicionar campo "body" também
+                  message: message.text?.body || null, // Adicionar campo "message" também
                   timestamp: new Date(message.timestamp * 1000).toISOString(),
                   raw: message,
                 }
@@ -165,8 +167,17 @@ export default async function handler(
                 )
 
                 // Encaminhar para aplicação externa (se configurado)
+                // Enviando formato mais compatível com diferentes sistemas
                 forwardToExternalApp({
                   event: 'message',
+                  type: 'whatsapp_message',
+                  messageId: message.id,
+                  from: senderPhone,
+                  name: senderName,
+                  text: message.text?.body || null,
+                  body: message.text?.body || null,
+                  message: message.text?.body || null,
+                  timestamp: new Date(message.timestamp * 1000).toISOString(),
                   data: normalized,
                 }).catch(() => {})
 
