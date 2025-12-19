@@ -28,14 +28,14 @@ export default function SpotsLeftBar() {
   const ratio = Math.max(0, Math.min(1, (data.total - data.spotsLeft) / data.total))
 
   return (
-    <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-md">
-      <div className="relative overflow-hidden rounded-2xl border border-button-primary/30 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl shadow-2xl">
-        <div className="px-5 py-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-text-secondary">
+    <div className="fixed bottom-6 right-4 left-auto -translate-x-0 z-40 w-80 max-w-[90vw] drop-shadow-xl">
+      <div className="relative overflow-hidden rounded-xl border border-button-primary/30 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl shadow-2xl">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-text-secondary leading-snug">
               Vagas restantes hoje
             </p>
-            <p className="text-sm font-semibold text-button-primary">
+            <p className="text-sm font-semibold text-button-primary whitespace-nowrap">
               {data.spotsLeft} / {data.total}
             </p>
           </div>
