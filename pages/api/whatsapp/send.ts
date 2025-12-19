@@ -1,5 +1,5 @@
-import { sendWhatsAppMessage } from '@/lib/whatsapp'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { sendWhatsAppMessage } from '../../../lib/whatsapp'
 
 type ResponseData = {
   success?: boolean
