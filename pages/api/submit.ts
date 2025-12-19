@@ -157,6 +157,20 @@ export default async function handler(
     // Save locally
     await appendLead(entry)
 
+    // Enviar confirmação via WhatsApp
+    if (normalizedPhone) {
+      try {
+        await sendLeadConfirmation(normalizedPhone, name)
+        console.log(
+          '✅ Confirmação de lead enviada via WhatsApp:',
+          normalizedPhone
+        )
+      } catch (error) {
+        console.error('❌ Erro ao enviar confirmação WhatsApp:', error)
+        // Não retorna erro, pois o lead foi criado com sucesso
+      }
+    }
+
     // Send to external systems in parallel (fire and forget)
     Promise.allSettled([
       sendToZoho(entry),
