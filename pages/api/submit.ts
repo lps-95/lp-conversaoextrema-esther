@@ -1,7 +1,8 @@
 import fs from 'fs/promises'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
-import { sendLeadConfirmation } from '../../lib/whatsapp'
+import { currentDateKey, kvIncr } from '../../lib/kv'
+import { sendInternalLeadAlert, sendLeadConfirmation } from '../../lib/whatsapp'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const DATA_FILE = path.join(DATA_DIR, 'leads.json')
@@ -158,6 +159,14 @@ export default async function handler(
     // Save locally
     await appendLead(entry)
 
+    // Incrementar contador diário em KV (se configurado)
+    try {
+      const key = `leads:${currentDateKey()}`
+      await kvIncr(key, 1)
+    } catch (e) {
+      console.error('KV incr falhou (não bloqueante):', e)
+    }
+
     // Enviar confirmação via WhatsApp
     if (normalizedPhone) {
       try {
@@ -170,6 +179,23 @@ export default async function handler(
         console.error('❌ Erro ao enviar confirmação WhatsApp:', error)
         // Não retorna erro, pois o lead foi criado com sucesso
       }
+    }
+
+    // Alerta interno para o time (opcional)
+    try {
+      await sendInternalLeadAlert({
+        name,
+        email,
+        plan: entry.plan,
+        whatsapp: normalizedPhone,
+        bestTime: entry.bestTime,
+        utmSource: entry.utmSource,
+        utmMedium: entry.utmMedium,
+        utmCampaign: entry.utmCampaign,
+        origin: entry.origin,
+      })
+    } catch (e) {
+      console.error('Aviso interno (WhatsApp) falhou:', e)
     }
 
     // Send to external systems in parallel (fire and forget)

@@ -17,6 +17,7 @@ export async function sendWhatsAppMessage(
 ): Promise<WhatsAppResponse> {
   const token = process.env.WHATSAPP_TOKEN
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID
+  const graphVersion = process.env.WHATSAPP_GRAPH_VERSION || 'v20.0'
 
   if (!token || !phoneNumberId) {
     return {
@@ -32,7 +33,7 @@ export async function sendWhatsAppMessage(
     // Se for tipo template (recomendado para notificações)
     if (data.type === 'template' && data.templateName) {
       const response = await fetch(
-        `https://graph.instagram.com/v18.0/${phoneNumberId}/messages`,
+        `https://graph.facebook.com/${graphVersion}/${phoneNumberId}/messages`,
         {
           method: 'POST',
           headers: {
@@ -47,7 +48,7 @@ export async function sendWhatsAppMessage(
             template: {
               name: data.templateName,
               language: {
-                code: 'pt_BR',
+                code: process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR',
               },
               components: data.templateParams
                 ? [
@@ -83,7 +84,7 @@ export async function sendWhatsAppMessage(
 
     // Envio de mensagem de texto simples
     const response = await fetch(
-      `https://graph.instagram.com/v18.0/${phoneNumberId}/messages`,
+      `https://graph.facebook.com/${graphVersion}/${phoneNumberId}/messages`,
       {
         method: 'POST',
         headers: {
@@ -135,6 +136,17 @@ export async function sendLeadConfirmation(
   phone: string,
   name: string
 ): Promise<WhatsAppResponse> {
+  const templateName = process.env.WHATSAPP_TEMPLATE_LEAD_CONFIRM
+  if (templateName) {
+    return sendWhatsAppMessage({
+      phone,
+      message: '',
+      type: 'template',
+      templateName,
+      templateParams: [name],
+    })
+  }
+
   const message = `Olá ${name}! 👋
 
 Recebemos sua solicitação com sucesso! 
@@ -165,6 +177,41 @@ Recebemos sua mensagem e responderemos assim que possível. Estamos aqui para aj
   return sendWhatsAppMessage({
     phone,
     message,
+    type: 'text',
+  })
+}
+
+// Alerta interno para time (envia para número definido em INTERNAL_ALERT_NUMBER)
+export async function sendInternalLeadAlert(params: {
+  name: string
+  email: string
+  plan?: string
+  whatsapp?: string
+  bestTime?: string
+  utmSource?: string
+  utmMedium?: string
+  utmCampaign?: string
+  origin?: string
+}) {
+  const to = process.env.INTERNAL_ALERT_NUMBER
+  if (!to) return { success: false, error: 'INTERNAL_ALERT_NUMBER not set' }
+
+  const messageLines = [
+    '🔥 Novo lead capturado!',
+    `Nome: ${params.name}`,
+    `E-mail: ${params.email}`,
+    params.plan ? `Plano: ${params.plan}` : undefined,
+    params.whatsapp ? `WhatsApp: ${params.whatsapp}` : undefined,
+    params.bestTime ? `Melhor horário: ${params.bestTime}` : undefined,
+    params.origin ? `Origem: ${params.origin}` : undefined,
+    params.utmSource ? `UTM Source: ${params.utmSource}` : undefined,
+    params.utmMedium ? `UTM Medium: ${params.utmMedium}` : undefined,
+    params.utmCampaign ? `UTM Campaign: ${params.utmCampaign}` : undefined,
+  ].filter(Boolean)
+
+  return sendWhatsAppMessage({
+    phone: to,
+    message: messageLines.join('\n'),
     type: 'text',
   })
 }

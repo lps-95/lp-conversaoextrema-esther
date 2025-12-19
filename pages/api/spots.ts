@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
+import { currentDateKey, kvGetNumber } from '../../lib/kv'
 
 type Data = { spotsLeft: number; total: number }
 
@@ -28,6 +29,17 @@ export default async function handler(
   const total = getSpotsTotal()
 
   try {
+    // 1) Tenta obter contagem persistente via KV
+    const todayKey = `leads:${currentDateKey()}`
+    const kv = await kvGetNumber(todayKey)
+
+    if (kv.ok && typeof kv.value === 'number') {
+      const todayCount = Math.max(0, kv.value)
+      const spotsLeft = Math.max(0, total - todayCount)
+      return res.status(200).json({ spotsLeft, total })
+    }
+
+    // 2) Fallback: contar pelo arquivo local (ambiente dev)
     const raw = await fs.readFile(DATA_FILE, 'utf-8').catch(() => '[]')
     const list = JSON.parse(raw || '[]') as Array<{
       timestamp?: string
