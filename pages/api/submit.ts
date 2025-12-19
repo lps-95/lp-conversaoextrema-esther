@@ -4,7 +4,12 @@ import path from 'path'
 import { currentDateKey, kvIncr } from '../../lib/kv'
 import { sendInternalLeadAlert, sendLeadConfirmation } from '../../lib/whatsapp'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
+// Em Vercel (serverless), o sistema de arquivos é somente leitura,
+// mas o diretório /tmp é gravável durante a execução da função.
+// Usamos /tmp em produção e a pasta do projeto em desenvolvimento.
+const DATA_DIR = process.env.VERCEL
+  ? path.join('/tmp', 'data')
+  : path.join(process.cwd(), 'data')
 const DATA_FILE = path.join(DATA_DIR, 'leads.json')
 
 interface LeadEntry {
@@ -156,8 +161,12 @@ export default async function handler(
       date: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
     }
 
-    // Save locally
-    await appendLead(entry)
+    // Save locally (não bloqueante)
+    try {
+      await appendLead(entry)
+    } catch (e) {
+      console.error('Local lead log falhou (não bloqueante):', e)
+    }
 
     // Incrementar contador diário em KV (se configurado)
     try {
