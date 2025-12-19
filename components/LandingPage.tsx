@@ -10,7 +10,6 @@ import { MSection, MStagger } from './Motion'
 import ParallaxLayer from './ParallaxLayer'
 import ROICalculator from './ROICalculator'
 import ScrollProgress from './ScrollProgress'
-import SpotsLeftBar from './SpotsLeftBar'
 import VideoModal from './VideoModal'
 import WhatsAppWidget from './WhatsAppWidget'
 import Beneficios from './sections/Beneficios'
@@ -200,7 +199,6 @@ export default function LandingPage() {
         phone={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5548991964517'}
         message="Olá! Vim da landing page e gostaria de saber mais sobre a mentoria Esther Social Media."
       />
-      <SpotsLeftBar />
 
       {/* Hero Section - Redesigned with sophisticated visuals */}
       <section id='hero' className='relative overflow-hidden min-h-screen flex items-center'>
