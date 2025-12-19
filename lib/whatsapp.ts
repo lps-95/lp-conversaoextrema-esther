@@ -156,14 +156,26 @@ export async function sendLeadConfirmation(
   const templateName =
     process.env.WHATSAPP_TEMPLATE_LEAD_CONFIRM || 'lead_confirmation'
 
-  // Se tiver email e plan, usa template completo
-  if (templateName && email && plan) {
+  // Formatar o telefone para exibição (55 XX XXXXX-XXXX)
+  const formatPhone = (phone: string) => {
+    const clean = phone.replace(/\D/g, '')
+    if (clean.length === 13 && clean.startsWith('55')) {
+      return `${clean.slice(0, 2)} ${clean.slice(2, 4)} ${clean.slice(
+        4,
+        9
+      )}-${clean.slice(9)}`
+    }
+    return phone
+  }
+
+  // Usa template com os 4 parâmetros conforme configurado no WhatsApp Business
+  if (templateName && name && email && plan) {
     return sendWhatsAppMessage({
       phone,
       message: '',
       type: 'template',
       templateName,
-      templateParams: [name, email, plan, phone],
+      templateParams: [name, email, plan, formatPhone(phone)],
     })
   }
 
@@ -339,7 +351,20 @@ export async function sendInternalLeadAlert(params: {
     timeZone: 'America/Sao_Paulo',
   })
 
-  // Tenta usar template primeiro
+  // Formatar o telefone para exibição
+  const formatPhone = (phone?: string) => {
+    if (!phone) return 'Não informado'
+    const clean = phone.replace(/\D/g, '')
+    if (clean.length === 13 && clean.startsWith('55')) {
+      return `${clean.slice(0, 2)} ${clean.slice(2, 4)} ${clean.slice(
+        4,
+        9
+      )}-${clean.slice(9)}`
+    }
+    return phone
+  }
+
+  // Tenta usar template primeiro - TODOS os 10 parâmetros são obrigatórios
   if (templateName) {
     return sendWhatsAppMessage({
       phone: to,
@@ -347,15 +372,15 @@ export async function sendInternalLeadAlert(params: {
       type: 'template',
       templateName,
       templateParams: [
-        params.name,
-        params.email,
-        params.whatsapp || 'Não informado',
+        params.name || 'Nome não informado',
+        params.email || 'Email não informado',
+        formatPhone(params.whatsapp),
         params.plan || 'Não especificado',
         params.bestTime || 'Não informado',
-        params.utmSource || '-',
+        params.utmSource || 'Direto',
         params.utmMedium || '-',
         params.utmCampaign || '-',
-        params.origin || '-',
+        params.origin || 'Landing Page',
         now,
       ],
     })
