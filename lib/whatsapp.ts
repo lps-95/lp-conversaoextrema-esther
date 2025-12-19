@@ -131,12 +131,80 @@ export async function sendWhatsAppMessage(
   }
 }
 
-// Função auxiliar para enviar confirmação de lead
+// ========================================
+// 🎯 TEMPLATES PRÉ-CONFIGURADOS
+// ========================================
+
+/**
+ * 1. Confirmação de Lead (lead_confirmation)
+ * Envia confirmação completa quando alguém preenche o formulário
+ *
+ * Variáveis do template:
+ * {{1}} = Nome do lead
+ * {{2}} = E-mail
+ * {{3}} = Plano escolhido
+ * {{4}} = WhatsApp formatado
+ *
+ * Uso: Automático após preenchimento do formulário
+ */
 export async function sendLeadConfirmation(
+  phone: string,
+  name: string,
+  email?: string,
+  plan?: string
+): Promise<WhatsAppResponse> {
+  const templateName =
+    process.env.WHATSAPP_TEMPLATE_LEAD_CONFIRM || 'lead_confirmation'
+
+  // Se tiver email e plan, usa template completo
+  if (templateName && email && plan) {
+    return sendWhatsAppMessage({
+      phone,
+      message: '',
+      type: 'template',
+      templateName,
+      templateParams: [name, email, plan, phone],
+    })
+  }
+
+  // Fallback: mensagem de texto simples
+  const message = `Olá ${name}! 👋
+
+Recebemos seu interesse na Mentoria Esther Social Media!
+
+📋 Seus dados foram registrados com sucesso.
+
+✅ Próximos passos:
+Nossa equipe entrará em contato em breve para agendar uma conversa inicial e explicar tudo sobre o programa.
+
+🚀 Prepare-se para transformar seu Instagram em uma máquina de autoridade!
+
+_Esta é uma mensagem automática de confirmação._
+
+*Esther Social Media © 2025*`
+
+  return sendWhatsAppMessage({
+    phone,
+    message,
+    type: 'text',
+  })
+}
+
+/**
+ * 2. Boas-vindas Simples (boas_vindas)
+ * Versão curta e direta para primeira aprovação
+ *
+ * Variáveis:
+ * {{1}} = Nome
+ *
+ * Uso: Alternativa mais simples à confirmação completa
+ */
+export async function sendWelcomeMessage(
   phone: string,
   name: string
 ): Promise<WhatsAppResponse> {
-  const templateName = process.env.WHATSAPP_TEMPLATE_LEAD_CONFIRM
+  const templateName = process.env.WHATSAPP_TEMPLATE_WELCOME || 'boas_vindas'
+
   if (templateName) {
     return sendWhatsAppMessage({
       phone,
@@ -147,15 +215,67 @@ export async function sendLeadConfirmation(
     })
   }
 
-  const message = `Olá ${name}! 👋
+  const message = `Olá ${name}! 🌟
 
-Recebemos sua solicitação com sucesso! 
+Obrigada pelo seu interesse na Mentoria Esther Social Media!
 
-Um de nossos especialistas entrará em contato em breve para discutir sobre a mentoria Esther Social Media.
+Nossa equipe vai entrar em contato em breve.
 
-Obrigado por confiar em nós! 🚀
+Enquanto isso, fique à vontade para tirar dúvidas aqui no WhatsApp.
 
-*Esther Social Media*`
+Abraços,
+Equipe Esther Social Media`
+
+  return sendWhatsAppMessage({
+    phone,
+    message,
+    type: 'text',
+  })
+}
+
+/**
+ * 3. Lembrete de Reunião (lembrete_reuniao)
+ * Envia lembrete para reuniões agendadas
+ *
+ * Variáveis:
+ * {{1}} = Nome
+ * {{2}} = Data
+ * {{3}} = Horário
+ *
+ * Uso: Manual ou via automação de agendamento
+ */
+export async function sendMeetingReminder(
+  phone: string,
+  name: string,
+  date: string,
+  time: string
+): Promise<WhatsAppResponse> {
+  const templateName =
+    process.env.WHATSAPP_TEMPLATE_MEETING || 'lembrete_reuniao'
+
+  if (templateName) {
+    return sendWhatsAppMessage({
+      phone,
+      message: '',
+      type: 'template',
+      templateName,
+      templateParams: [name, date, time],
+    })
+  }
+
+  const message = `Olá ${name}! 📅
+
+Lembrando que nossa reunião está agendada para:
+
+📆 Data: ${date}
+🕐 Horário: ${time}
+
+Te aguardamos!
+
+Caso precise reagendar, responda esta mensagem.
+
+Abraços,
+Esther Social Media`
 
   return sendWhatsAppMessage({
     phone,
@@ -181,7 +301,24 @@ Recebemos sua mensagem e responderemos assim que possível. Estamos aqui para aj
   })
 }
 
-// Alerta interno para time (envia para número definido em INTERNAL_ALERT_NUMBER)
+/**
+ * 4. Alerta Interno para o Time (novo_lead_interno)
+ * Notifica a equipe quando entra um novo lead
+ *
+ * Variáveis:
+ * {{1}} = Nome
+ * {{2}} = E-mail
+ * {{3}} = WhatsApp
+ * {{4}} = Plano
+ * {{5}} = Melhor horário
+ * {{6}} = UTM Source
+ * {{7}} = UTM Medium
+ * {{8}} = UTM Campaign
+ * {{9}} = URL de origem
+ * {{10}} = Data/hora
+ *
+ * Uso: Automático após captura de lead
+ */
 export async function sendInternalLeadAlert(params: {
   name: string
   email: string
@@ -196,17 +333,51 @@ export async function sendInternalLeadAlert(params: {
   const to = process.env.INTERNAL_ALERT_NUMBER
   if (!to) return { success: false, error: 'INTERNAL_ALERT_NUMBER not set' }
 
+  const templateName =
+    process.env.WHATSAPP_TEMPLATE_INTERNAL_ALERT || 'novo_lead_interno'
+  const now = new Date().toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+  })
+
+  // Tenta usar template primeiro
+  if (templateName) {
+    return sendWhatsAppMessage({
+      phone: to,
+      message: '',
+      type: 'template',
+      templateName,
+      templateParams: [
+        params.name,
+        params.email,
+        params.whatsapp || 'Não informado',
+        params.plan || 'Não especificado',
+        params.bestTime || 'Não informado',
+        params.utmSource || '-',
+        params.utmMedium || '-',
+        params.utmCampaign || '-',
+        params.origin || '-',
+        now,
+      ],
+    })
+  }
+
+  // Fallback: mensagem de texto
   const messageLines = [
-    '🔥 Novo lead capturado!',
-    `Nome: ${params.name}`,
-    `E-mail: ${params.email}`,
-    params.plan ? `Plano: ${params.plan}` : undefined,
-    params.whatsapp ? `WhatsApp: ${params.whatsapp}` : undefined,
-    params.bestTime ? `Melhor horário: ${params.bestTime}` : undefined,
-    params.origin ? `Origem: ${params.origin}` : undefined,
-    params.utmSource ? `UTM Source: ${params.utmSource}` : undefined,
-    params.utmMedium ? `UTM Medium: ${params.utmMedium}` : undefined,
-    params.utmCampaign ? `UTM Campaign: ${params.utmCampaign}` : undefined,
+    '🔥 NOVO LEAD CAPTURADO!',
+    '',
+    `👤 Nome: ${params.name}`,
+    `📧 E-mail: ${params.email}`,
+    params.whatsapp ? `📱 WhatsApp: ${params.whatsapp}` : undefined,
+    params.plan ? `💎 Plano: ${params.plan}` : undefined,
+    params.bestTime ? `🕐 Melhor horário: ${params.bestTime}` : undefined,
+    '',
+    '📊 Origem do Lead:',
+    params.utmSource ? `• Source: ${params.utmSource}` : undefined,
+    params.utmMedium ? `• Medium: ${params.utmMedium}` : undefined,
+    params.utmCampaign ? `• Campaign: ${params.utmCampaign}` : undefined,
+    params.origin ? `• URL: ${params.origin}` : undefined,
+    '',
+    `⏰ ${now}`,
   ].filter(Boolean)
 
   return sendWhatsAppMessage({

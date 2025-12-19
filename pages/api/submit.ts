@@ -176,13 +176,14 @@ export default async function handler(
       console.error('KV incr falhou (não bloqueante):', e)
     }
 
-    // Enviar confirmação via WhatsApp
+    // Enviar confirmação via WhatsApp (com template completo)
     if (normalizedPhone) {
       try {
-        await sendLeadConfirmation(normalizedPhone, name)
+        await sendLeadConfirmation(normalizedPhone, name, email, entry.plan)
         console.log(
           '✅ Confirmação de lead enviada via WhatsApp:',
-          normalizedPhone
+          normalizedPhone,
+          '| Template: lead_confirmation'
         )
       } catch (error) {
         console.error('❌ Erro ao enviar confirmação WhatsApp:', error)
