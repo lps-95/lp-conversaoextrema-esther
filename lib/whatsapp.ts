@@ -32,6 +32,35 @@ export async function sendWhatsAppMessage(
 
     // Se for tipo template (recomendado para notificações)
     if (data.type === 'template' && data.templateName) {
+      const payload = {
+        messaging_product: 'whatsapp',
+        recipient_type: 'individual',
+        to: cleanPhone,
+        type: 'template',
+        template: {
+          name: data.templateName,
+          language: {
+            code: process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR',
+          },
+          components: data.templateParams
+            ? [
+                {
+                  type: 'body',
+                  parameters: data.templateParams.map((param) => ({
+                    type: 'text',
+                    text: param,
+                  })),
+                },
+              ]
+            : undefined,
+        },
+      }
+
+      console.log(
+        '[WhatsApp] 📤 Payload enviado ao Meta:',
+        JSON.stringify(payload, null, 2)
+      )
+
       const response = await fetch(
         `https://graph.facebook.com/${graphVersion}/${phoneNumberId}/messages`,
         {
@@ -40,29 +69,7 @@ export async function sendWhatsAppMessage(
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            recipient_type: 'individual',
-            to: cleanPhone,
-            type: 'template',
-            template: {
-              name: data.templateName,
-              language: {
-                code: process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR',
-              },
-              components: data.templateParams
-                ? [
-                    {
-                      type: 'body',
-                      parameters: data.templateParams.map((param) => ({
-                        type: 'text',
-                        text: param,
-                      })),
-                    },
-                  ]
-                : undefined,
-            },
-          }),
+          body: JSON.stringify(payload),
         }
       )
 
@@ -70,6 +77,10 @@ export async function sendWhatsAppMessage(
 
       if (!response.ok) {
         console.error('WhatsApp template error:', result)
+        console.error(
+          '[WhatsApp] ❌ Payload que causou erro:',
+          JSON.stringify(payload, null, 2)
+        )
         return {
           success: false,
           error: result.error?.message || 'Failed to send template',
@@ -170,12 +181,22 @@ export async function sendLeadConfirmation(
 
   // Usa template com os 4 parâmetros conforme configurado no WhatsApp Business
   if (templateName && name && email && plan) {
+    const params = [name, email, plan, formatPhone(phone)]
+    console.log(
+      '[WhatsApp] 🔍 Enviando template lead_confirmation com parâmetros:',
+      {
+        templateName,
+        phone,
+        params,
+      }
+    )
+
     return sendWhatsAppMessage({
       phone,
       message: '',
       type: 'template',
       templateName,
-      templateParams: [name, email, plan, formatPhone(phone)],
+      templateParams: params,
     })
   }
 
