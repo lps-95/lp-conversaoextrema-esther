@@ -19,9 +19,10 @@ const Home: NextPage = () => {
         <meta name='viewport' content='width=device-width,initial-scale=1' />
         <meta name='description' content={description} />
         <meta name='robots' content='index,follow' />
-        <meta name='theme-color' content='#000000' />
+        <meta name='theme-color' content='#D4AF37' />
         <link rel='canonical' href={url} />
-        <link rel='icon' href='/favicon.ico' />
+
+        {/* Favicon removido daqui - já está no _document.tsx */}
 
         {/* Open Graph */}
         <meta property='og:type' content='website' />

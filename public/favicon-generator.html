@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gerar Favicon</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui;
+      background: #f5f5f5;
+    "
+  >
+    <div
+      style="
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <h1 style="color: #0f0a1e; margin-top: 0">Gerador de Favicon</h1>
+      <p style="color: #666">
+        Use este arquivo para gerar os ícones do projeto.
+      </p>
+
+      <div style="margin: 30px 0">
+        <h3>Visualização:</h3>
+        <div style="display: flex; gap: 20px; align-items: center">
+          <div
+            style="
+              width: 64px;
+              height: 64px;
+              background: #0f0a1e;
+              border-radius: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <span
+              style="
+                font-family: Georgia, serif;
+                font-size: 42px;
+                font-weight: bold;
+                background: linear-gradient(135deg, #f4e4c1, #d4af37, #c5a028);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+              "
+              >E</span
+            >
+          </div>
+          <div
+            style="
+              width: 32px;
+              height: 32px;
+              background: #0f0a1e;
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <span
+              style="
+                font-family: Georgia, serif;
+                font-size: 21px;
+                font-weight: bold;
+                background: linear-gradient(135deg, #f4e4c1, #d4af37, #c5a028);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+              "
+              >E</span
+            >
+          </div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              background: #0f0a1e;
+              border-radius: 3px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <span
+              style="
+                font-family: Georgia, serif;
+                font-size: 11px;
+                font-weight: bold;
+                color: #d4af37;
+              "
+              >E</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          background: #f8f8f8;
+          padding: 20px;
+          border-radius: 8px;
+          margin: 20px 0;
+        "
+      >
+        <h3 style="margin-top: 0">Opção 1: Usar ferramenta online</h3>
+        <ol style="color: #666; line-height: 1.8">
+          <li>
+            Acesse
+            <a href="https://realfavicongenerator.net/" target="_blank"
+              >realfavicongenerator.net</a
+            >
+          </li>
+          <li>Faça upload do arquivo <code>favicon.svg</code></li>
+          <li>Baixe o pacote gerado</li>
+          <li>Extraia os arquivos na pasta <code>/public</code></li>
+        </ol>
+      </div>
+
+      <div
+        style="
+          background: #f8f8f8;
+          padding: 20px;
+          border-radius: 8px;
+          margin: 20px 0;
+        "
+      >
+        <h3 style="margin-top: 0">Opção 2: Usar Canva/Figma</h3>
+        <ol style="color: #666; line-height: 1.8">
+          <li>Crie um design 512x512px</li>
+          <li>Fundo escuro (#0F0A1E)</li>
+          <li>Letra "E" dourada em Georgia Bold</li>
+          <li>Exporte como PNG</li>
+          <li>
+            Use
+            <a href="https://favicon.io/favicon-converter/" target="_blank"
+              >favicon.io</a
+            >
+            para converter
+          </li>
+        </ol>
+      </div>
+
+      <div
+        style="
+          background: #fff3cd;
+          padding: 20px;
+          border-radius: 8px;
+          border-left: 4px solid #d4af37;
+        "
+      >
+        <p style="margin: 0; color: #856404">
+          <strong>Dica:</strong> O favicon.svg já está funcionando! Este arquivo
+          é apenas para gerar versões .ico e .png se necessário.
+        </p>
+      </div>
+    </div>
+
+    <canvas id="canvas" style="display: none"></canvas>
+
+    <script>
+      // Script para download do ícone como PNG
+      function downloadIcon(size) {
+        const canvas = document.getElementById('canvas')
+        const ctx = canvas.getContext('2d')
+        canvas.width = size
+        canvas.height = size
+
+        // Fundo escuro
+        ctx.fillStyle = '#0F0A1E'
+        ctx.fillRect(0, 0, size, size)
+
+        // Letra E dourada
+        ctx.font = `bold ${size * 0.65}px Georgia, serif`
+        ctx.fillStyle = '#D4AF37'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText('E', size / 2, size / 2)
+
+        // Download
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `icon-${size}x${size}.png`
+          a.click()
+          URL.revokeObjectURL(url)
+        })
+      }
+
+      console.log('Para gerar ícones PNG, execute no console:')
+      console.log('downloadIcon(512) // Gera icon-512x512.png')
+      console.log('downloadIcon(192) // Gera icon-192x192.png')
+      console.log('downloadIcon(180) // Gera apple-touch-icon.png')
+    </script>
+  </body>
+</html>

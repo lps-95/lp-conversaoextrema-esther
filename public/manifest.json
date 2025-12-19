@@ -1,0 +1,16 @@
+{
+  "name": "Esther Social Media - Mentoria de Conversão",
+  "short_name": "Esther Social",
+  "description": "Transforme sua presença digital com a mentoria especializada da Esther Social Media",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F0A1E",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
