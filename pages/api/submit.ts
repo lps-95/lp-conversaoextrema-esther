@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
+import { sendLeadConfirmation } from '../../lib/whatsapp'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const DATA_FILE = path.join(DATA_DIR, 'leads.json')
