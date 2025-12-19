@@ -159,13 +159,13 @@ export default function Footer({ onTrack }: Props) {
               <div className='flex items-center gap-4 sm:gap-6'>
                 <a
                   href='/politica-privacidade.html'
-                  className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'
+                  className='text-text-primary hover:text-button-primary underline underline-offset-4 decoration-1 transition-colors duration-200 whitespace-nowrap'
                 >
                   Política de Privacidade
                 </a>
                 <a
                   href='/termos-de-uso.html'
-                  className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'
+                  className='text-text-primary hover:text-button-primary underline underline-offset-4 decoration-1 transition-colors duration-200 whitespace-nowrap'
                 >
                   Termos de Uso
                 </a>
