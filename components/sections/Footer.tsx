@@ -157,7 +157,10 @@ export default function Footer({ onTrack }: Props) {
                 © {new Date().getFullYear()} Esther Social Media. Todos os direitos reservados.
               </p>
               <div className='flex items-center gap-4 sm:gap-6'>
-                <a href='#' className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'>
+                <a
+                  href='/politica-privacidade.html'
+                  className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'
+                >
                   Política de Privacidade
                 </a>
                 <a href='#' className='hover:text-button-primary transition-colors duration-200 whitespace-nowrap'>
