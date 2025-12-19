@@ -7,6 +7,8 @@ type SpotsResponse = {
 
 export default function SpotsLeftBar() {
   const [data, setData] = useState<SpotsResponse | null>(null)
+  const [hidden, setHidden] = useState(false)
+  const [nearFooter, setNearFooter] = useState(false)
 
   async function fetchSpots() {
     try {
@@ -23,14 +25,34 @@ export default function SpotsLeftBar() {
     return () => clearInterval(id)
   }, [])
 
-  if (!data) return null
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY
+      const h = window.innerHeight
+      const doc = document.documentElement
+      setNearFooter(y + h >= doc.scrollHeight - 320)
+    }
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  if (!data || hidden || nearFooter) return null
 
   const ratio = Math.max(0, Math.min(1, (data.total - data.spotsLeft) / data.total))
 
   return (
-    <div className="fixed bottom-6 right-4 left-auto -translate-x-0 z-40 w-80 max-w-[90vw] drop-shadow-xl">
+    <div className="fixed bottom-4 left-4 md:left-auto md:right-28 z-40 w-[min(20rem,90vw)] drop-shadow-xl">
       <div className="relative overflow-hidden rounded-xl border border-button-primary/30 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl shadow-2xl">
-        <div className="px-4 py-3">
+        <button
+          type="button"
+          aria-label="Fechar barra de vagas"
+          className="absolute top-2 right-2 text-text-tertiary hover:text-text-primary text-sm"
+          onClick={() => setHidden(true)}
+        >
+          ✕
+        </button>
+        <div className="px-4 py-3 pr-8">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-text-secondary leading-snug">
               Vagas restantes hoje

@@ -8,8 +8,12 @@ export default function FloatingCTA() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show after scrolling 800px
-      setIsVisible(window.scrollY > 800)
+      const y = window.scrollY
+      const h = window.innerHeight
+      const doc = document.documentElement
+      const nearFooter = y + h >= doc.scrollHeight - 320 // esconde perto do rodapé
+      // Show after scrolling 800px, hide near footer
+      setIsVisible(y > 800 && !nearFooter)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -23,8 +27,8 @@ export default function FloatingCTA() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 animate-fade-in-up">
-      <div className="bg-gradient-to-r from-black/95 via-[#0d0c12]/95 to-black/95 backdrop-blur-xl border-t border-button-primary/30 shadow-2xl">
+    <div className="fixed bottom-4 left-4 right-4 z-40 animate-fade-in-up">
+      <div className="bg-gradient-to-r from-black/95 via-[#0d0c12]/95 to-black/95 backdrop-blur-xl border border-button-primary/30 shadow-2xl rounded-2xl">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Message */}
           <div className="text-center sm:text-left">
