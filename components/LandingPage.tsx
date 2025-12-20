@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import useSmoothScroll from '../hooks/useSmoothScroll'
+import { enviarLead } from '../lib/leads'
 import AnimatedBlobs from './AnimatedBlobs'
 import CountdownTimer from './CountdownTimer'
 import CustomCursor from './CustomCursor'
@@ -108,34 +109,27 @@ export default function LandingPage() {
       utm_campaign: utmCampaign,
     })
     try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          plan,
-          whatsapp,
-          bestTime,
-          utmSource,
-          utmMedium,
-          utmCampaign,
-          origin,
-        }),
+      const result = await enviarLead({
+        nome: name,
+        email,
+        telefone: whatsapp,
+        plano: plan,
+        melhorHorario: bestTime,
+        utmSource,
+        utmMedium,
+        utmCampaign,
       })
-      if (res.ok) {
-        setStatus('success')
-        track('lead_success', { plan, whatsapp })
-        setName('')
-        setEmail('')
-        setPlan('')
-        setWhatsapp('')
-        setBestTime('')
-      } else {
-        setStatus('error')
-      }
+      setStatus('success')
+      track('lead_success', { plan, whatsapp })
+      setName('')
+      setEmail('')
+      setPlan('')
+      setWhatsapp('')
+      setBestTime('')
+      alert('✅ Cadastro realizado com sucesso! Nossa equipe entrará em contato em breve.')
     } catch (err) {
       setStatus('error')
+      alert('❌ Erro ao enviar cadastro. Tente novamente.')
     }
   }
 
