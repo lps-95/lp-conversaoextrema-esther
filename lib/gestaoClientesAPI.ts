@@ -20,6 +20,15 @@ interface LeadData {
  * Envia lead capturado para o sistema Gestão de Clientes
  */
 export async function sendLeadToGestao(leadData: LeadData) {
+  // LOG DE DEBUG DAS VARIÁVEIS DE AMBIENTE
+  console.log(
+    '[DEBUG][sendLeadToGestao] GESTAO_CLIENTES_LEADS_URL:',
+    process.env.GESTAO_CLIENTES_LEADS_URL
+  )
+  console.log(
+    '[DEBUG][sendLeadToGestao] GESTAO_CLIENTES_WEBHOOK_SECRET:',
+    process.env.GESTAO_CLIENTES_WEBHOOK_SECRET ? '[PRESENTE]' : '[NÃO DEFINIDO]'
+  )
   const url = process.env.GESTAO_CLIENTES_LEADS_URL
   const secret = process.env.GESTAO_CLIENTES_WEBHOOK_SECRET
 
