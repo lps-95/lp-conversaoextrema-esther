@@ -12,47 +12,53 @@ interface WhatsAppResponse {
   error?: string
 }
 
+const EXPECTED_PARAMS: Record<string, number> = {
+  lead_confirmation: 4,
+  boas_vindas: 1,
+  lembrete_reuniao: 3,
+  novo_lead_interno: 10,
+}
+
 export async function sendWhatsAppMessage(
   data: WhatsAppMessage
 ): Promise<WhatsAppResponse> {
   const token = process.env.WHATSAPP_TOKEN
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID
   const graphVersion = process.env.WHATSAPP_GRAPH_VERSION || 'v20.0'
+  const languageCode = process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR'
 
   if (!token || !phoneNumberId) {
-    return {
-      success: false,
-      error: 'WhatsApp credentials not configured',
-    }
+    return { success: false, error: 'WhatsApp credentials not configured' }
   }
 
   try {
-    // Remover caracteres especiais do número
     const cleanPhone = data.phone.replace(/\D/g, '')
+    if (!cleanPhone) return { success: false, error: 'Invalid phone number' }
 
-    // Se for tipo template (recomendado para notificações)
     if (data.type === 'template' && data.templateName) {
+      const expected = EXPECTED_PARAMS[data.templateName]
+      const provided = data.templateParams?.length ?? 0
+
+      if (expected && provided !== expected) {
+        return {
+          success: false,
+          error: `Template ${data.templateName} expects ${expected} parameters, got ${provided}`,
+        }
+      }
+
+      const bodyParams = (data.templateParams ?? []).map((p) => ({
+        type: 'text' as const,
+        text: String(p ?? ''),
+      }))
+
       const payload = {
         messaging_product: 'whatsapp',
-        recipient_type: 'individual',
         to: cleanPhone,
         type: 'template',
         template: {
           name: data.templateName,
-          language: {
-            code: process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR',
-          },
-          components: data.templateParams
-            ? [
-                {
-                  type: 'body',
-                  parameters: data.templateParams.map((param) => ({
-                    type: 'text',
-                    text: param,
-                  })),
-                },
-              ]
-            : undefined,
+          language: { code: languageCode },
+          components: [{ type: 'body', parameters: bodyParams }],
         },
       }
 
@@ -77,23 +83,20 @@ export async function sendWhatsAppMessage(
 
       if (!response.ok) {
         console.error('WhatsApp template error:', result)
-        console.error(
-          '[WhatsApp] ❌ Payload que causou erro:',
-          JSON.stringify(payload, null, 2)
-        )
+        console.error('Error details:', result?.error?.error_data?.details)
         return {
           success: false,
-          error: result.error?.message || 'Failed to send template',
+          error:
+            result?.error?.error_data?.details ||
+            result?.error?.message ||
+            'Failed to send template',
         }
       }
 
-      return {
-        success: true,
-        messageId: result.messages?.[0]?.id,
-      }
+      return { success: true, messageId: result.messages?.[0]?.id }
     }
 
-    // Envio de mensagem de texto simples
+    // Text message
     const response = await fetch(
       `https://graph.facebook.com/${graphVersion}/${phoneNumberId}/messages`,
       {
@@ -104,23 +107,19 @@ export async function sendWhatsAppMessage(
         },
         body: JSON.stringify({
           messaging_product: 'whatsapp',
-          recipient_type: 'individual',
           to: cleanPhone,
           type: 'text',
-          text: {
-            body: data.message,
-          },
+          text: { body: data.message },
         }),
       }
     )
 
     const result = await response.json()
-
     if (!response.ok) {
       console.error('WhatsApp send error:', result)
       return {
         success: false,
-        error: result.error?.message || 'Failed to send message',
+        error: result?.error?.message || 'Failed to send message',
       }
     }
 
@@ -128,11 +127,7 @@ export async function sendWhatsAppMessage(
       phone: cleanPhone,
       messageId: result.messages?.[0]?.id,
     })
-
-    return {
-      success: true,
-      messageId: result.messages?.[0]?.id,
-    }
+    return { success: true, messageId: result.messages?.[0]?.id }
   } catch (error) {
     console.error('WhatsApp service error:', error)
     return {
