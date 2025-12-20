@@ -158,7 +158,7 @@ export async function sendLeadConfirmation(
   name: string,
   email?: string,
   plan?: string
-): Promise<WhatsAppResponse> {
+): Promise<WhatsAppResponse & { templateText?: string }> {
   const templateName =
     process.env.WHATSAPP_TEMPLATE_LEAD_CONFIRM || 'lead_confirmation'
 
@@ -174,6 +174,25 @@ export async function sendLeadConfirmation(
     return phone
   }
 
+  // Formatar o conteúdo do template
+  const templateText = `Olá ${name}! 👋
+
+Recebemos seu interesse na Mentoria Esther Social Media!
+
+📋 Seus dados foram registrados:
+• E-mail: ${email || 'Não informado'}
+• Plano: ${plan || 'Não especificado'}
+• WhatsApp: ${formatPhone(phone)}
+
+✅ Próximos passos:
+Nossa equipe entrará em contato em breve para agendar uma conversa inicial e explicar tudo sobre o programa.
+
+🚀 Prepare-se para transformar seu Instagram em uma máquina de autoridade!
+
+_Esta é uma mensagem automática de confirmação._
+
+*Esther Social Media © 2025*`
+
   // Usa template com os 4 parâmetros conforme configurado no WhatsApp Business
   if (templateName && name && email && plan) {
     const params = [name, email, plan, formatPhone(phone)]
@@ -186,36 +205,25 @@ export async function sendLeadConfirmation(
       }
     )
 
-    return sendWhatsAppMessage({
+    const result = await sendWhatsAppMessage({
       phone,
       message: '',
       type: 'template',
       templateName,
       templateParams: params,
     })
+
+    return { ...result, templateText }
   }
 
   // Fallback: mensagem de texto simples
-  const message = `Olá ${name}! 👋
-
-Recebemos seu interesse na Mentoria Esther Social Media!
-
-📋 Seus dados foram registrados com sucesso.
-
-✅ Próximos passos:
-Nossa equipe entrará em contato em breve para agendar uma conversa inicial e explicar tudo sobre o programa.
-
-🚀 Prepare-se para transformar seu Instagram em uma máquina de autoridade!
-
-_Esta é uma mensagem automática de confirmação._
-
-*Esther Social Media © 2025*`
-
-  return sendWhatsAppMessage({
+  const result = await sendWhatsAppMessage({
     phone,
-    message,
+    message: templateText,
     type: 'text',
   })
+
+  return { ...result, templateText }
 }
 
 /**
@@ -357,7 +365,7 @@ export async function sendInternalLeadAlert(params: {
   utmMedium?: string
   utmCampaign?: string
   origin?: string
-}) {
+}): Promise<WhatsAppResponse & { templateText?: string }> {
   const to = process.env.INTERNAL_ALERT_NUMBER
   if (!to) return { success: false, error: 'INTERNAL_ALERT_NUMBER not set' }
 
@@ -372,6 +380,27 @@ export async function sendInternalLeadAlert(params: {
     if (!phone) return 'Não informado'
     return phone.replace(/\D/g, '') || 'Não informado'
   }
+
+  // Formatar o conteúdo do template para enviar no webhook
+  const messageLines = [
+    '🔥 NOVO LEAD CAPTURADO!',
+    '',
+    `👤 Nome: ${params.name}`,
+    `📧 E-mail: ${params.email}`,
+    params.whatsapp ? `📱 WhatsApp: ${params.whatsapp}` : undefined,
+    params.plan ? `💎 Plano: ${params.plan}` : undefined,
+    params.bestTime ? `🕐 Melhor horário: ${params.bestTime}` : undefined,
+    '',
+    '📊 Origem do Lead:',
+    params.utmSource ? `• Source: ${params.utmSource}` : undefined,
+    params.utmMedium ? `• Medium: ${params.utmMedium}` : undefined,
+    params.utmCampaign ? `• Campaign: ${params.utmCampaign}` : undefined,
+    params.origin ? `• URL: ${params.origin}` : undefined,
+    '',
+    `⏰ ${now}`,
+  ].filter(Boolean)
+
+  const templateText = messageLines.join('\n')
 
   // Tenta usar template primeiro - TODOS os 10 parâmetros são obrigatórios
   // Ordem conforme template no Meta:
@@ -400,10 +429,10 @@ export async function sendInternalLeadAlert(params: {
       ],
     })
 
-    // Se o template funcionou, retorna sucesso
+    // Se o template funcionou, retorna sucesso com o texto formatado
     if (templateResult.success) {
       console.log('[WhatsApp] ✅ Template interno enviado com sucesso')
-      return templateResult
+      return { ...templateResult, templateText }
     }
 
     // Se falhou, loga e tenta fallback
@@ -411,27 +440,11 @@ export async function sendInternalLeadAlert(params: {
   }
 
   // Fallback: mensagem de texto
-  const messageLines = [
-    '🔥 NOVO LEAD CAPTURADO!',
-    '',
-    `👤 Nome: ${params.name}`,
-    `📧 E-mail: ${params.email}`,
-    params.whatsapp ? `📱 WhatsApp: ${params.whatsapp}` : undefined,
-    params.plan ? `💎 Plano: ${params.plan}` : undefined,
-    params.bestTime ? `🕐 Melhor horário: ${params.bestTime}` : undefined,
-    '',
-    '📊 Origem do Lead:',
-    params.utmSource ? `• Source: ${params.utmSource}` : undefined,
-    params.utmMedium ? `• Medium: ${params.utmMedium}` : undefined,
-    params.utmCampaign ? `• Campaign: ${params.utmCampaign}` : undefined,
-    params.origin ? `• URL: ${params.origin}` : undefined,
-    '',
-    `⏰ ${now}`,
-  ].filter(Boolean)
-
-  return sendWhatsAppMessage({
+  const result = await sendWhatsAppMessage({
     phone: to,
-    message: messageLines.join('\n'),
+    message: templateText,
     type: 'text',
   })
+
+  return { ...result, templateText }
 }

@@ -123,7 +123,13 @@ async function sendToN8n(data: LeadEntry) {
 // ========================================
 // ENCAMINHAR PARA GESTÃO CLIENTES
 // ========================================
-async function sendToGestaoClientes(data: LeadEntry) {
+async function sendToGestaoClientes(
+  data: LeadEntry,
+  templates?: {
+    leadConfirmation?: string
+    internalAlert?: string
+  }
+) {
   const gestaoUrl = process.env.GESTAO_CLIENTES_WEBHOOK_URL
   const secret = process.env.GESTAO_CLIENTES_WEBHOOK_SECRET
 
@@ -142,6 +148,17 @@ async function sendToGestaoClientes(data: LeadEntry) {
       utmCampaign: data.utmCampaign,
       origin: data.origin,
       timestamp: data.timestamp,
+      // Incluir os conteúdos formatados dos templates
+      templates: {
+        lead_confirmation: {
+          name: 'lead_confirmation',
+          text: templates?.leadConfirmation || null,
+        },
+        novo_lead_interno: {
+          name: 'novo_lead_interno',
+          text: templates?.internalAlert || null,
+        },
+      },
     })
 
     let signature: string | undefined
@@ -231,10 +248,20 @@ export default async function handler(
       console.error('KV incr falhou (não bloqueante):', e)
     }
 
+    // Armazenar templateText para enviar nos webhooks
+    let leadConfirmationText: string | undefined
+    let internalAlertText: string | undefined
+
     // Enviar confirmação via WhatsApp (com template completo)
     if (normalizedPhone) {
       try {
-        await sendLeadConfirmation(normalizedPhone, name, email, entry.plan)
+        const result = await sendLeadConfirmation(
+          normalizedPhone,
+          name,
+          email,
+          entry.plan
+        )
+        leadConfirmationText = result.templateText
         console.log(
           '✅ Confirmação de lead enviada via WhatsApp:',
           normalizedPhone,
@@ -248,7 +275,7 @@ export default async function handler(
 
     // Alerta interno para o time (opcional)
     try {
-      await sendInternalLeadAlert({
+      const result = await sendInternalLeadAlert({
         name,
         email,
         plan: entry.plan,
@@ -259,6 +286,7 @@ export default async function handler(
         utmCampaign: entry.utmCampaign,
         origin: entry.origin,
       })
+      internalAlertText = result.templateText
     } catch (e) {
       console.error('Aviso interno (WhatsApp) falhou:', e)
     }
@@ -269,7 +297,10 @@ export default async function handler(
       sendToActiveCampaign(entry),
       sendToRDStation(entry),
       sendToN8n(entry),
-      sendToGestaoClientes(entry),
+      sendToGestaoClientes(entry, {
+        leadConfirmation: leadConfirmationText,
+        internalAlert: internalAlertText,
+      }),
     ]).catch((e) => console.error('Error sending to external systems:', e))
 
     return res.status(200).json({ success: true })
