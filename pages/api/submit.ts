@@ -237,7 +237,6 @@ export default async function handler(
       origin: origin || '',
       timestamp: now.toISOString(),
       date: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
-    }
 
     // Save locally (não bloqueante)
     try {
