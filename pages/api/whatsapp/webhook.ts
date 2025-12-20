@@ -77,10 +77,27 @@ export default async function handler(
         try {
           console.log('[Webhook LP] 🚀 Encaminhando para Gestão:', gestaoUrl)
 
+          // Validar URL e avisar sobre endpoints Netlify comuns
+          try {
+            const u = new URL(gestaoUrl)
+            if (
+              u.hostname.endsWith('netlify.app') &&
+              u.pathname.startsWith('/api/')
+            ) {
+              console.warn(
+                '[Webhook LP] ⚠️ Endpoint parece Netlify; funções costumam usar /.netlify/functions/<nome>. Verifique a URL.'
+              )
+            }
+          } catch {
+            console.error('[Webhook LP] ❌ URL inválida:', gestaoUrl)
+          }
+
           const payloadString = JSON.stringify(payload)
 
           const headers: Record<string, string> = {
             'Content-Type': 'application/json',
+            Accept: 'application/json, */*',
+            'User-Agent': 'lp-esther-webhook/1.0',
           }
 
           // Adicionar assinatura HMAC se secret configurado
@@ -97,26 +114,81 @@ export default async function handler(
             )
           }
 
-          const response = await fetch(gestaoUrl, {
-            method: 'POST',
-            headers,
-            body: payloadString,
-          })
+          // Helper: POST com timeout e tentativas
+          const postWithRetries = async (
+            targetUrl: string
+          ): Promise<{ ok: boolean; lastError?: unknown }> => {
+            const maxAttempts = 3
+            let attempt = 0
+            let lastError: unknown = null
 
-          if (response.ok) {
-            console.log(
-              '[Webhook LP] ✅ Encaminhado com sucesso!',
-              payload.event
-            )
-          } else {
+            while (attempt < maxAttempts) {
+              attempt++
+              const controller = new AbortController()
+              const timeout = setTimeout(() => controller.abort(), 10000)
+              try {
+                const response = await fetch(targetUrl, {
+                  method: 'POST',
+                  headers,
+                  body: payloadString,
+                  signal: controller.signal,
+                })
+                clearTimeout(timeout)
+
+                if (response.ok) {
+                  console.log(
+                    '[Webhook LP] ✅ Encaminhado com sucesso!',
+                    payload.event,
+                    '→',
+                    targetUrl
+                  )
+                  return { ok: true }
+                }
+
+                const text = await response.text()
+                console.error(
+                  '[Webhook LP] ❌ Erro HTTP:',
+                  response.status,
+                  text,
+                  '→',
+                  targetUrl
+                )
+                lastError = new Error(`HTTP ${response.status}: ${text}`)
+              } catch (e: any) {
+                clearTimeout(timeout)
+                lastError = e
+                console.error(
+                  '[Webhook LP] ❌ Erro ao encaminhar (tentativa',
+                  attempt,
+                  '):',
+                  e,
+                  '→',
+                  targetUrl
+                )
+                if (e?.cause) {
+                  console.error('[Webhook LP] ℹ️ Causa:', e.cause)
+                }
+              }
+
+              if (attempt < maxAttempts) {
+                const backoffMs = attempt * 500
+                await new Promise((r) => setTimeout(r, backoffMs))
+              }
+            }
+
+            return { ok: false, lastError }
+          }
+
+          // Tentar URL principal com retries e timeout
+          const result = await postWithRetries(gestaoUrl)
+          if (!result.ok) {
             console.error(
-              '[Webhook LP] ❌ Erro:',
-              response.status,
-              await response.text()
+              '[Webhook LP] ❌ Falha ao encaminhar:',
+              result.lastError
             )
           }
         } catch (e) {
-          console.error('[Webhook LP] ❌ Erro ao encaminhar:', e)
+          console.error('[Webhook LP] ❌ Erro inesperado ao encaminhar:', e)
         }
       }
       // Processar eventos
