@@ -84,6 +84,9 @@ export async function sendWhatsAppMessage(
       if (!response.ok) {
         console.error('WhatsApp template error:', result)
         console.error('Error details:', result?.error?.error_data?.details)
+        console.error('Full error object:', JSON.stringify(result, null, 2))
+        console.error('Template name:', data.templateName)
+        console.error('Num parameters sent:', data.templateParams?.length)
         return {
           success: false,
           error:
