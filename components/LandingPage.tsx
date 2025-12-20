@@ -113,12 +113,12 @@ export default function LandingPage() {
         name: name,
         email: email,
         phone: whatsapp.replace(/\D/g, ''),
-        plan: plan || null,
-        bestTime: bestTime || null,
+        plan: plan || undefined,
+        bestTime: bestTime || undefined,
         utmParams: {
-          utm_source: utmSource || null,
-          utm_medium: utmMedium || null,
-          utm_campaign: utmCampaign || null,
+          utm_source: utmSource || undefined,
+          utm_medium: utmMedium || undefined,
+          utm_campaign: utmCampaign || undefined,
         },
         origin: 'landing_page_conversao_extrema',
       })
