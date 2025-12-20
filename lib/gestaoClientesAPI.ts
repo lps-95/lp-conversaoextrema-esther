@@ -79,15 +79,40 @@ export async function sendLeadToGestao(leadData: LeadData) {
     body: payload,
   })
 
-  if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ error: 'Unknown error' }))
-    console.error('[Gestão API] Erro ao enviar lead:', error)
-    throw new Error(`Erro ao enviar lead: ${response.status}`)
+  // Ler como texto sempre para evitar crashes ao tentar parsear HTML
+  const rawText = await response.text().catch(() => '')
+  const contentType = response.headers.get('content-type') || ''
+
+  // Tentar parsear JSON quando aplicável
+  let parsed: any = null
+  if (rawText && contentType.includes('application/json')) {
+    try {
+      parsed = JSON.parse(rawText)
+    } catch {
+      // mantém parsed como null
+    }
+  } else if (rawText) {
+    try {
+      parsed = JSON.parse(rawText)
+    } catch {
+      parsed = null
+    }
   }
 
-  const result = await response.json()
+  if (!response.ok) {
+    const snippet = rawText ? rawText.slice(0, 200) : ''
+    console.error('[Gestão API] Erro ao enviar lead:', {
+      status: response.status,
+      contentType,
+      bodySnippet: snippet,
+    })
+    throw new Error(
+      parsed?.error ||
+        `Falha no endpoint de gestão (status ${response.status}). Conteúdo: ${snippet}`
+    )
+  }
+
+  const result = parsed ?? { success: true }
   console.log('[Gestão API] Lead enviado com sucesso:', result)
 
   return result

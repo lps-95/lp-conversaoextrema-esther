@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { sendLeadToGestao } from '../../lib/gestaoClientesAPI'
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,6 +42,9 @@ export default async function handler(
         .status(400)
         .json({ error: 'Campos obrigatórios: name, email, phone' })
     }
+
+    // Import dinâmico para evitar erro de inicialização do módulo em runtime Edge
+    const { sendLeadToGestao } = await import('../../lib/gestaoClientesAPI')
 
     // Enviar para o painel de gestão
     const result = await sendLeadToGestao({
