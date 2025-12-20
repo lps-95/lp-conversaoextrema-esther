@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import useSmoothScroll from '../hooks/useSmoothScroll'
-import { sendLeadToGestao } from '../lib/gestaoClientesAPI'
 import AnimatedBlobs from './AnimatedBlobs'
 import CountdownTimer from './CountdownTimer'
 import CustomCursor from './CustomCursor'
@@ -109,19 +108,31 @@ export default function LandingPage() {
       utm_campaign: utmCampaign,
     })
     try {
-      const result = await sendLeadToGestao({
-        name: name,
-        email: email,
-        phone: whatsapp.replace(/\D/g, ''),
-        plan: plan || undefined,
-        bestTime: bestTime || undefined,
-        utmParams: {
-          utm_source: utmSource || undefined,
-          utm_medium: utmMedium || undefined,
-          utm_campaign: utmCampaign || undefined,
+      // Enviar para API endpoint (server-side) ao invés de chamar diretamente
+      const response = await fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        origin: 'landing_page_conversao_extrema',
+        body: JSON.stringify({
+          name,
+          email,
+          phone: whatsapp.replace(/\D/g, ''),
+          plan: plan || undefined,
+          bestTime: bestTime || undefined,
+          utmSource: utmSource || undefined,
+          utmMedium: utmMedium || undefined,
+          utmCampaign: utmCampaign || undefined,
+          origin: 'landing_page_conversao_extrema',
+        }),
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erro ao enviar lead')
+      }
+
+      const result = await response.json()
       setStatus('success')
       track('lead_success', { plan, whatsapp })
       setName('')
