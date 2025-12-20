@@ -478,7 +478,7 @@ export default function LandingPage() {
                   <div className='relative'>
                     <label className='block text-base font-semibold text-text-primary mb-2'>Melhor horário para contato</label>
                     <CustomSelect
-                      value={bestTime}
+                      value={bestTime || ''}
                       onChange={setBestTime}
                       placeholder='Selecione uma opção'
                       options={[
