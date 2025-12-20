@@ -361,22 +361,14 @@ Recebemos sua mensagem e responderemos assim que possível. Estamos aqui para aj
 export async function sendInternalLeadAlert(params: {
   name: string
   email: string
-  plan?: string
-  whatsapp?: string
+  whatsapp: string
   bestTime?: string
-  utmSource?: string
-  utmMedium?: string
-  utmCampaign?: string
-  origin?: string
 }): Promise<WhatsAppResponse & { templateText?: string }> {
   const to = process.env.INTERNAL_ALERT_NUMBER
   if (!to) return { success: false, error: 'INTERNAL_ALERT_NUMBER not set' }
 
   const templateName =
-    process.env.WHATSAPP_TEMPLATE_INTERNAL_ALERT || 'novo_lead_interno'
-  const now = new Date().toLocaleString('pt-BR', {
-    timeZone: 'America/Sao_Paulo',
-  })
+    process.env.WHATSAPP_TEMPLATE_INTERNAL_ALERT || 'novo_lead_simples'
 
   // Limpar telefone (apenas números, sem formatação)
   const cleanPhone = (phone?: string) => {
@@ -386,48 +378,26 @@ export async function sendInternalLeadAlert(params: {
 
   // Formatar o conteúdo do template para enviar no webhook
   const messageLines = [
-    '🔥 NOVO LEAD CAPTURADO!',
+    '🔥 NOVO LEAD!',
     '',
     `👤 Nome: ${params.name}`,
     `📧 E-mail: ${params.email}`,
-    params.whatsapp ? `📱 WhatsApp: ${params.whatsapp}` : undefined,
-    params.plan ? `💎 Plano: ${params.plan}` : undefined,
-    params.bestTime ? `🕐 Melhor horário: ${params.bestTime}` : undefined,
-    '',
-    '📊 Origem do Lead:',
-    params.utmSource ? `• Source: ${params.utmSource}` : undefined,
-    params.utmMedium ? `• Medium: ${params.utmMedium}` : undefined,
-    params.utmCampaign ? `• Campaign: ${params.utmCampaign}` : undefined,
-    params.origin ? `• URL: ${params.origin}` : undefined,
-    '',
-    `⏰ ${now}`,
-  ].filter(Boolean)
+    `📱 WhatsApp: ${params.whatsapp}`,
+    `🕐 Melhor horário: ${params.bestTime || 'Não informado'}`,
+  ]
 
   const templateText = messageLines.join('\n')
 
-  // Tenta usar template primeiro - TODOS os 10 parâmetros são obrigatórios
-  // Ordem conforme template no Meta:
-  // {{1}} Nome, {{2}} Email, {{3}} WhatsApp (sem formatação!),
-  // {{4}} Plano, {{5}} Melhor horário, {{6}} UTM Source,
-  // {{7}} UTM Medium, {{8}} UTM Campaign, {{9}} URL, {{10}} Data/hora
   if (templateName) {
     console.log('[WhatsApp] 🔍 Tentando enviar template interno:', templateName)
 
-    // Garantir que todos os parâmetros sejam strings não vazias e simples
     const templateParams = [
-      String(params.name || 'Nome não informado').trim() || 'Sem nome',
-      String(params.email || 'Email não informado').trim() || 'Sem email',
-      String(cleanPhone(params.whatsapp) || 'Não informado').trim() || '0',
-      String(params.plan || 'Não especificado').trim() || 'Sem plano',
-      String(params.bestTime || 'Não informado').trim() || 'Não definido',
-      String(params.utmSource || 'direto').trim() || 'direto',
-      String(params.utmMedium || 'direto').trim() || 'direto',
-      String(params.utmCampaign || 'organico').trim() || 'organico',
-      String(params.origin || 'Landing Page').trim() || 'Landing Page',
-      String(now).trim() || 'Data não disponível',
+      String(params.name || 'Não informado'),
+      String(params.email || 'Não informado'),
+      String(cleanPhone(params.whatsapp) || 'Não informado'),
+      String(params.bestTime || 'Não informado'),
     ]
 
-    console.log('[WhatsApp] 📋 Total de parâmetros:', templateParams.length)
     console.log('[WhatsApp] 📋 Parâmetros do template interno:', templateParams)
 
     const templateResult = await sendWhatsAppMessage({
@@ -435,28 +405,22 @@ export async function sendInternalLeadAlert(params: {
       message: '',
       type: 'template',
       templateName,
-      templateParams: templateParams,
+      templateParams,
     })
 
-    // Se o template funcionou, retorna sucesso com o texto formatado
     if (templateResult.success) {
       console.log('[WhatsApp] ✅ Template interno enviado com sucesso')
       return { ...templateResult, templateText }
     }
 
-    // Se falhou, retorna erro MAS inclui o templateText para o webhook
     console.warn('[WhatsApp] ⚠️ Template falhou:', templateResult.error)
-    console.warn(
-      '[WhatsApp] ℹ️ Não é possível enviar mensagem de texto (primeira mensagem deve ser template)'
-    )
     return {
       success: false,
       error: templateResult.error,
-      templateText, // ← SEMPRE retorna o texto formatado para o webhook
+      templateText,
     }
   }
 
-  // Se não tem template configurado, retorna erro com o texto formatado
   console.warn('[WhatsApp] ⚠️ Template interno não configurado')
   return {
     success: false,
