@@ -413,33 +413,29 @@ export async function sendInternalLeadAlert(params: {
   if (templateName) {
     console.log('[WhatsApp] 🔍 Tentando enviar template interno:', templateName)
 
-    // Garantir que todos os parâmetros sejam strings não vazias
+    // Garantir que todos os parâmetros sejam strings não vazias e simples
     const templateParams = [
-      String(params.name || 'Nome não informado').trim(),
-      String(params.email || 'Email não informado').trim(),
-      String(cleanPhone(params.whatsapp) || 'Não informado').trim(),
-      String(params.plan || 'Não especificado').trim(),
-      String(params.bestTime || 'Não informado').trim(),
-      String(params.utmSource || 'direto').trim(),
-      String(params.utmMedium || 'direto').trim(),
-      String(params.utmCampaign || 'organico').trim(),
-      String(params.origin || 'Landing Page').trim(),
-      String(now).trim(),
+      String(params.name || 'Nome não informado').trim() || 'Sem nome',
+      String(params.email || 'Email não informado').trim() || 'Sem email',
+      String(cleanPhone(params.whatsapp) || 'Não informado').trim() || '0',
+      String(params.plan || 'Não especificado').trim() || 'Sem plano',
+      String(params.bestTime || 'Não informado').trim() || 'Não definido',
+      String(params.utmSource || 'direto').trim() || 'direto',
+      String(params.utmMedium || 'direto').trim() || 'direto',
+      String(params.utmCampaign || 'organico').trim() || 'organico',
+      String(params.origin || 'Landing Page').trim() || 'Landing Page',
+      String(now).trim() || 'Data não disponível',
     ]
 
-    // Validar que nenhum parâmetro está vazio
-    const validParams = templateParams.map((p, idx) =>
-      p === '' ? `param_${idx + 1}` : p
-    )
-
-    console.log('[WhatsApp] 📋 Parâmetros do template interno:', validParams)
+    console.log('[WhatsApp] 📋 Total de parâmetros:', templateParams.length)
+    console.log('[WhatsApp] 📋 Parâmetros do template interno:', templateParams)
 
     const templateResult = await sendWhatsAppMessage({
       phone: to,
       message: '',
       type: 'template',
       templateName,
-      templateParams: validParams,
+      templateParams: templateParams,
     })
 
     // Se o template funcionou, retorna sucesso com o texto formatado
