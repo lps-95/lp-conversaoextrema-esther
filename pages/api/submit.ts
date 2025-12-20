@@ -121,7 +121,7 @@ async function sendToN8n(data: LeadEntry) {
 }
 
 // ========================================
-// ENCAMINHAR PARA GESTÃO CLIENTES
+// ENCAMINHAR PARA GESTÃO CLIENTES (NOVO ENDPOINT /api/leads)
 // ========================================
 async function sendToGestaoClientes(
   data: LeadEntry,
@@ -130,36 +130,39 @@ async function sendToGestaoClientes(
     internalAlert?: string
   }
 ) {
-  const gestaoUrl = process.env.GESTAO_CLIENTES_WEBHOOK_URL
+  const gestaoUrl = process.env.GESTAO_CLIENTES_LEADS_URL // Novo endpoint
   const secret = process.env.GESTAO_CLIENTES_WEBHOOK_SECRET
 
   if (!gestaoUrl) return { sent: false, reason: 'missing_webhook' }
 
   try {
-    const payload = JSON.stringify({
-      event: 'lead_submission',
-      from: data.whatsapp,
+    // Montar payload conforme especificação
+    const payloadObj: any = {
       name: data.name,
       email: data.email,
+      phone: data.whatsapp,
       plan: data.plan,
       bestTime: data.bestTime,
-      utmSource: data.utmSource,
-      utmMedium: data.utmMedium,
-      utmCampaign: data.utmCampaign,
-      origin: data.origin,
-      timestamp: data.timestamp,
-      // Incluir os conteúdos formatados dos templates
-      templates: {
-        lead_confirmation: {
-          name: 'lead_confirmation',
-          text: templates?.leadConfirmation || null,
-        },
-        novo_lead_interno: {
-          name: 'novo_lead_interno',
-          text: templates?.internalAlert || null,
-        },
+      utmParams: {
+        utm_source: data.utmSource,
+        utm_medium: data.utmMedium,
+        utm_campaign: data.utmCampaign,
       },
-    })
+      origin: data.origin || 'landing_page_conversao_extrema',
+    }
+    // Remover campos opcionais se estiverem vazios
+    if (!payloadObj.plan) delete payloadObj.plan
+    if (!payloadObj.bestTime) delete payloadObj.bestTime
+    if (
+      !payloadObj.utmParams.utm_source &&
+      !payloadObj.utmParams.utm_medium &&
+      !payloadObj.utmParams.utm_campaign
+    )
+      delete payloadObj.utmParams
+    if (!payloadObj.email) delete payloadObj.email
+    if (!payloadObj.phone) delete payloadObj.phone
+
+    const payload = JSON.stringify(payloadObj)
 
     let signature: string | undefined
     if (secret) {
@@ -173,13 +176,16 @@ async function sendToGestaoClientes(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(signature ? { 'X-Signature': signature } : {}),
+        ...(signature ? { 'X-Webhook-Signature': `sha256=${signature}` } : {}),
       },
       body: payload,
     })
 
     if (resp.ok) {
-      console.log('[Submit] ✅ Lead encaminhado para Gestão:', data.name)
+      console.log(
+        '[Submit] ✅ Lead encaminhado para Gestão (novo endpoint):',
+        data.name
+      )
       return { sent: true }
     } else {
       console.warn('[Submit] ⚠️ Gestão retornou:', resp.status)
