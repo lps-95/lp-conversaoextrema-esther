@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import useSmoothScroll from '../hooks/useSmoothScroll'
-import { enviarLead } from '../lib/leads'
+import { sendLeadToGestao } from '../lib/gestaoClientesAPI'
 import AnimatedBlobs from './AnimatedBlobs'
 import CountdownTimer from './CountdownTimer'
 import CustomCursor from './CustomCursor'
@@ -91,7 +91,7 @@ export default function LandingPage() {
 
     // Validar formato do WhatsApp
     const whatsappNumbers = whatsapp.replace(/\D/g, '')
-    if (whatsappNumbers.length < 10 || whatsappNumbers.length > 11) {
+    if (whatsappNumbers.length < 10 || whatsappNumbers.length > 13) {
       setStatus('error')
       setErrorMessage('WhatsApp inválido. Use o formato: (48) 99196-4517')
       return
@@ -109,15 +109,18 @@ export default function LandingPage() {
       utm_campaign: utmCampaign,
     })
     try {
-      const result = await enviarLead({
-        nome: name,
-        email,
-        telefone: whatsapp,
-        plano: plan,
-        melhorHorario: bestTime,
-        utmSource,
-        utmMedium,
-        utmCampaign,
+      const result = await sendLeadToGestao({
+        name: name,
+        email: email,
+        phone: whatsapp.replace(/\D/g, ''),
+        plan: plan || null,
+        bestTime: bestTime || null,
+        utmParams: {
+          utm_source: utmSource || null,
+          utm_medium: utmMedium || null,
+          utm_campaign: utmCampaign || null,
+        },
+        origin: 'landing_page_conversao_extrema',
       })
       setStatus('success')
       track('lead_success', { plan, whatsapp })
@@ -129,7 +132,9 @@ export default function LandingPage() {
       alert('✅ Cadastro realizado com sucesso! Nossa equipe entrará em contato em breve.')
     } catch (err) {
       setStatus('error')
-      alert('❌ Erro ao enviar cadastro. Tente novamente.')
+      const errorMessage = (err && typeof err === 'object' && 'message' in err) ? (err as Error).message : 'Erro ao enviar cadastro'
+      console.error('❌ Erro ao enviar lead:', err)
+      alert(`❌ ${errorMessage}. Tente novamente.`)
     }
   }
 
