@@ -285,13 +285,8 @@ export default async function handler(
       const result = await sendInternalLeadAlert({
         name,
         email,
-        plan: entry.plan,
         whatsapp: normalizedPhone,
         bestTime: entry.bestTime,
-        utmSource: entry.utmSource,
-        utmMedium: entry.utmMedium,
-        utmCampaign: entry.utmCampaign,
-        origin: entry.origin,
       })
       internalAlertText = result.templateText
     } catch (e) {
