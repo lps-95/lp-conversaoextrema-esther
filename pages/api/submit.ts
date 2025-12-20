@@ -236,7 +236,9 @@ export default async function handler(
       utmCampaign: utmCampaign || '',
       origin: origin || '',
       timestamp: now.toISOString(),
+
       date: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    }
 
     // Save locally (não bloqueante)
     try {
