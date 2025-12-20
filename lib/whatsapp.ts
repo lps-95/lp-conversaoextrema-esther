@@ -405,28 +405,38 @@ export async function sendInternalLeadAlert(params: {
   // Tenta usar template primeiro - TODOS os 10 parâmetros são obrigatórios
   // Ordem conforme template no Meta:
   // {{1}} Nome, {{2}} Email, {{3}} WhatsApp (sem formatação!),
-  // {{4}} Plano, {{5}} Melhor horário, {{6}} Melhor horário (repetido),
+  // {{4}} Plano, {{5}} Melhor horário, {{6}} UTM Source,
   // {{7}} UTM Medium, {{8}} UTM Campaign, {{9}} URL, {{10}} Data/hora
   if (templateName) {
     console.log('[WhatsApp] 🔍 Tentando enviar template interno:', templateName)
+
+    // Garantir que todos os parâmetros sejam strings não vazias
+    const templateParams = [
+      String(params.name || 'Nome não informado').trim(),
+      String(params.email || 'Email não informado').trim(),
+      String(cleanPhone(params.whatsapp) || 'Não informado').trim(),
+      String(params.plan || 'Não especificado').trim(),
+      String(params.bestTime || 'Não informado').trim(),
+      String(params.utmSource || 'direto').trim(),
+      String(params.utmMedium || 'direto').trim(),
+      String(params.utmCampaign || 'organico').trim(),
+      String(params.origin || 'Landing Page').trim(),
+      String(now).trim(),
+    ]
+
+    // Validar que nenhum parâmetro está vazio
+    const validParams = templateParams.map((p, idx) =>
+      p === '' ? `param_${idx + 1}` : p
+    )
+
+    console.log('[WhatsApp] 📋 Parâmetros do template interno:', validParams)
 
     const templateResult = await sendWhatsAppMessage({
       phone: to,
       message: '',
       type: 'template',
       templateName,
-      templateParams: [
-        params.name || 'Nome não informado',
-        params.email || 'Email não informado',
-        cleanPhone(params.whatsapp), // SEM formatação!
-        params.plan || 'Não especificado',
-        params.bestTime || 'Não informado',
-        params.bestTime || 'Não informado', // {{6}} parece ser repetido
-        params.utmMedium || 'direto', // {{7}} é Medium, não Source!
-        params.utmCampaign || 'organico', // {{8}} Campaign
-        params.origin || 'Landing Page',
-        now,
-      ],
+      templateParams: validParams,
     })
 
     // Se o template funcionou, retorna sucesso com o texto formatado
@@ -435,16 +445,23 @@ export async function sendInternalLeadAlert(params: {
       return { ...templateResult, templateText }
     }
 
-    // Se falhou, loga e tenta fallback
-    console.warn('[WhatsApp] ⚠️ Template falhou, usando mensagem de texto')
+    // Se falhou, retorna erro MAS inclui o templateText para o webhook
+    console.warn('[WhatsApp] ⚠️ Template falhou:', templateResult.error)
+    console.warn(
+      '[WhatsApp] ℹ️ Não é possível enviar mensagem de texto (primeira mensagem deve ser template)'
+    )
+    return {
+      success: false,
+      error: templateResult.error,
+      templateText, // ← SEMPRE retorna o texto formatado para o webhook
+    }
   }
 
-  // Fallback: mensagem de texto
-  const result = await sendWhatsAppMessage({
-    phone: to,
-    message: templateText,
-    type: 'text',
-  })
-
-  return { ...result, templateText }
+  // Se não tem template configurado, retorna erro com o texto formatado
+  console.warn('[WhatsApp] ⚠️ Template interno não configurado')
+  return {
+    success: false,
+    error: 'Template not configured',
+    templateText,
+  }
 }
