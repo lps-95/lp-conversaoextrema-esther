@@ -57,46 +57,136 @@ export default function ComoFunciona() {
             <h2 className='font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4'>
               Como Funciona o{' '}
               <span className='bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>
-                Método Narrativa Vendedora
+                Gestão Extrema
               </span>
             </h2>
             <p className='text-text-secondary text-lg max-w-2xl mx-auto'>
-              5 passos estratégicos que transformam seu perfil invisível em máquina de vendas diárias
+              5 passos estratégicos que transformam seu perfil invisível em máquina de vendas.
             </p>
           </div>
         </MSection>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8'>
+        <div className='space-y-6 lg:space-y-8'>
           {steps.map((step, idx) => (
-            <ScrollReveal key={idx} direction='scale' delay={idx * 100}>
-              <TiltCard tiltAmount={10}>
+            <ScrollReveal key={idx} direction={idx % 2 === 0 ? 'left' : 'right'} delay={idx * 100}>
+              <TiltCard tiltAmount={5}>
                 <div className='group relative'>
-                  {/* Animated border */}
-                  <div className={`absolute -inset-0.5 bg-gradient-to-br ${step.gradient} rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500`} />
+                  {/* Animated border glow */}
+                  <div className={`absolute -inset-1 bg-gradient-to-r ${step.gradient} rounded-3xl blur-xl opacity-20 group-hover:opacity-50 transition-all duration-700 animate-gradient-x`} />
 
                   {/* Card content */}
-                  <div className='relative h-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 hover:scale-105 transition-all duration-300'>
-                    {/* Step number badge */}
-                    <div className='absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-button-primary to-accent-gold rounded-full flex items-center justify-center text-primary-dark font-bold text-sm shadow-xl animate-pulse-glow'>
-                      {step.number}
+                  <div className='relative h-full bg-gradient-to-br from-white/[0.12] to-white/[0.03] backdrop-blur-2xl border border-white/20 rounded-3xl overflow-hidden group-hover:border-white/40 transition-all duration-500'>
+                    {/* Background pattern */}
+                    <div className='absolute inset-0 opacity-[0.03]'>
+                      <svg className='w-full h-full' xmlns='http://www.w3.org/2000/svg'>
+                        <defs>
+                          <pattern id={`pattern-${idx}`} x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'>
+                            <path d='M 40 0 L 0 0 0 40' fill='none' stroke='currentColor' strokeWidth='0.5' className='text-white' />
+                          </pattern>
+                        </defs>
+                        <rect width='100%' height='100%' fill={`url(#pattern-${idx})`} />
+                      </svg>
                     </div>
 
-                    {/* Icon */}
-                    <div className='relative inline-block mb-6'>
-                      <div className='absolute inset-0 bg-button-primary/30 blur-xl rounded-full animate-pulse-glow' />
-                      <div className='relative text-5xl'>{step.emoji}</div>
+                    {/* Gradient overlay on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${step.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-700`} />
+
+                    <div className='relative flex flex-col sm:flex-row gap-6 p-6 sm:p-8 lg:p-10'>
+                      {/* Left side - Number & Icon */}
+                      <div className='flex-shrink-0 flex sm:flex-col items-center sm:items-start gap-4 sm:gap-6'>
+                        {/* Step number with animated ring */}
+                        <div className='relative'>
+                          {/* Animated ring */}
+                          <div className='absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                            <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${step.gradient} animate-spin-slow`} style={{ animationDuration: '8s' }} />
+                            <div className='absolute inset-1 rounded-full bg-[#0d0c12]' />
+                          </div>
+
+                          {/* Number badge */}
+                          <div className='relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-button-primary via-accent-gold to-button-primary rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500'>
+                            <span className='text-2xl sm:text-3xl font-black text-primary-dark'>
+                              {step.number}
+                            </span>
+                            {/* Shine effect */}
+                            <div className='absolute inset-0 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+                          </div>
+                        </div>
+
+                        {/* Icon with glow */}
+                        <div className='relative sm:ml-0'>
+                          {/* Glow effect */}
+                          <div className={`absolute inset-0 bg-gradient-to-br ${step.gradient} blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500 scale-150`} />
+                          <div className='relative text-5xl sm:text-6xl transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500'>
+                            {step.emoji}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right side - Content */}
+                      <div className='flex-1 space-y-4'>
+                        {/* Title with gradient on hover */}
+                        <h3 className='font-display text-2xl sm:text-3xl font-bold leading-tight group-hover:bg-gradient-to-r group-hover:from-button-primary group-hover:to-accent-gold group-hover:bg-clip-text group-hover:text-transparent transition-all duration-500'>
+                          {step.title}
+                        </h3>
+
+                        {/* Divider line */}
+                        <div className='flex items-center gap-3'>
+                          <div className={`h-1 w-12 bg-gradient-to-r ${step.gradient.replace('/20', '')} rounded-full group-hover:w-24 transition-all duration-500`} />
+                          <div className='h-[2px] flex-1 bg-gradient-to-r from-white/20 to-transparent' />
+                        </div>
+
+                        {/* Description */}
+                        <p className='text-text-secondary text-base sm:text-lg leading-relaxed group-hover:text-text-primary transition-colors duration-500'>
+                          {step.description}
+                        </p>
+
+                        {/* Bottom highlights */}
+                        <div className='flex flex-wrap gap-2 pt-2'>
+                          {idx === 0 && (
+                            <>
+                              <span className='px-3 py-1 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 text-xs font-medium'>Diagnóstico Profundo</span>
+                              <span className='px-3 py-1 bg-orange-500/10 border border-orange-500/30 rounded-full text-orange-400 text-xs font-medium'>Análise Completa</span>
+                            </>
+                          )}
+                          {idx === 1 && (
+                            <>
+                              <span className='px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-xs font-medium'>Bio Estratégica</span>
+                              <span className='px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs font-medium'>Design Premium</span>
+                            </>
+                          )}
+                          {idx === 2 && (
+                            <>
+                              <span className='px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 text-xs font-medium'>90 Dias de Conteúdo</span>
+                              <span className='px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 text-xs font-medium'>Funil Invisível</span>
+                            </>
+                          )}
+                          {idx === 3 && (
+                            <>
+                              <span className='px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs font-medium'>Gestão Total</span>
+                              <span className='px-3 py-1 bg-pink-500/10 border border-pink-500/30 rounded-full text-pink-400 text-xs font-medium'>Hands-Off</span>
+                            </>
+                          )}
+                          {idx === 4 && (
+                            <>
+                              <span className='px-3 py-1 bg-button-primary/10 border border-button-primary/30 rounded-full text-button-primary text-xs font-medium'>ROI Crescente</span>
+                              <span className='px-3 py-1 bg-accent-gold/10 border border-accent-gold/30 rounded-full text-accent-gold text-xs font-medium'>Otimização Contínua</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Arrow indicator */}
+                      <div className='hidden lg:flex items-center justify-center flex-shrink-0'>
+                        <div className='w-10 h-10 rounded-full bg-gradient-to-br from-button-primary/20 to-accent-gold/20 flex items-center justify-center group-hover:scale-125 group-hover:rotate-90 transition-all duration-500'>
+                          <svg className='w-5 h-5 text-button-primary' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M13 7l5 5m0 0l-5 5m5-5H6' />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
-                    <h3 className='font-display text-xl sm:text-2xl font-bold text-text-primary mb-3 group-hover:text-button-primary transition-colors'>
-                      {step.title}
-                    </h3>
-
-                    <p className='text-text-secondary leading-relaxed'>
-                      {step.description}
-                    </p>
-
-                    {/* Decorative element */}
-                    <div className='absolute bottom-4 right-4 w-20 h-20 bg-gradient-to-br from-button-primary/10 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+                    {/* Bottom shine effect */}
+                    <div className='absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-button-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
                   </div>
                 </div>
               </TiltCard>

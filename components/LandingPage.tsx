@@ -9,7 +9,6 @@ import FloatingCTA from './FloatingCTA'
 import MagneticButton from './MagneticButton'
 import { MSection } from './Motion'
 import ParallaxLayer from './ParallaxLayer'
-import ROICalculator from './ROICalculator'
 import ScrollProgress from './ScrollProgress'
 import VideoModal from './VideoModal'
 import WhatsAppWidget from './WhatsAppWidget'
@@ -24,7 +23,6 @@ import Oportunidade from './sections/Oportunidade'
 import ParaQuem from './sections/ParaQuem'
 import Pricing from './sections/Pricing'
 import Problem from './sections/Problem'
-import ProvaSocial from './sections/ProvaSocial'
 
 export default function LandingPage() {
   useSmoothScroll()
@@ -107,8 +105,9 @@ export default function LandingPage() {
       utm_medium: utmMedium,
       utm_campaign: utmCampaign,
     })
+
     try {
-      // Enviar para API endpoint (server-side) ao invés de chamar diretamente
+      // Enviar para API para registrar o lead no banco de dados
       const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
@@ -129,18 +128,30 @@ export default function LandingPage() {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Erro ao enviar lead')
+        throw new Error(error.error || 'Erro ao registrar lead')
       }
 
-      const result = await response.json()
       setStatus('success')
       track('lead_success', { plan, whatsapp })
+
+      // Limpar formulário
       setName('')
       setEmail('')
       setPlan('')
       setWhatsapp('')
       setBestTime('')
-      alert('✅ Cadastro realizado com sucesso! Nossa equipe entrará em contato em breve.')
+
+      // Redirecionar para WhatsApp com as informações preenchidas
+      setTimeout(() => {
+        redirectToWhatsApp({
+          name,
+          email,
+          plan,
+          whatsapp,
+          bestTime,
+        })
+      }, 500)
+
     } catch (err) {
       setStatus('error')
       const errorMessage = (err && typeof err === 'object' && 'message' in err) ? (err as Error).message : 'Erro ao enviar cadastro'
@@ -238,7 +249,7 @@ export default function LandingPage() {
               {/* Badge */}
               <div className='inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 backdrop-blur-sm'>
                 <span className='w-2 h-2 bg-accent-gold rounded-full animate-pulse-glow' />
-                <span className='text-sm font-medium text-text-secondary'>Mentoria Exclusiva para Alta Performance</span>
+                <span className='text-sm font-medium text-text-secondary'>Gestão Exclusiva para Alta Performance</span>
               </div>
 
               {/* Main headline with gradient text */}
@@ -285,7 +296,10 @@ export default function LandingPage() {
                   <button
                     onClick={() => {
                       track('cta_click', { id: 'hero_secondary' })
-                      document.getElementById('numeros')?.scrollIntoView({ behavior: 'smooth' })
+                      const element = document.getElementById('prova-numeros')
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }
                     }}
                     className='px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl border-2 border-white/30 text-text-primary text-sm sm:text-base font-semibold hover:bg-white/5 hover:border-white/50 transition-all duration-200'
                   >
@@ -312,15 +326,15 @@ export default function LandingPage() {
                 <div className='flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm text-text-tertiary'>
                   <div className='flex items-center gap-2'>
                     <span className='text-accent-gold text-base sm:text-xl'>★★★★★</span>
-                    <span className='whitespace-nowrap'>Avaliação 5.0</span>
+                    <span className='whitespace-nowrap'>Avaliação 4.8</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='w-2 h-2 bg-green-500 rounded-full animate-pulse-glow' />
-                    <span className='whitespace-nowrap'>+200 Alunas Ativas</span>
+                    <span className='whitespace-nowrap'>10+ Gestões Ativas</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-accent-gold text-base sm:text-lg'>💰</span>
-                    <span className='whitespace-nowrap'>R$ 50M+ Gerados</span>
+                    <span className='whitespace-nowrap'>R$ 20M+ Gerados</span>
                   </div>
                 </div>
               </div>
@@ -336,75 +350,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Prova Numérica - Resultados Reais */}
       <NumbersProof />
+
+      {/* Seção de Problema - Identificação de Dores */}
       <Problem />
+
+      {/* Oportunidade - Solução Apresentada */}
       <Oportunidade />
+
+      {/* Para Quem - Perfil Ideal */}
       <ParaQuem />
+
+      {/* Benefícios - Transformações */}
       <Beneficios />
+
+      {/* História - Autoridade e Credibilidade */}
       <Historia onTrack={track} />
-      <ProvaSocial />
+
+      {/* Cases de Sucesso */}
       <Case />
+
+      {/* Como Funciona - Metodologia */}
       <ComoFunciona />
 
-      <section className='relative overflow-hidden py-16 sm:py-20 bg-gradient-to-b from-black via-[#0d0c12] to-black border-y border-white/10'>
-        <ParallaxLayer speed={0.04} className='absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_50%_50%,rgba(255,214,102,0.08),transparent_50%)]' />
-        <div className='relative z-10 max-w-4xl mx-auto px-4 text-center'>
-          <MSection>
-            <div className='group relative inline-block'>
-              <div className='absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500 animate-gradient-x' />
-              <div className='relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 sm:p-10'>
-                <div className='text-4xl mb-4'>💎</div>
-                <h2 className='font-display text-3xl sm:text-4xl font-bold mb-6'>
-                  <span className='bg-gradient-to-r from-button-primary via-accent-gold to-button-primary bg-clip-text text-transparent animate-gradient-x'>
-                    Pronta Para Escolher Seu Plano?
-                  </span>
-                </h2>
-                <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
-                  <a href='#planos' onClick={() => track('cta_click', { id: 'pre_pricing_cta' })} className='group/btn relative inline-block'>
-                    <div className='absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-xl blur-lg opacity-60 group-hover/btn:opacity-100 transition duration-300 animate-gradient-x' />
-                    <div className='relative bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark font-bold text-lg px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-200 shadow-2xl'>
-                      Ver Planos e Preços
-                      <span className='ml-2'>→</span>
-                    </div>
-                  </a>
-                  <a href='#faq' className='text-text-secondary hover:text-button-primary transition-colors text-base font-medium'>
-                    Ver Perguntas Frequentes
-                  </a>
-                </div>
-              </div>
-            </div>
-          </MSection>
-        </div>
-      </section>
+      {/* CTA Pré-Pricing - Transição para Planos */}
 
-      {/* ROI Calculator Section */}
-      <section className='relative overflow-hidden py-20 sm:py-28 bg-gradient-to-b from-black via-[#0d0c12] to-black'>
-        <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(232,220,200,0.08),transparent_70%)]' />
-        <ParallaxLayer speed={0.05} className='absolute inset-0 pointer-events-none opacity-40' />
 
-        <div className='max-w-7xl mx-auto px-4 relative z-10'>
-          <MSection>
-            <div className='text-center mb-12'>
-              <span className='inline-block px-4 py-2 mb-6 text-sm font-semibold bg-gradient-to-r from-button-primary/20 to-accent-gold/20 border border-button-primary/30 rounded-full text-button-primary'>
-                📊 Faça as Contas
-              </span>
-              <h2 className='font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4'>
-                Descubra Seu <span className='bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>Potencial de Retorno</span>
-              </h2>
-              <p className='text-text-secondary text-lg max-w-2xl mx-auto'>
-                Veja quanto você pode ganhar investindo no crescimento do seu Instagram
-              </p>
-            </div>
-
-            <ROICalculator onTrack={track} />
-          </MSection>
-        </div>
-      </section>
-
+      {/* Planos e Preços */}
       <Pricing onChoosePlan={goToForm} />
+
+      {/* FAQ - Perguntas Frequentes */}
       <FAQ onTrack={track} />
 
-      {/* Form anchor section */}
+      {/* Formulário de Captura de Lead */}
       <section id='form' className='relative overflow-hidden py-16 sm:py-20 bg-gradient-to-b from-black via-[#0d0c12] to-black border-t border-button-primary/20'>
         <ParallaxLayer speed={0.04} className='absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_22%_20%,rgba(255,214,102,0.10),transparent_35%),radial-gradient(circle_at_78%_0%,rgba(255,255,255,0.06),transparent_30%)]' />
         <div className='relative z-10 max-w-lg mx-auto px-4'>
@@ -504,32 +483,42 @@ export default function LandingPage() {
                 </div>
 
                 {errorMessage && (
-                  <div className='text-red-500 text-sm text-center'>{errorMessage}</div>
+                  <div className='text-red-500 text-sm text-center font-medium'>{errorMessage}</div>
                 )}
                 {status === 'success' && (
-                  <div className='text-green-500 text-sm text-center'>Lead enviado! Você receberá a confirmação automática no WhatsApp.</div>
+                  <div className='bg-green-500/10 border border-green-500/30 text-green-400 text-sm text-center p-4 rounded-lg font-medium'>
+                    ✅ Perfeito! Abrindo WhatsApp com seus dados...
+                  </div>
                 )}
 
                 <button
                   type='submit'
-                  className={`group relative overflow-hidden w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold text-base bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark shadow-xl hover:scale-[1.02] transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-button-primary/50 ${status === 'loading' ? 'opacity-60 cursor-not-allowed' : ''}`}
-                  disabled={status === 'loading'}
+                  className={`group relative overflow-hidden w-full flex items-center justify-center gap-2 px-4 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark shadow-xl hover:scale-[1.02] transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-button-primary/50 ${status === 'loading' ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  disabled={status === 'loading' || status === 'success'}
                   aria-busy={status === 'loading'}
-                  aria-label='Enviar e receber confirmação no WhatsApp'
-                  title='Enviar e receber confirmação no WhatsApp'
+                  aria-label='Abrir WhatsApp com seus dados preenchidos'
+                  title='Seus dados serão enviados para o WhatsApp'
                 >
                   <span aria-hidden className='pointer-events-none absolute inset-0 -translate-x-[120%] group-hover:translate-x-[120%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/15 to-transparent' />
                   {status === 'loading' ? (
-                    <svg className='animate-spin h-5 w-5 text-primary-dark' fill='none' viewBox='0 0 24 24'>
-                      <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
-                      <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z' />
-                    </svg>
+                    <>
+                      <svg className='animate-spin h-5 w-5 text-primary-dark' fill='none' viewBox='0 0 24 24'>
+                        <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+                        <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z' />
+                      </svg>
+                      <span>Processando...</span>
+                    </>
+                  ) : status === 'success' ? (
+                    <>
+                      <span className='text-lg'>✓</span>
+                      <span>Abrindo WhatsApp...</span>
+                    </>
                   ) : (
                     <span className='inline-flex items-center gap-2'>
                       <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5' fill='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
                         <path d='M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z' />
                       </svg>
-                      Enviar e receber no WhatsApp
+                      Abrir WhatsApp
                     </span>
                   )}
                 </button>
@@ -548,6 +537,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Footer - Links e Informações */}
       <Footer onTrack={track} />
 
     </div>

@@ -113,7 +113,7 @@ export default function Footer({ onTrack }: Props) {
                     <div className='text-xs sm:text-sm font-medium mb-1 text-text-tertiary'>E-mail</div>
                     <div className='flex items-center gap-2'>
                       <span className='text-blue-400 text-base sm:text-lg'>✉️</span>
-                      <span className='text-xs sm:text-sm break-all'>contato@esthersocialmedia.com</span>
+                      <span className='text-xs sm:text-sm break-all'>esther.lps27@gmail.com</span>
                     </div>
                   </a>
                 </li>
@@ -121,32 +121,7 @@ export default function Footer({ onTrack }: Props) {
             </div>
           </div>
 
-          {/* CTA Section */}
-          <div className='mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-white/10'>
-            <div className='group relative max-w-3xl mx-auto'>
-              <div className='absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500 animate-gradient-x' />
-              <div className='relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 sm:p-8 lg:p-10 text-center'>
-                <div className='text-3xl sm:text-4xl mb-3 sm:mb-4'>🚀</div>
-                <h3 className='font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary mb-3 sm:mb-4'>
-                  Pronta Para Transformar Seu Instagram em Máquina de Vendas?
-                </h3>
-                <p className='text-text-secondary text-sm sm:text-base mb-5 sm:mb-6 max-w-xl mx-auto'>
-                  Agende uma conversa estratégica gratuita e descubra como o Método Narrativa Vendedora pode funcionar para você
-                </p>
-                <a
-                  href='#form'
-                  onClick={() => onTrack('cta_click', { id: 'footer_cta' })}
-                  className='group/cta relative inline-block'
-                >
-                  <div className='absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-xl blur-lg opacity-60 group-hover/cta:opacity-100 transition duration-300 animate-gradient-x' />
-                  <div className='relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-button-primary to-accent-gold rounded-xl font-bold text-base sm:text-lg text-primary-dark hover:scale-105 transition-transform duration-200 shadow-2xl'>
-                    Quero Começar Agora
-                    <span className='ml-2'>→</span>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         {/* Bottom bar */}

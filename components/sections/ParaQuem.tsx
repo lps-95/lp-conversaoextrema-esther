@@ -37,7 +37,7 @@ export default function ParaQuem() {
             <h2 className='font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4'>
               Para Quem é Essa{' '}
               <span className='bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>
-                Mentoria
+                Gestão
               </span>
             </h2>
             <p className='text-text-secondary text-lg max-w-2xl mx-auto'>
