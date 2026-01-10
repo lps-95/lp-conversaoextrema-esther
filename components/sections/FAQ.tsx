@@ -12,43 +12,43 @@ export default function FAQ({ onTrack }: Props) {
   const faqs = [
     {
       number: '01',
-      question: 'Quanto tempo leva para ver os primeiros resultados de venda?',
-      answer: 'Os primeiros sinais aparecem em 30 dias com mais mensagens qualificadas no direct. Vendas orgânicas começam entre 60 e 90 dias de implementação estratégica. Alguns clientes relatam primeira venda já na 3ª semana, dependendo do ticket médio e público.',
+      question: 'Quanto tempo leva para ver resultados? (Vendas, não likes)',
+      answer: 'Movimento real no direct (mensagens qualificadas) começa em 3-4 semanas. Primeira venda orgânica acontece entre 6-10 semanas dependendo do seu ticket e ciclo de venda. A maioria das clientes vê ROI completo (recupera investimento) entre 2-3 meses através de 2-3 contratos fechados. Marina (arquiteta) fechou primeiro contrato na semana 7. Carla (terapeuta) teve 3 vendas no segundo mês.',
       color: 'from-green-500/20 to-emerald-500/20',
       icon: '⏱️'
     },
     {
       number: '02',
-      question: 'Eu preciso aparecer em vídeos ou fazer dancinhas para vender?',
-      answer: 'Não. Autoridade digital vem de posicionamento claro e narrativa estratégica, não de exposição forçada. Você vende através de conteúdo profissional que mostra expertise, não de trends virais. Muitas alunas gerenciam perfil de forma discreta e mesmo assim fecham contratos altos.',
+      question: 'Preciso aparecer em vídeos ou fazer dancinhas para vender?',
+      answer: 'Não. Autoridade não vem de exposição forçada, vem de posicionamento estratégico. 60% das nossas clientes nunca aparecem em vídeo e vendem consistentemente através de carrosséis, posts de texto e stories estratégicos. Se você se sente confortável em vídeo, usamos isso a favor. Se não, construímos sua máquina de vendas sem exigir que você vire influencer. A prova? Beatriz (nutricionista) trabalha 50h semanais, não faz vídeos, e gera 15+ clientes novos a cada ciclo.',
       color: 'from-blue-500/20 to-purple-500/20',
       icon: '🎬'
     },
     {
       number: '03',
-      question: 'Funciona para qualquer nicho ou só para alguns mercados específicos?',
-      answer: 'Funciona para qualquer profissional com expertise validada que vende conhecimento ou serviços. Coaches, consultoras, terapeutas, arquitetas, nutricionistas, designers e infoprodutoras já comprovaram resultados. A metodologia é agnóstica ao nicho.',
+      question: 'E se eu entregar meu perfil e ele perder minha autenticidade?',
+      answer: 'Esse é o medo número 1 e por isso dedicamos as primeiras 2 semanas só estudando sua voz, valores e jeitos de falar antes de criar um único post. Você aprova todo conteúdo antes de publicar e tem controle total sobre o que vai ao ar. Marina (arquiteta) tinha exatamente esse medo e hoje seus clientes dizem que o perfil parece "ainda mais ela" do que quando fazia sozinha. Confiança e autenticidade é não-negociável.',
       color: 'from-purple-500/20 to-pink-500/20',
       icon: '🎯'
     },
     {
       number: '04',
-      question: 'Qual é o investimento mensal? Há alguma taxa oculta?',
-      answer: 'Nós operamos com planos fixos e transparentes: Essencial, Profissional e Premium. Sem taxas ocultas. Você sabe exatamente o que paga e recebe. Após 90 dias, muitas clientes geram receita que cobre o investimento muitas vezes.',
+      question: 'Já investi em gestão antes e não funcionou. Por que seria diferente?',
+      answer: 'A maioria das agências entrega posts bonitos sem estratégia de vendas. Nós não somos agência, somos estrategistas de conversão. A diferença: mostramos o funil de vendas completo na primeira reunião, você vê exatamente como cada post conecta à jornada de compra, e acompanha métricas que importam (consultas geradas, vendas fechadas) não métricas de vaidade (curtidas, seguidores). Carla gastou R$ 12k com agência que prometeu autoridade e entregou zero vendas. Conosco fechou 2 contratos de R$ 8k em 8 semanas. É a diferença entre criar posts e criar resultados.',
       color: 'from-button-primary/20 to-accent-gold/20',
       icon: '💰'
     },
     {
       number: '05',
-      question: 'Preciso estar todos os dias no Instagram ou a Esther faz tudo?',
-      answer: 'Dependendo do plano: Essencial você gera o conteúdo, Profissional fazemos juntas, Premium nós fazemos tudo. Você nunca fica preso ao algoritmo. A gestão é estratégica e hands-off conforme você escolher.',
+      question: 'Não tenho tempo para reuniões semanais e aprovações constantes',
+      answer: 'Entendemos. O processo exige 3-4 horas suas no primeiro mês (reunião de imersão + aprovação de planejamento). Depois disso, apenas 40 minutos mensais para aprovar o calendário do mês seguinte. Todo o resto (criação, edição, agendamento, gestão) é 100% executado por nós. Beatriz (nutricionista) trabalha 50h semanais atendendo clientes e consegue manter o sistema rodando perfeitamente. Seu Instagram roda sozinho enquanto você trabalha.',
       color: 'from-cyan-500/20 to-blue-500/20',
       icon: '⚙️'
     },
     {
       number: '06',
-      question: 'E se não funcionar? Existe garantia ou reembolso?',
-      answer: 'Sim. Se você não ver mudanças palpáveis de engajamento, mensagens qualificadas e movimento em direção a vendas após 90 dias de trabalho integrado, oferecemos revisão completa ou reembolso. Sua satisfação é garantida.',
+      question: 'Qual garantia de que vai funcionar? E se não der certo?',
+      answer: 'Garantia Dupla: Se após 90 dias seguindo o planejamento estratégico seu perfil não apresentar aumento mensurável em consultas qualificadas e oportunidades de venda, continuamos trabalhando sem custo adicional por mais 30 dias até atingir a meta. Você não arrisca nada além de 90 dias de execução comprometida. Sua satisfação é nossa prioridade - no mercado há muita promessa e pouca entrega. Nós fazemos o oposto.',
       color: 'from-orange-500/20 to-red-500/20',
       icon: '✅'
     }
@@ -127,12 +127,12 @@ export default function FAQ({ onTrack }: Props) {
                         <div className='mt-4 flex items-start gap-2'>
                           <span className='text-green-400 text-lg flex-shrink-0 mt-0.5'>✓</span>
                           <span className='text-sm text-text-tertiary'>
-                            {idx === 0 && 'A maioria vê movimento significativo no 1º mês'}
-                            {idx === 1 && 'Você mantém sua privacidade e profissionalismo'}
-                            {idx === 2 && 'Já transformamos 200+ profissionais de diversos mercados'}
-                            {idx === 3 && 'Sem cobranças surpresa ou aumentos sem aviso'}
-                            {idx === 4 && 'A flexibilidade é parte do nosso diferencial'}
-                            {idx === 5 && 'Sua satisfação é nossa prioridade máxima'}
+                            {idx === 0 && 'Resultado verificado: Marina passou de 2 para 8-12 consultas mensais em 90 dias'}
+                            {idx === 1 && 'Você mantém sua privacidade e profissionalismo sem exposição forçada'}
+                            {idx === 2 && 'Autenticidade preservada + crescimento exponencial comprovado'}
+                            {idx === 3 && 'Diferença entre agência genérica e estratégia de conversão'}
+                            {idx === 4 && 'Apenas 40 minutos mensais de seu tempo após o primeiro mês'}
+                            {idx === 5 && 'Sua satisfação é nossa prioridade - 90 dias de garantia dupla'}
                           </span>
                         </div>
                       </div>
@@ -144,42 +144,7 @@ export default function FAQ({ onTrack }: Props) {
           ))}
         </MStagger>
 
-        {/* CTA Final */}
-        <MSection>
-          <div className='text-center'>
-            <div className='group relative inline-block'>
-              <div className='absolute -inset-2 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-40 group-hover:opacity-70 transition duration-500 animate-gradient-x' />
-              <div className='relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 sm:p-10 max-w-2xl'>
-                <div className='text-4xl mb-4'>🤝</div>
-                <h3 className='font-display text-2xl sm:text-3xl font-bold mb-4'>
-                  Ainda tem dúvidas?
-                </h3>
-                <p className='text-text-secondary text-base sm:text-lg mb-6 leading-relaxed'>
-                  Agende uma conversa estratégica gratuita de 20 minutos. Vamos entender se o <strong className='text-button-primary'>Método Narrativa Vendedora</strong> é exatamente o que você precisa para decolar suas vendas.
-                </p>
-                <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
-                  <a
-                    href='#form'
-                    onClick={() => onTrack('cta_click', { id: 'faq_final' })}
-                    className='group/cta relative inline-block'
-                  >
-                    <div className='absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-xl blur opacity-60 group-hover/cta:opacity-100 transition duration-300' />
-                    <div className='relative bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark font-bold text-base sm:text-lg px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-200 shadow-xl'>
-                      Começar Agora
-                      <span className='ml-2'>→</span>
-                    </div>
-                  </a>
-                  <a
-                    href='#form'
-                    className='text-button-primary hover:text-accent-gold transition-colors font-semibold text-base'
-                  >
-                    ou saiba mais detalhes
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </MSection>
+
       </div>
     </section>
   )

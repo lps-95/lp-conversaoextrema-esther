@@ -34,101 +34,192 @@ export default function Pricing({ onChoosePlan }: Props) {
           </MSection>
         </div>
 
-        <MStagger className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-12'>
-          <MItem className='group relative h-full'>
-            <div className='absolute -inset-0.5 bg-gradient-to-br from-white/20 to-transparent rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500' />
-            <div className='relative h-full bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl border border-white/20 rounded-2xl p-8 flex flex-col hover:scale-105 transition-all duration-300'>
-              <div className='mb-6'>
-                <span className='inline-block px-3 py-1 mb-3 text-xs font-bold bg-white/10 border border-white/20 rounded-full text-text-secondary'>ESSENCIAL</span>
-                <h3 className='font-display text-2xl font-bold text-text-primary mb-2'>Reativação Digital</h3>
-                <div className='flex items-baseline gap-2 mb-2'>
-                  <span className='text-4xl font-bold bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>R$ 1.700</span>
-                  <span className='text-text-tertiary text-sm'>/mês</span>
+        <MStagger className='grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12'>
+          {/* Plano Essencial */}
+          <MItem className='group relative'>
+            <div className='relative h-full bg-gradient-to-br from-white/5 to-transparent backdrop-blur-sm border border-white/10 rounded-3xl p-6 hover:border-button-primary/40 transition-all duration-300 flex flex-col'>
+
+              <div className='mb-5'>
+                <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full mb-4'>
+                  <span className='w-2 h-2 bg-button-primary rounded-full animate-pulse' />
+                  <span className='text-text-secondary text-xs font-semibold uppercase tracking-widest'>Essencial</span>
                 </div>
-                <p className='text-text-secondary text-sm'>Mínimo 3 meses</p>
+
+                <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
+                  Saia da Invisibilidade
+                </h3>
+
+                <div className='flex items-end gap-2 mb-4'>
+                  <span className='text-5xl font-bold text-button-primary'>R$ 1.700</span>
+                  <span className='text-text-tertiary text-base mb-2'>/mês</span>
+                </div>
+
+                <p className='text-text-secondary text-sm leading-relaxed'>
+                  Recupere 10-15h semanais e conquiste suas primeiras consultas orgânicas
+                </p>
               </div>
-              <ul className='space-y-3 mb-8 text-text-secondary text-sm flex-grow'>
-                {['Diagnóstico completo da atrofia digital', 'Arquitetura de identidade magnética', 'Planejamento estratégico 30 dias', 'Gestão executiva hands-off', 'Relatório mensal em PDF', 'Suporte prioritário WhatsApp'].map((t) => (
-                  <li key={t} className='flex items-start'><span className='text-button-primary mr-2 flex-shrink-0 text-lg'>✓</span><span>{t}</span></li>
+
+              <div className='space-y-2.5 mb-6 flex-1'>
+                {[
+                  'Diagnóstico completo do perfil',
+                  'Planejamento estratégico 30 dias',
+                  'Gestão executiva completa',
+                  'Arquitetura de identidade',
+                  'Relatório mensal de performance',
+                  'Suporte via WhatsApp'
+                ].map((item, i) => (
+                  <div key={i} className='flex items-start gap-2.5'>
+                    <div className='w-5 h-5 rounded-full bg-button-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
+                      <svg className='w-3 h-3 text-button-primary' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='3'>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                      </svg>
+                    </div>
+                    <span className='text-text-secondary text-sm'>{item}</span>
+                  </div>
                 ))}
-              </ul>
-              <button onClick={() => onChoosePlan('pricing_essential')} className='group/btn relative w-full mt-auto'>
-                <div className='absolute -inset-0.5 bg-gradient-to-r from-button-primary to-accent-gold rounded-xl blur opacity-60 group-hover/btn:opacity-100 transition duration-300' />
-                <div className='relative bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark font-bold text-sm py-4 rounded-xl hover:scale-105 transition-transform duration-200'>
-                  QUERO COMEÇAR AGORA
-                </div>
+              </div>
+
+              <button
+                onClick={() => onChoosePlan('pricing_essential')}
+                className='w-full bg-gradient-to-r from-button-primary/10 to-accent-gold/10 hover:from-button-primary hover:to-accent-gold text-button-primary hover:text-primary-dark font-bold text-sm py-4 rounded-xl border border-button-primary/30 hover:border-transparent transition-all duration-300 group/btn'
+              >
+                <span className='flex items-center justify-center gap-2'>
+                  Escolher Plano
+                  <svg className='w-4 h-4 group-hover/btn:translate-x-1 transition-transform' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
+                  </svg>
+                </span>
               </button>
             </div>
           </MItem>
 
-          <MItem className='group relative h-full md:scale-105'>
-            <div className='absolute -inset-1 bg-gradient-to-br from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-60 group-hover:opacity-100 transition duration-500 animate-gradient-x' />
-            <div className='relative h-full bg-gradient-to-br from-button-primary/15 via-white/10 to-accent-gold/15 backdrop-blur-xl border-2 border-button-primary rounded-2xl p-8 flex flex-col'>
-              <div className='absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-2 bg-gradient-to-r from-accent-gold via-button-primary to-accent-gold rounded-full text-primary-dark text-xs font-bold shadow-xl animate-pulse-glow'>
-                ⭐ MAIS ESCOLHIDO
+          {/* Plano Profissional - DESTAQUE */}
+          <MItem className='group relative md:scale-105 md:-mt-4 md:mb-4'>
+            <div className='absolute -inset-1 bg-gradient-to-br from-button-primary/40 via-accent-gold/40 to-button-primary/40 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500' />
+
+            <div className='relative h-full bg-gradient-to-br from-accent-gold/10 via-button-primary/10 to-accent-gold/10 backdrop-blur-sm border-2 border-accent-gold/50 rounded-3xl p-6 flex flex-col'>
+
+              <div className='absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-gradient-to-r from-accent-gold to-button-primary rounded-full shadow-lg'>
+                <span className='text-primary-dark text-xs font-bold uppercase tracking-wide'>⭐ Mais Escolhido</span>
               </div>
-              <div className='mb-6 mt-2'>
-                <span className='inline-block px-3 py-1 mb-3 text-xs font-bold bg-accent-gold/20 border border-accent-gold/40 rounded-full text-accent-gold'>PROFISSIONAL</span>
-                <h3 className='font-display text-2xl font-bold text-text-primary mb-2'>Autoridade Magnética</h3>
-                <div className='flex items-baseline gap-2 mb-2'>
-                  <span className='text-4xl font-bold bg-gradient-to-r from-accent-gold via-button-primary to-accent-gold bg-clip-text text-transparent'>R$ 2.400</span>
-                  <span className='text-text-tertiary text-sm'>/mês</span>
+
+              <div className='mb-5 mt-2'>
+                <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-accent-gold/20 border border-accent-gold/40 rounded-full mb-4'>
+                  <span className='w-2 h-2 bg-accent-gold rounded-full animate-pulse' />
+                  <span className='text-accent-gold text-xs font-semibold uppercase tracking-widest'>Profissional</span>
                 </div>
-                <p className='text-text-secondary text-sm'><span className='line-through opacity-60'>R$ 7.200</span> ou 3x R$ 2.400</p>
+
+                <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
+                  Sistema Completo
+                </h3>
+
+                <div className='flex items-end gap-2 mb-4'>
+                  <span className='text-5xl font-bold bg-gradient-to-r from-accent-gold to-button-primary bg-clip-text text-transparent'>
+                    R$ 2.400
+                  </span>
+                  <span className='text-text-tertiary text-base mb-2'>/mês</span>
+                </div>
+
+                <p className='text-text-secondary text-sm leading-relaxed'>
+                  Previsibilidade financeira com 8-15 consultas mensais garantidas
+                </p>
               </div>
-              <ul className='space-y-3 mb-8 text-text-secondary text-sm flex-grow'>
+
+              <div className='space-y-2.5 mb-6 flex-1'>
                 {[
-                  'Tudo do Pacote Essencial',
-                  'Sistema de narrativas vendedoras (90 dias)',
-                  'Calendário editorial Implementação Imediata',
-                  'Banco de ganchos e roteiros',
-                  'Workshop "Desbloqueio Algorítmico"',
-                  'Reunião estratégica mensal',
-                  '2 campanhas de lançamento',
-                ].map((t) => (
-                  <li key={t} className='flex items-start'><span className='text-accent-gold mr-2 flex-shrink-0 text-lg'>★</span><span>{t}</span></li>
+                  { text: 'Tudo do plano Essencial', bold: true },
+                  { text: 'Sistema de Narrativas 90 dias' },
+                  { text: 'Calendário editorial completo' },
+                  { text: 'Banco de roteiros anti-bloqueio' },
+                  { text: '2 campanhas de lançamento' },
+                  { text: 'Workshop algorítmico exclusivo' },
+                  { text: 'Reunião estratégica mensal' }
+                ].map((item, i) => (
+                  <div key={i} className='flex items-start gap-2.5'>
+                    <div className='w-5 h-5 rounded-full bg-accent-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
+                      <svg className='w-3 h-3 text-accent-gold' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='3'>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                      </svg>
+                    </div>
+                    <span className={`text-sm ${item.bold ? 'text-text-primary font-semibold' : 'text-text-secondary'}`}>
+                      {item.text}
+                    </span>
+                  </div>
                 ))}
-              </ul>
-              <button onClick={() => onChoosePlan('pricing_professional')} className='group/btn relative w-full mt-auto'>
-                <div className='absolute -inset-0.5 bg-gradient-to-r from-accent-gold via-button-primary to-accent-gold rounded-xl blur-lg opacity-80 group-hover/btn:opacity-100 transition duration-300 animate-gradient-x' />
-                <div className='relative bg-gradient-to-r from-accent-gold to-button-primary text-primary-dark font-bold text-sm py-4 rounded-xl shadow-2xl hover:scale-105 transition-transform duration-200'>
-                  QUERO AUTORIDADE MAGNÉTICA
-                </div>
+              </div>
+
+              <button
+                onClick={() => onChoosePlan('pricing_professional')}
+                className='w-full bg-gradient-to-r from-accent-gold to-button-primary hover:from-button-primary hover:to-accent-gold text-primary-dark font-bold text-sm py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group/btn'
+              >
+                <span className='flex items-center justify-center gap-2'>
+                  Escolher Plano
+                  <svg className='w-4 h-4 group-hover/btn:translate-x-1 transition-transform' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
+                  </svg>
+                </span>
               </button>
             </div>
           </MItem>
 
-          <MItem className='group relative h-full'>
-            <div className='absolute -inset-0.5 bg-gradient-to-br from-purple-500/20 via-white/20 to-blue-500/20 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500' />
-            <div className='relative h-full bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl border border-white/20 rounded-2xl p-8 flex flex-col hover:scale-105 transition-all duration-300'>
-              <div className='mb-6'>
-                <span className='inline-block px-3 py-1 mb-3 text-xs font-bold bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400'>PREMIUM VIP</span>
-                <h3 className='font-display text-2xl font-bold text-text-primary mb-2'>Transformação Completa VIP</h3>
-                <div className='flex items-baseline gap-2 mb-2'>
-                  <span className='text-4xl font-bold bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>R$ 3.800</span>
-                  <span className='text-text-tertiary text-sm'>/mês</span>
+          {/* Plano Premium */}
+          <MItem className='group relative'>
+            <div className='relative h-full bg-gradient-to-br from-white/5 to-transparent backdrop-blur-sm border border-white/10 rounded-3xl p-6 hover:border-purple-400/40 transition-all duration-300 flex flex-col'>
+
+              <div className='mb-5'>
+                <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4'>
+                  <span className='w-2 h-2 bg-purple-400 rounded-full animate-pulse' />
+                  <span className='text-purple-400 text-xs font-semibold uppercase tracking-widest'>Premium VIP</span>
                 </div>
-                <p className='text-text-secondary text-sm'>Trimestre R$ 11.400 ou 3x R$ 3.800</p>
+
+                <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
+                  Domínio Completo
+                </h3>
+
+                <div className='flex items-end gap-2 mb-4'>
+                  <span className='text-5xl font-bold text-purple-400'>R$ 3.800</span>
+                  <span className='text-text-tertiary text-base mb-2'>/mês</span>
+                </div>
+
+                <p className='text-text-secondary text-sm leading-relaxed'>
+                  Torne-se A autoridade do mercado com 7 figuras e lista de espera
+                </p>
               </div>
-              <ul className='space-y-3 mb-8 text-text-secondary text-sm flex-grow'>
+
+              <div className='space-y-2.5 mb-6 flex-1'>
                 {[
-                  'Tudo do Pacote Profissional',
-                  'Diagnóstico presencial (2 horas)',
-                  'Sessão estratégica de posicionamento',
-                  'Criação de ofertas premium',
-                  'Suporte WhatsApp 2 horas resposta',
-                  'Análise competitiva do seu nicho',
-                  'Consultoria mensal individual (1 hora)',
-                  'Acesso vitalício ao banco de recursos',
-                ].map((t) => (
-                  <li key={t} className='flex items-start'><span className='text-button-primary mr-2 flex-shrink-0 text-lg'>✓</span><span>{t}</span></li>
+                  { text: 'Tudo do plano Profissional', bold: true },
+                  { text: 'Diagnóstico presencial de 2h' },
+                  { text: 'Sessão de posicionamento único' },
+                  { text: 'Criação de ofertas premium' },
+                  { text: 'Análise competitiva trimestral' },
+                  { text: 'Consultoria individual 1h/mês' },
+                  { text: 'Banco de recursos vitalício' },
+                  { text: 'Suporte prioritário 24/7' }
+                ].map((item, i) => (
+                  <div key={i} className='flex items-start gap-2.5'>
+                    <div className='w-5 h-5 rounded-full bg-purple-400/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
+                      <svg className='w-3 h-3 text-purple-400' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='3'>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                      </svg>
+                    </div>
+                    <span className={`text-sm ${item.bold ? 'text-text-primary font-semibold' : 'text-text-secondary'}`}>
+                      {item.text}
+                    </span>
+                  </div>
                 ))}
-              </ul>
-              <button onClick={() => onChoosePlan('pricing_premium')} className='group/btn relative w-full mt-auto'>
-                <div className='absolute -inset-0.5 bg-gradient-to-r from-button-primary to-accent-gold rounded-xl blur opacity-60 group-hover/btn:opacity-100 transition duration-300' />
-                <div className='relative bg-gradient-to-r from-button-primary to-accent-gold text-primary-dark font-bold text-sm py-4 rounded-xl hover:scale-105 transition-transform duration-200'>
-                  QUERO TRANSFORMAÇÃO VIP
-                </div>
+              </div>
+
+              <button
+                onClick={() => onChoosePlan('pricing_premium')}
+                className='w-full bg-gradient-to-r from-purple-500/10 to-purple-400/10 hover:from-purple-500 hover:to-purple-400 text-purple-400 hover:text-white font-bold text-sm py-4 rounded-xl border border-purple-400/30 hover:border-transparent transition-all duration-300 group/btn'
+              >
+                <span className='flex items-center justify-center gap-2'>
+                  Escolher Plano
+                  <svg className='w-4 h-4 group-hover/btn:translate-x-1 transition-transform' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                    <path strokeLinecap='round' strokeLinejoin='round' d='M9 5l7 7-7 7' />
+                  </svg>
+                </span>
               </button>
             </div>
           </MItem>
@@ -191,7 +282,7 @@ export default function Pricing({ onChoosePlan }: Props) {
             </div>
           </div>
         </MSection>
-      </div>
-    </section>
+      </div >
+    </section >
   )
 }
