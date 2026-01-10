@@ -12,43 +12,43 @@ export default function FAQ({ onTrack }: Props) {
   const faqs = [
     {
       number: '01',
-      question: 'Quanto tempo leva para ver resultados? (Vendas, não likes)',
-      answer: 'Movimento real no direct (mensagens qualificadas) começa em 3-4 semanas. Primeira venda orgânica acontece entre 6-10 semanas dependendo do seu ticket e ciclo de venda. A maioria das clientes vê ROI completo (recupera investimento) entre 2-3 meses através de 2-3 contratos fechados. Marina (arquiteta) fechou primeiro contrato na semana 7. Carla (terapeuta) teve 3 vendas no segundo mês.',
+      question: 'Quando vejo minha primeira venda orgânica?',
+      answer: 'Primeira venda orgânica em 90 dias (mas depende totalmente do seu desempenho e foco). Aqui está o que sabemos: movimento real no direct (mensagens qualificadas) começa em 3-4 semanas. A primeira venda acontece quando você executa a estratégia com consistência. Exemplo real: Amanda (esteticista) seguiu tudo à risca e fechou seu primeiro contrato na semana 9. Já Priscila (biomédica) demorou 14 semanas porque faltou com a aprovação de posts algumas semanas. A timeline varia, mas com foco e disciplina, 90 dias é realista.',
       color: 'from-green-500/20 to-emerald-500/20',
       icon: '⏱️'
     },
     {
       number: '02',
-      question: 'Preciso aparecer em vídeos ou fazer dancinhas para vender?',
-      answer: 'Não. Autoridade não vem de exposição forçada, vem de posicionamento estratégico. 60% das nossas clientes nunca aparecem em vídeo e vendem consistentemente através de carrosséis, posts de texto e stories estratégicos. Se você se sente confortável em vídeo, usamos isso a favor. Se não, construímos sua máquina de vendas sem exigir que você vire influencer. A prova? Beatriz (nutricionista) trabalha 50h semanais, não faz vídeos, e gera 15+ clientes novos a cada ciclo.',
+      question: 'Preciso fazer vídeos, dancinhas ou aparecer muito?',
+      answer: 'Não. Você NÃO precisa de vídeos dançando, fazendo trends ou aparecendo de forma exagerada. Precisamos de você em conteúdo estratégico, mas sem a exposição desnecessária. 60% das nossas clientes nunca fazem vídeos dinâmicos - trabalham com carrosséis, reels educativos, stories estratégicos e posts de texto. Jessica (personal trainer) gera 12+ clientes mensais com reels mostrando exercícios educativos (sem danças). Patricia (cabelereira) não aparece em vídeo, só posta antes/depois dos trabalhos. Roberta (dona de ótica) compartilha dicas de cuidado com os olhos em texto. Você vende com inteligência, não com exposição exagerada.',
       color: 'from-blue-500/20 to-purple-500/20',
       icon: '🎬'
     },
     {
       number: '03',
-      question: 'E se eu entregar meu perfil e ele perder minha autenticidade?',
-      answer: 'Esse é o medo número 1 e por isso dedicamos as primeiras 2 semanas só estudando sua voz, valores e jeitos de falar antes de criar um único post. Você aprova todo conteúdo antes de publicar e tem controle total sobre o que vai ao ar. Marina (arquiteta) tinha exatamente esse medo e hoje seus clientes dizem que o perfil parece "ainda mais ela" do que quando fazia sozinha. Confiança e autenticidade é não-negociável.',
+      question: 'E se meu perfil perder a minha autenticidade?',
+      answer: 'Esse medo é legítimo e nós levamos a sério. Dedicamos as primeiras 2 semanas estudando sua voz, valores, jeitos de falar, posicionamento único - ANTES de criar um único post. Você aprova tudo que sai no ar e tem controle total. Stefania (esteticista) tinha esse medo exato: "Meu perfil é muito pessoal". Hoje ela diz que o perfil está "ainda mais ela". Vanessa (biomédica) pensava que seria corporativo demais. Resultado: clientes dizem que ela passou a ser mais próxima e relatable. Autenticidade + Estratégia = Vendas reais.',
       color: 'from-purple-500/20 to-pink-500/20',
       icon: '🎯'
     },
     {
       number: '04',
-      question: 'Já investi em gestão antes e não funcionou. Por que seria diferente?',
-      answer: 'A maioria das agências entrega posts bonitos sem estratégia de vendas. Nós não somos agência, somos estrategistas de conversão. A diferença: mostramos o funil de vendas completo na primeira reunião, você vê exatamente como cada post conecta à jornada de compra, e acompanha métricas que importam (consultas geradas, vendas fechadas) não métricas de vaidade (curtidas, seguidores). Carla gastou R$ 12k com agência que prometeu autoridade e entregou zero vendas. Conosco fechou 2 contratos de R$ 8k em 8 semanas. É a diferença entre criar posts e criar resultados.',
+      question: 'Já investi em gestão e não funcionou. Por que seria diferente?',
+      answer: 'A maioria das agências entrega posts bonitos sem foco em vendas. Nós somos diferentes: somos estrategistas de conversão, não criadores de conteúdo. Mostramos o funil completo na primeira reunião e você vê como cada post conecta à jornada de compra. Acompanhamos métricas que importam: consultas geradas, vendas fechadas - não curtidas ou likes vazios. Exemplo: Carla (dona de ótica) gastou R$ 12k com agência que entregou zero vendas. Conosco fechou 2 clientes de R$ 8k cada em 8 semanas. A diferença é estratégia + execução focada em resultado.',
       color: 'from-button-primary/20 to-accent-gold/20',
       icon: '💰'
     },
     {
       number: '05',
-      question: 'Não tenho tempo para reuniões semanais e aprovações constantes',
-      answer: 'Entendemos. O processo exige 3-4 horas suas no primeiro mês (reunião de imersão + aprovação de planejamento). Depois disso, apenas 40 minutos mensais para aprovar o calendário do mês seguinte. Todo o resto (criação, edição, agendamento, gestão) é 100% executado por nós. Beatriz (nutricionista) trabalha 50h semanais atendendo clientes e consegue manter o sistema rodando perfeitamente. Seu Instagram roda sozinho enquanto você trabalha.',
+      question: 'Não tenho tempo para muitas reuniões e aprovações',
+      answer: 'Tranquilo. Primeira reunião é imersão profunda (2-3 horas, acontece uma vez). Depois disso, você precisa de apenas 40 minutos mensais para aprovar o planejamento do mês. Todo o resto (criação, edição, agendamento, posting, gestão) é executado por nós. Natália (personal trainer) tem agenda lotada de clientes e consegue participar de uma reunião rápida por mês. Gabriela (cabelereira) aprova posts enquanto come. O sistema roda sozinho depois que você aprova a estratégia.',
       color: 'from-cyan-500/20 to-blue-500/20',
       icon: '⚙️'
     },
     {
       number: '06',
-      question: 'Qual garantia de que vai funcionar? E se não der certo?',
-      answer: 'Garantia Dupla: Se após 90 dias seguindo o planejamento estratégico seu perfil não apresentar aumento mensurável em consultas qualificadas e oportunidades de venda, continuamos trabalhando sem custo adicional por mais 30 dias até atingir a meta. Você não arrisca nada além de 90 dias de execução comprometida. Sua satisfação é nossa prioridade - no mercado há muita promessa e pouca entrega. Nós fazemos o oposto.',
+      question: 'Qual garantia vocês dão? E se não der certo?',
+      answer: 'Garantia Dupla: Se após 90 dias seguindo a estratégia seu perfil não apresentar aumento mensurável em consultas qualificadas e oportunidades de venda, continuamos trabalhando SEM CUSTO ADICIONAL por mais 30 dias até atingir a meta. Você só paga quando vê resultado ou se não quiser continuar. Sua satisfação é nossa prioridade - no mercado há muita promessa vazia. Nós fazemos o oposto: resultados provados.',
       color: 'from-orange-500/20 to-red-500/20',
       icon: '✅'
     }

@@ -8,11 +8,11 @@ export default function NumbersProof() {
   const testimonials = [
     {
       title: 'Medo de Perder Autenticidade Ao Delegar',
-      quote: 'Meu maior medo era entregar meu perfil e ele perder minha voz. A Esther passou 2 semanas estudando meu jeito de falar antes de criar um post. Hoje meus clientes dizem que parece ainda mais "eu" do que quando eu fazia sozinha.',
-      author: 'Marina Silva',
-      role: 'Arquiteta',
+      quote: 'Meu maior medo era entregar meu consultório e perder minha voz. A Esther passou 2 semanas estudando meu jeito de atender para entender minha abordagem. Hoje meus pacientes dizem que parece até mais "eu" do que quando eu fazia os posts sozinha.',
+      author: 'Priscila Mendes',
+      role: 'Biomédica Estética',
       result: '2 → 8-12 consultas/mês',
-      before: 'Criava sozinha (resultado: 2 consultas/mês)',
+      before: 'Posts próprios (resultado: 2 consultas/mês)',
       after: 'Esther gerencia com minha voz (resultado: 8-12/mês)',
       stars: 5,
       gradient: 'from-purple-500/20 to-pink-500/20',
@@ -21,12 +21,12 @@ export default function NumbersProof() {
     },
     {
       title: 'Investimento Anterior Sem Resultado',
-      quote: 'Já tinha gasto R$ 12.000 com agência que prometeu autoridade e entregou posts bonitos que ninguém comprava. Esther mostrou o funil de vendas na primeira reunião. Em 8 semanas fechei 2 contratos de R$ 8.000 cada.',
-      author: 'Carla Oliveira',
-      role: 'Terapeuta',
+      quote: 'Já tinha gasto R$ 12.000 com agência que prometeu autoridade e entregou reels bonitos que ninguém comprava. Esther mostrou o funil de vendas na primeira reunião. Em 8 semanas fechei 2 contratos para meu espaço de estética, totalizando R$ 16.000 em serviços.',
+      author: 'Stefania Costa',
+      role: 'Esteticista',
       result: '2 × R$ 8.000 em 8 semanas',
       before: 'Agência anterior: R$ 12k investidos, zero vendas',
-      after: 'Com Esther: ROI recuperado em 8 semanas',
+      after: 'Com Esther: ROI recuperado + lucro extra',
       stars: 5,
       gradient: 'from-green-500/20 to-emerald-500/20',
       verification: 'Resultado verificado',
@@ -34,9 +34,9 @@ export default function NumbersProof() {
     },
     {
       title: 'Objeção: Não Tenho Tempo Para Gerenciar',
-      quote: 'Trabalho 50h semanais atendendo clientes. Não tinha como ficar em reunião toda semana. O processo dela exigiu 3h minhas no primeiro mês e depois só 40 minutos mensais para aprovar planejamento. Meu Instagram roda sozinho.',
-      author: 'Beatriz Santos',
-      role: 'Nutricionista',
+      quote: 'Atendo 40h semanais no meu espaço de estética. Não tinha como ficar pensando em reel toda semana. O processo exigiu 3h minhas no primeiro mês e depois só 40 minutos mensais para aprovar planejamento. Meu Instagram roda sozinho e gera leads todo dia.',
+      author: 'Jessica Teixeira',
+      role: 'Personal Trainer',
       result: '+15 clientes novos em 90 dias',
       before: 'Tentativa própria: 12h/semana criando posts',
       after: 'Com Esther: 40 min/mês de colaboração',
@@ -167,7 +167,7 @@ export default function NumbersProof() {
         </MStagger>
 
 
-          
+
       </div>
     </section>
   )
