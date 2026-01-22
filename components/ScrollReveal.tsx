@@ -20,7 +20,10 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     const isInViewport = rect.top < window.innerHeight && rect.bottom > 0
 
     if (isInViewport) {
-      setTimeout(() => setIsVisible(true), delay)
+      // Em mobile: sem delay para carregar instantaneamente
+      const isMobile = window.innerWidth < 768
+      const actualDelay = isMobile ? 0 : delay
+      setTimeout(() => setIsVisible(true), actualDelay)
       return
     }
 
@@ -30,14 +33,16 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay)
+          // Em mobile: sem delay para carregar instantaneamente
+          const actualDelay = isMobile ? 0 : delay
+          setTimeout(() => setIsVisible(true), actualDelay)
           observer.unobserve(element)
         }
       },
       {
-        // Mobile: threshold menor e rootMargin mais generoso
+        // Mobile: threshold menor e rootMargin mais generoso (aparece antes de entrar na view)
         threshold: isMobile ? 0.01 : 0.1,
-        rootMargin: isMobile ? '50px 0px 0px 0px' : '0px 0px -80px 0px',
+        rootMargin: isMobile ? '100px 0px -50px 0px' : '0px 0px -80px 0px',
       }
     )
 

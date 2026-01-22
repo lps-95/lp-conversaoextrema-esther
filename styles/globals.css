@@ -57,6 +57,14 @@ body {
     height: -webkit-fill-available;
   }
 
+  /* Usar dvh (dynamic viewport height) no iOS 15.4+ */
+  @supports (height: 100dvh) {
+    html,
+    body {
+      height: 100dvh;
+    }
+  }
+
   /* Prevenir zoom ao focar inputs */
   input,
   textarea,
