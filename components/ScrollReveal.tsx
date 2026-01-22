@@ -17,7 +17,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
 
     // Em mobile: mostrar imediatamente sem delay
     const isMobile = window.innerWidth < 768
-    
+
     if (isMobile) {
       setIsVisible(true)
       return

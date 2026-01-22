@@ -93,3 +93,8 @@ export function MItem({ children, className = '', style, delay = 0 }: CommonProp
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: '-10%' }}
       transition={{ type: 'spring', stiffness: 140, damping: 20, delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
