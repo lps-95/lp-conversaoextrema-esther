@@ -56,14 +56,14 @@ body {
   html {
     height: -webkit-fill-available;
   }
-  
+
   /* Prevenir zoom ao focar inputs */
   input,
   textarea,
   select {
     font-size: 16px !important;
   }
-  
+
   /* Melhorar scroll touch */
   * {
     -webkit-tap-highlight-color: transparent;
@@ -314,7 +314,9 @@ body {
 .scroll-reveal {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
 }
 
 .scroll-reveal.revealed {

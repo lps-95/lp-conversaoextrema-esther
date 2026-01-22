@@ -26,7 +26,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
 
     // Detectar mobile para ajustar configurações
     const isMobile = window.innerWidth < 768
-    
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
