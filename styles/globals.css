@@ -50,6 +50,26 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Fix viewport height para iOS */
+  html {
+    height: -webkit-fill-available;
+  }
+  
+  /* Prevenir zoom ao focar inputs */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Melhorar scroll touch */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

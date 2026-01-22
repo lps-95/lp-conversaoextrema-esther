@@ -24,6 +24,9 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
       return
     }
 
+    // Detectar mobile para ajustar configurações
+    const isMobile = window.innerWidth < 768
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -32,8 +35,9 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
         }
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -80px 0px',
+        // Mobile: threshold menor e rootMargin mais generoso
+        threshold: isMobile ? 0.01 : 0.1,
+        rootMargin: isMobile ? '50px 0px 0px 0px' : '0px 0px -80px 0px',
       }
     )
 
