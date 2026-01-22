@@ -15,34 +15,25 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     const element = ref.current
     if (!element) return
 
-    // Check if element is already in viewport on mount
-    const rect = element.getBoundingClientRect()
-    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0
-
-    if (isInViewport) {
-      // Em mobile: sem delay para carregar instantaneamente
-      const isMobile = window.innerWidth < 768
-      const actualDelay = isMobile ? 0 : delay
-      setTimeout(() => setIsVisible(true), actualDelay)
+    // Em mobile: mostrar imediatamente sem delay
+    const isMobile = window.innerWidth < 768
+    
+    if (isMobile) {
+      setIsVisible(true)
       return
     }
 
-    // Detectar mobile para ajustar configurações
-    const isMobile = window.innerWidth < 768
-
+    // Em desktop: usar IntersectionObserver normal
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Em mobile: sem delay para carregar instantaneamente
-          const actualDelay = isMobile ? 0 : delay
-          setTimeout(() => setIsVisible(true), actualDelay)
+          setTimeout(() => setIsVisible(true), delay)
           observer.unobserve(element)
         }
       },
       {
-        // Mobile: threshold menor e rootMargin mais generoso (aparece antes de entrar na view)
-        threshold: isMobile ? 0.01 : 0.1,
-        rootMargin: isMobile ? '100px 0px -50px 0px' : '0px 0px -80px 0px',
+        threshold: 0.1,
+        rootMargin: '0px 0px -80px 0px',
       }
     )
 
