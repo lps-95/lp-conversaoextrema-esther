@@ -15,7 +15,7 @@ function useIsMobileClient() {
   useEffect(() => {
     // Importante: Detectar mobile APÓS hidratação
     if (typeof window === 'undefined') return
-    
+
     // Dar um tick para garantir hidratação
     const detectMobile = () => {
       setIsMobileClient(window.innerWidth < 768)
