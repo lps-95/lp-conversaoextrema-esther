@@ -11,10 +11,14 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [isMountedClient, setIsMountedClient] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Garantir que só executa no cliente
   useEffect(() => {
     setIsMountedClient(true)
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [])
 
   useEffect(() => {
@@ -33,7 +37,8 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay)
+          // Usar ref para evitar memory leak
+          timeoutRef.current = setTimeout(() => setIsVisible(true), delay)
           observer.unobserve(element)
         }
       },
@@ -45,7 +50,10 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
 
     observer.observe(element)
 
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [delay, isMountedClient])
 
   const animationClass = {

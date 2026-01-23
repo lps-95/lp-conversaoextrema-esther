@@ -9,6 +9,11 @@ export default function AnimatedBlobs() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    // Detectar mobile e desabilitar AnimatedBlobs completamente
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return // Desabilitar em mobile para economizar bateria
+    }
+
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -18,7 +23,14 @@ export default function AnimatedBlobs() {
       canvas.height = window.innerHeight
     }
     resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
+
+    let resizeTimeout: NodeJS.Timeout
+    const handleResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(resizeCanvas, 200) // Debounce resize
+    }
+
+    window.addEventListener('resize', handleResize, { passive: true })
 
     // Blob configuration
     const blobs = [
@@ -49,6 +61,7 @@ export default function AnimatedBlobs() {
     ]
 
     let time = 0
+    let raf: number | null = null
 
     const animate = () => {
       if (!ctx || !canvas) return
@@ -90,13 +103,15 @@ export default function AnimatedBlobs() {
         ctx.fill()
       })
 
-      requestAnimationFrame(animate)
+      raf = requestAnimationFrame(animate)
     }
 
-    animate()
+    raf = requestAnimationFrame(animate)
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas)
+      window.removeEventListener('resize', handleResize)
+      if (resizeTimeout) clearTimeout(resizeTimeout)
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [])
 

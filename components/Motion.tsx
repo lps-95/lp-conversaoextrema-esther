@@ -25,9 +25,20 @@ function useIsMobileClient() {
     // Usar microtask para garantir que hidratação terminou
     Promise.resolve().then(detectMobile)
 
-    const handleResize = () => setIsMobileClient(window.innerWidth < 768)
+    // Debounce resize handler para evitar muitos updates
+    let resizeTimeout: NodeJS.Timeout
+    const handleResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        setIsMobileClient(window.innerWidth < 768)
+      }, 150)
+    }
+
     window.addEventListener('resize', handleResize, { passive: true })
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(resizeTimeout)
+    }
   }, [])
 
   return { isMobileClient, isHydrated }

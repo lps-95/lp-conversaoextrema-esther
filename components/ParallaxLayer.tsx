@@ -7,27 +7,42 @@ type Props = {
 }
 
 export default function ParallaxLayer({ speed = 0.08, className = '', children }: Props) {
-  const [offset, setOffset] = useState(0)
   const [smoothOffset, setSmoothOffset] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
+
+    // Detectar mobile e desabilitar parallax
+    const mobile = window.innerWidth < 768
+    setIsMobile(mobile)
+
+    if (mobile) return // Parallax desativado em mobile
+
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (reduce?.matches) return
 
     let raf: number | null = null
     let targetOffset = 0
+    let isScrolling = false
 
     const onScroll = () => {
-      const y = window.scrollY || window.pageYOffset || 0
-      targetOffset = y * speed * -1
+      if (!isScrolling) {
+        isScrolling = true
+        const y = window.scrollY || window.pageYOffset || 0
+        targetOffset = y * speed * -1
+      }
     }
 
-    // Smooth interpolation for ultra-smooth parallax
+    // Smooth interpolation - rodando só quando necessário
     const animate = () => {
       setSmoothOffset((prev) => {
         const diff = targetOffset - prev
-        return prev + diff * 0.1 // Easing factor for smoothness
+        if (Math.abs(diff) < 0.5) {
+          isScrolling = false
+          return targetOffset
+        }
+        return prev + diff * 0.1
       })
       raf = requestAnimationFrame(animate)
     }
@@ -42,6 +57,11 @@ export default function ParallaxLayer({ speed = 0.08, className = '', children }
     }
   }, [speed])
 
+  // Mobile: render sem transform
+  if (isMobile) {
+    return <div className={className}>{children}</div>
+  }
+
   return (
     <div
       aria-hidden='true'
@@ -49,7 +69,6 @@ export default function ParallaxLayer({ speed = 0.08, className = '', children }
       style={{
         transform: `translate3d(0, ${smoothOffset}px, 0)`,
         willChange: 'transform',
-        transition: 'transform 0.1s ease-out'
       }}
     >
       {children}

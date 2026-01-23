@@ -15,10 +15,16 @@ export default function CustomCursor() {
   const [particles, setParticles] = useState<Particle[]>([])
   const [isPointer, setIsPointer] = useState(false)
   const [particleId, setParticleId] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Detectar mobile e desabilitar cursor customizado
+    const mobile = typeof window !== 'undefined' && window.innerWidth < 768
+    setIsMobile(mobile)
+
+    if (mobile) return // CustomCursor desativado em mobile
+
     let animationFrame: number
-    let lastTime = Date.now()
     let lastParticleTime = Date.now()
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -34,117 +40,92 @@ export default function CustomCursor() {
         window.getComputedStyle(target).cursor === 'pointer'
       setIsPointer(isInteractive)
 
-      // Create particle trail
+      // Create particle trail - com limite máximo
       const now = Date.now()
       if (now - lastParticleTime > 30) {
-        // Create particle every 30ms
         lastParticleTime = now
-        setParticles((prev) => [
-          ...prev,
-          {
-            id: particleId,
-            x: e.clientX,
-            y: e.clientY,
-            scale: 1,
-            opacity: 1,
-          },
-        ])
+        setParticles((prev) => {
+          // Manter máximo de 20 partículas
+          const updated = [
+            ...prev,
+            {
+              id: particleId,
+              x: e.clientX,
+              y: e.clientY,
+              scale: 1,
+              opacity: 1,
+            },
+          ]
+          return updated.length > 20 ? updated.slice(-20) : updated
+        })
         setParticleId((prev) => prev + 1)
       }
     }
 
     const updateParticles = () => {
-      const now = Date.now()
-      const delta = now - lastTime
-      lastTime = now
-
       setParticles((prev) =>
         prev
-          .map((particle) => ({
-            ...particle,
-            scale: particle.scale - delta * 0.002,
-            opacity: particle.opacity - delta * 0.003,
+          .map((p) => ({
+            ...p,
+            scale: p.scale * 0.92,
+            opacity: p.opacity * 0.92,
           }))
-          .filter((particle) => particle.opacity > 0)
+          .filter((p) => p.opacity > 0.05)
       )
 
       animationFrame = requestAnimationFrame(updateParticles)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    updateParticles()
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    animationFrame = requestAnimationFrame(updateParticles)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       cancelAnimationFrame(animationFrame)
     }
-  }, [particleId])
-
-  // Hide on mobile
-  useEffect(() => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-    if (isMobile) {
-      document.documentElement.style.setProperty('--custom-cursor-display', 'none')
-    }
   }, [])
+
+  // Mobile: não renderizar cursor customizado
+  if (isMobile) return null
 
   return (
     <>
-      <style jsx global>{`
-        @media (min-width: 769px) {
-          body {
-            cursor: none !important;
-          }
-          a, button, [role="button"], input, textarea, select {
-            cursor: none !important;
-          }
-        }
-      `}</style>
-
-      {/* Main cursor */}
+      {/* Main cursor dot */}
       <div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block"
+        className='fixed w-2 h-2 bg-white rounded-full pointer-events-none z-50 mix-blend-screen'
         style={{
-          transform: `translate(${position.x}px, ${position.y}px)`,
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          transform: 'translate(-50%, -50%)',
+          opacity: 0.7,
         }}
-      >
-        {/* Outer ring */}
+      />
+
+      {/* Outer ring */}
+      <div
+        className='fixed w-8 h-8 border border-white rounded-full pointer-events-none z-50 mix-blend-screen'
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          transform: 'translate(-50%, -50%)',
+          opacity: isPointer ? 0.3 : 0.2,
+          transition: 'opacity 0.3s ease-out',
+        }}
+      />
+
+      {/* Particles trail */}
+      {particles.map((p) => (
         <div
-          className={`absolute top-0 left-0 w-10 h-10 border-2 border-button-primary/50 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${isPointer ? 'scale-150 border-accent-gold' : 'scale-100'
-            }`}
+          key={p.id}
+          className='fixed w-1 h-1 bg-accent-gold rounded-full pointer-events-none z-40'
           style={{
-            background: isPointer
-              ? 'radial-gradient(circle, rgba(232,220,200,0.2), transparent)'
-              : 'transparent',
+            left: `${p.x}px`,
+            top: `${p.y}px`,
+            transform: `translate(-50%, -50%) scale(${p.scale})`,
+            opacity: p.opacity * 0.5,
           }}
         />
-
-        {/* Inner dot */}
-        <div
-          className={`absolute top-0 left-0 w-2 h-2 bg-gradient-to-br from-button-primary to-accent-gold rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-100 ${isPointer ? 'scale-0' : 'scale-100'
-            }`}
-          style={{
-            boxShadow: '0 0 20px rgba(232,220,200,0.8)',
-          }}
-        />
-      </div>
-
-      {/* Particle trail */}
-      <div className="fixed top-0 left-0 pointer-events-none z-[9998] hidden md:block">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-gradient-to-br from-button-primary to-accent-gold rounded-full"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              transform: `translate(-50%, -50%) scale(${particle.scale})`,
-              opacity: particle.opacity,
-              boxShadow: `0 0 ${10 * particle.scale}px rgba(232,220,200,${particle.opacity * 0.6})`,
-            }}
-          />
-        ))}
-      </div>
+      ))}
     </>
   )
 }

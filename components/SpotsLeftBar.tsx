@@ -12,7 +12,7 @@ export default function SpotsLeftBar() {
 
   async function fetchSpots() {
     try {
-      const res = await fetch('/api/spots')
+      const res = await fetch('/api/spots', { signal: AbortSignal.timeout(5000) })
       if (!res.ok) return
       const json = await res.json()
       setData(json)
@@ -21,20 +21,31 @@ export default function SpotsLeftBar() {
 
   useEffect(() => {
     fetchSpots()
-    const id = setInterval(fetchSpots, 30000)
+    // Polling menos frequente em mobile
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    const interval = isMobile ? 60000 : 30000 // 1min mobile, 30s desktop
+    const id = setInterval(fetchSpots, interval)
     return () => clearInterval(id)
   }, [])
 
   useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout
     const handleScroll = () => {
-      const y = window.scrollY
-      const h = window.innerHeight
-      const doc = document.documentElement
-      setNearFooter(y + h >= doc.scrollHeight - 320)
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        const y = window.scrollY
+        const h = window.innerHeight
+        const doc = document.documentElement
+        setNearFooter(y + h >= doc.scrollHeight - 320)
+      }, 100) // Debounce scroll listener
     }
+
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(scrollTimeout)
+    }
   }, [])
 
   if (!data || hidden || nearFooter) return null
@@ -72,3 +83,4 @@ export default function SpotsLeftBar() {
     </div>
   )
 }
+
