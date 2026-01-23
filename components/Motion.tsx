@@ -13,11 +13,20 @@ function useIsMobileClient() {
   const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
-    setIsHydrated(true)
-    setIsMobileClient(window.innerWidth < 768)
+    // Importante: Detectar mobile APÓS hidratação
+    if (typeof window === 'undefined') return
+    
+    // Dar um tick para garantir hidratação
+    const detectMobile = () => {
+      setIsMobileClient(window.innerWidth < 768)
+      setIsHydrated(true)
+    }
+
+    // Usar microtask para garantir que hidratação terminou
+    Promise.resolve().then(detectMobile)
 
     const handleResize = () => setIsMobileClient(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleResize, { passive: true })
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 

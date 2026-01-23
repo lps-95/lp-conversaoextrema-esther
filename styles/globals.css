@@ -5,7 +5,6 @@
 @tailwind utilities;
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 2rem;
 }
 
@@ -20,18 +19,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #000;
   overscroll-behavior: none;
-  scroll-behavior: smooth !important;
+  touch-action: manipulation;
 }
 
-/* Instagram-like smooth scrolling */
-*,
-*::before,
-*::after {
-  scroll-behavior: smooth !important;
-}
+/* Smooth scroll only on desktop - fixes iOS stalling */
+@media (min-width: 769px) {
+  html {
+    scroll-behavior: smooth;
+  }
 
-html:focus-within {
-  scroll-behavior: smooth !important;
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Optional: Smooth scroll snapping for sections */
@@ -43,11 +42,6 @@ html:focus-within {
 .scroll-snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: normal;
-}
-
-/* Momentum scrolling for iOS */
-body {
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Mobile-specific optimizations */
@@ -72,9 +66,17 @@ body {
     font-size: 16px !important;
   }
 
-  /* Melhorar scroll touch */
+  /* Melhorar scroll touch e performance */
   * {
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Remover efeitos de bounce excessivo no iOS */
+  body {
+    -webkit-user-select: none;
+    -webkit-user-select: text;
+    user-select: text;
   }
 }
 

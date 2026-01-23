@@ -10,13 +10,19 @@ type Props = {
 export default function ScrollReveal({ children, className = '', delay = 0, direction = 'up' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [isMountedClient, setIsMountedClient] = useState(false)
+
+  // Garantir que só executa no cliente
+  useEffect(() => {
+    setIsMountedClient(true)
+  }, [])
 
   useEffect(() => {
     const element = ref.current
-    if (!element) return
+    if (!element || !isMountedClient) return
 
     // Em mobile: mostrar imediatamente sem delay
-    const isMobile = window.innerWidth < 768
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
     if (isMobile) {
       setIsVisible(true)
@@ -40,7 +46,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [delay])
+  }, [delay, isMountedClient])
 
   const animationClass = {
     up: 'animate-fade-in-up',
