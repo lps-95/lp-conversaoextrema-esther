@@ -7,6 +7,7 @@ type Data = { spotsLeft: number; total: number }
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const DATA_FILE = path.join(DATA_DIR, 'leads.json')
+const TZ = 'America/Sao_Paulo'
 
 function getSpotsTotal() {
   const val = process.env.SPOTS_PER_DAY
@@ -14,12 +15,23 @@ function getSpotsTotal() {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 8
 }
 
-function isSameLocalDay(a: Date, b: Date) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  )
+function dateKeyFor(input: Date | string | number, tz = TZ) {
+  const date = input instanceof Date ? input : new Date(input)
+  if (Number.isNaN(date.getTime())) return ''
+
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: tz,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+    .formatToParts(date)
+    .reduce<Record<string, string>>((acc, p) => {
+      if (p.type !== 'literal') acc[p.type] = p.value
+      return acc
+    }, {})
+
+  return `${parts.year}-${parts.month}-${parts.day}`
 }
 
 export default async function handler(
@@ -30,7 +42,7 @@ export default async function handler(
 
   try {
     // 1) Tenta obter contagem persistente via KV
-    const todayKey = `leads:${currentDateKey()}`
+    const todayKey = `leads:${currentDateKey(TZ)}`
     const kv = await kvGetNumber(todayKey)
 
     if (kv.ok && typeof kv.value === 'number') {
@@ -46,11 +58,10 @@ export default async function handler(
       date?: string
     }>
 
-    const now = new Date()
+    const today = currentDateKey(TZ)
     const todayCount = list.filter((item) => {
       if (item.timestamp) {
-        const d = new Date(item.timestamp)
-        return isSameLocalDay(d, now)
+        return dateKeyFor(item.timestamp, TZ) === today
       }
       if (item.date) {
         // Support legacy pt-BR date like 18/12/2025 12:34:56
@@ -62,7 +73,7 @@ export default async function handler(
             parseInt(mm, 10) - 1,
             parseInt(dd, 10)
           )
-          return isSameLocalDay(d, now)
+          return dateKeyFor(d, TZ) === today
         }
       }
       return false

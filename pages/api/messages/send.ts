@@ -9,6 +9,13 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  const apiKey = req.headers['x-api-key']
+  const validKey = process.env.WHATSAPP_API_KEY
+
+  if (!validKey || apiKey !== validKey) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
   try {
     const { to, body, templateName, templateParams } = req.body || {}
     if (!to) return res.status(400).json({ error: 'Missing to' })

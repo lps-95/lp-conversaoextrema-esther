@@ -74,7 +74,6 @@ O projeto utiliza:
 - **PostCSS** para processamento de CSS
 - **Tailwind CSS** com configuração customizada
 - **TypeScript** com strict mode
-- **ESLint** para linting
 
 ## 📦 Deploy
 
