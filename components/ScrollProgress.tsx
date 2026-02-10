@@ -3,8 +3,13 @@ import { useEffect, useState } from 'react'
 export default function ScrollProgress() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Detectar mobile
+    const mobile = typeof window !== 'undefined' && window.innerWidth < 768
+    setIsMobile(mobile)
+
     const updateScrollProgress = () => {
       const scrollPx = document.documentElement.scrollTop
       const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight
@@ -22,13 +27,15 @@ export default function ScrollProgress() {
 
   return (
     <>
-      {/* Progress bar */}
-      <div className='fixed top-0 left-0 right-0 h-1 bg-black/50 backdrop-blur-sm z-50'>
-        <div
-          className='h-full bg-gradient-to-r from-button-primary via-accent-gold to-button-primary transition-all duration-150 ease-out'
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
+      {/* Progress bar - Oculto em mobile */}
+      {!isMobile && (
+        <div className='fixed top-0 left-0 right-0 h-1 bg-black/50 backdrop-blur-sm z-50'>
+          <div
+            className='h-full bg-gradient-to-r from-button-primary via-accent-gold to-button-primary transition-all duration-150 ease-out'
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
+      )}
 
       {/* Scroll to top button */}
       {isVisible && (

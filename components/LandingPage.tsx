@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import useSmoothScroll from '../hooks/useSmoothScroll'
 import AnimatedBlobs from './AnimatedBlobs'
@@ -12,17 +13,20 @@ import ParallaxLayer from './ParallaxLayer'
 import ScrollProgress from './ScrollProgress'
 import VideoModal from './VideoModal'
 import WhatsAppWidget from './WhatsAppWidget'
-import ComoFunciona from './sections/ComoFunciona'
-import FAQ from './sections/FAQ'
-import Footer from './sections/Footer'
-import Historia from './sections/Historia'
-import NumbersProof from './sections/NumbersProof'
-import Pricing from './sections/Pricing'
-import Problem from './sections/Problem'
+
+// Lazy load das seções para melhor performance em mobile
+const ComoFunciona = dynamic(() => import('./sections/ComoFunciona'), { loading: () => null })
+const FAQ = dynamic(() => import('./sections/FAQ'), { loading: () => null })
+const Footer = dynamic(() => import('./sections/Footer'), { loading: () => null })
+const Historia = dynamic(() => import('./sections/Historia'), { loading: () => null })
+const NumbersProof = dynamic(() => import('./sections/NumbersProof'), { loading: () => null })
+const Pricing = dynamic(() => import('./sections/Pricing'), { loading: () => null })
+const Problem = dynamic(() => import('./sections/Problem'), { loading: () => null })
 
 export default function LandingPage() {
   useSmoothScroll()
 
+  const [isMobile, setIsMobile] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [plan, setPlan] = useState('')
@@ -38,6 +42,15 @@ export default function LandingPage() {
   const [origin, setOrigin] = useState('')
   const [status, setStatus] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
+
+  // Detectar mobile no useEffect
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setIsMobile(window.innerWidth < 768)
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize, { passive: true })
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Máscara para WhatsApp
   const formatWhatsApp = (value: string) => {
@@ -225,21 +238,27 @@ export default function LandingPage() {
       <section id='hero' className='relative overflow-hidden min-h-screen flex items-center'>
         {/* Animated background layers */}
         <div className='absolute inset-0 bg-gradient-to-br from-black via-[#0f0e16] to-black' />
-        <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,220,200,0.15),transparent_50%)] animate-pulse-subtle' />
-        <div className='absolute top-0 right-0 w-[600px] h-[600px] bg-button-primary/20 rounded-full blur-[150px] animate-float-slow' />
-        <div className='absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent-gold/15 rounded-full blur-[120px] animate-float-slow' style={{ animationDelay: '2s' }} />
+        <div className={`absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,220,200,${isMobile ? '0.08' : '0.15'}),transparent_50%)] ${!isMobile && 'animate-pulse-subtle'}`} />
+        {!isMobile && (
+          <>
+            <div className='absolute top-0 right-0 w-[600px] h-[600px] bg-button-primary/20 rounded-full blur-[150px] animate-float-slow' />
+            <div className='absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent-gold/15 rounded-full blur-[120px] animate-float-slow' style={{ animationDelay: '2s' }} />
+          </>
+        )}
 
-        {/* Grid pattern */}
-        <div className='absolute inset-0 opacity-20'>
-          <svg className='w-full h-full' xmlns='http://www.w3.org/2000/svg'>
-            <defs>
-              <pattern id='hero-grid' x='0' y='0' width='60' height='60' patternUnits='userSpaceOnUse'>
-                <path d='M 60 0 L 0 0 0 60' fill='none' stroke='currentColor' strokeWidth='0.5' className='text-button-primary' />
-              </pattern>
-            </defs>
-            <rect width='100%' height='100%' fill='url(#hero-grid)' />
-          </svg>
-        </div>
+        {/* Grid pattern - Desabilitado em mobile */}
+        {!isMobile && (
+          <div className='absolute inset-0 opacity-20'>
+            <svg className='w-full h-full' xmlns='http://www.w3.org/2000/svg'>
+              <defs>
+                <pattern id='hero-grid' x='0' y='0' width='60' height='60' patternUnits='userSpaceOnUse'>
+                  <path d='M 60 0 L 0 0 0 60' fill='none' stroke='currentColor' strokeWidth='0.5' className='text-button-primary' />
+                </pattern>
+              </defs>
+              <rect width='100%' height='100%' fill='url(#hero-grid)' />
+            </svg>
+          </div>
+        )}
 
         <ParallaxLayer speed={0.06} className='absolute inset-0 pointer-events-none' />
 

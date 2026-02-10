@@ -4,6 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Reduzir motion em mobile - melhora performance e bateria */
+@media (max-width: 768px) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Exceto para animações críticas de UI */
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation-duration: 0.3s !important;
+  }
+
+  /* Desabilitar animações de gradient */
+  .animate-gradient-x,
+  .animate-float-slow,
+  .animate-pulse-glow,
+  .animate-pulse-subtle {
+    animation: none !important;
+  }
+}
+
 html {
   scroll-padding-top: 2rem;
 }
