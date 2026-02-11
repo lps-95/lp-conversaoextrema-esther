@@ -9,10 +9,7 @@ export default function Document() {
         <link rel="manifest" href="/manifest.json" />
 
         {/* Meta tags SEO */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=5"
-        />
+
         <meta name="theme-color" content="#D4AF37" />
         <meta name="author" content="Esther Social Media" />
 
