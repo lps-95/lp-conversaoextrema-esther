@@ -23,13 +23,31 @@ Landing page de alta conversão desenvolvida com Next.js 16, TypeScript, Tailwin
 
 ## 🏗️ Arquitetura
 
-Projeto modularizado com componentes em TypeScript:
+O projeto separa **conteúdo**, **lógica** e **layout** em pastas diferentes.
+Essa separação é o que permite usar este projeto como modelo pra novas
+landing pages sem reescrever componentes — normalmente só mexendo em
+`content/`.
 
 ```
+content/                     # Textos, opções de formulário, mensagens — SEM JSX.
+├── hero.ts                  # Conteúdo da seção Hero
+└── form.ts                  # Labels, opções de select, mensagens de validação
+
+hooks/                       # Lógica reutilizável, sem UI
+├── useLeadForm.ts           # Estado + validação + envio do formulário de lead
+├── useWhatsAppMask.ts       # Máscara de telefone
+└── useSmoothScroll.ts       # Scroll suave customizado
+
+lib/                         # Funções auxiliares puras
+├── analytics.ts             # Wrapper do Plausible (função track)
+└── whatsappRedirect.ts      # Monta a URL/mensagem de redirecionamento pro WhatsApp
+
 components/
-├── LandingPage.tsx          # Container principal
-├── Motion.tsx               # Wrappers Framer Motion tipados
-├── ParallaxLayer.tsx        # Parallax customizado
+├── LandingPage.tsx          # Só COMPÕE as peças abaixo — sem lógica própria
+├── hero/Hero.tsx            # Seção Hero (usa content/hero.ts)
+├── form/LeadForm.tsx        # Formulário de captura (usa content/form.ts + useLeadForm)
+├── Motion.tsx                # Wrappers Framer Motion tipados
+├── ParallaxLayer.tsx         # Parallax customizado
 └── sections/
     ├── NumbersProof.tsx     # Prova de resultados
     ├── Problem.tsx          # Seção do problema
@@ -42,7 +60,33 @@ components/
     ├── ComoFunciona.tsx     # Como funciona
     ├── Pricing.tsx          # Planos e preços
     └── FAQ.tsx              # Perguntas frequentes
+
+docs/                        # Documentação histórica de entregas anteriores
 ```
+
+### Como usar este projeto como modelo para outra landing page
+
+1. Duplique a pasta do projeto.
+2. Edite `content/hero.ts` e `content/form.ts` com os textos da nova página
+   (títulos, opções de select, mensagens).
+3. Se a nova página precisar de seções diferentes das que já existem em
+   `components/sections/`, copie a seção mais parecida e ajuste — o padrão
+   de cada seção é: receber conteúdo já pronto e só cuidar do layout.
+4. Ajuste as cores em `tailwind.config.cjs` se a identidade visual for
+   diferente.
+5. `components/LandingPage.tsx` normalmente não precisa mudar — é só a
+   composição das seções.
+
+### Mobile-first / performance
+
+- A decisão do que mostrar em telas pequenas é feita **em CSS**
+  (`hidden md:block` etc.), nunca com `window.innerWidth` em JavaScript.
+  Isso evita que o servidor renderize uma versão e o navegador troque para
+  outra depois que o JS carrega (layout shift).
+- `styles/globals.css` já reduz/desliga animações custosas abaixo de 768px
+  via `@media (max-width: 768px)`.
+- As seções abaixo da dobra são carregadas com `next/dynamic` (lazy load),
+  então não entram no JS inicial da página.
 
 ## 🛠️ Desenvolvimento
 
