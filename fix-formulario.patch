@@ -1,0 +1,236 @@
+diff --git a/.gitignore b/.gitignore
+index 190215f..1652ada 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,6 @@
+ /.env*
+ 
++/data/
+ node_modules/
+ .next/
+ .env.local
+diff --git a/lib/leadsStore.ts b/lib/leadsStore.ts
+new file mode 100644
+index 0000000..2a975c4
+--- /dev/null
++++ b/lib/leadsStore.ts
+@@ -0,0 +1,60 @@
++import { randomUUID } from 'crypto'
++import { existsSync, mkdirSync } from 'fs'
++import { appendFile } from 'fs/promises'
++import path from 'path'
++
++/**
++ * Armazenamento simples de leads em arquivo local (JSON Lines).
++ *
++ * Isso existe pra o formulário funcionar de ponta a ponta enquanto a
++ * integração com a API de gestão de clientes não está configurada — sem
++ * isso, todo envio do formulário falhava porque não tinha onde guardar o
++ * lead.
++ *
++ * ⚠️ IMPORTANTE — isso é uma solução pra desenvolvimento/validação local:
++ * em ambientes serverless (Vercel, Netlify etc.) o sistema de arquivos é
++ * efêmero/read-only, então isso NÃO persiste em produção. Quando a
++ * integração com a API de gestão de clientes (`lib/gestaoClientesAPI.ts`)
++ * estiver configurada via env vars, ela passa a ser o destino real do
++ * lead — este arquivo local vira só um log auxiliar.
++ */
++
++export interface StoredLead {
++  id: string
++  name: string
++  email: string
++  phone: string
++  plan?: string
++  bestTime?: string
++  utmSource?: string
++  utmMedium?: string
++  utmCampaign?: string
++  origin?: string
++  createdAt: string
++}
++
++const DATA_DIR = path.join(process.cwd(), 'data')
++const LEADS_FILE = path.join(DATA_DIR, 'leads.jsonl')
++
++function ensureDataDir() {
++  if (!existsSync(DATA_DIR)) {
++    mkdirSync(DATA_DIR, { recursive: true })
++  }
++}
++
++/** Salva um lead como uma linha JSON no arquivo `data/leads.jsonl`. */
++export async function saveLeadLocally(
++  lead: Omit<StoredLead, 'id' | 'createdAt'>
++): Promise<StoredLead> {
++  ensureDataDir()
++
++  const record: StoredLead = {
++    id: randomUUID(),
++    createdAt: new Date().toISOString(),
++    ...lead,
++  }
++
++  await appendFile(LEADS_FILE, JSON.stringify(record) + '\n', 'utf-8')
++
++  return record
++}
+diff --git a/next-env.d.ts b/next-env.d.ts
+index 1970904..7996d35 100644
+--- a/next-env.d.ts
++++ b/next-env.d.ts
+@@ -1,6 +1,6 @@
+ /// <reference types="next" />
+ /// <reference types="next/image-types/global" />
+-import "./.next/types/routes.d.ts";
++import "./.next/dev/types/routes.d.ts";
+ 
+ // NOTE: This file should not be edited
+ // see https://nextjs.org/docs/pages/api-reference/config/typescript for more information.
+diff --git a/pages/api/submit-lead.ts b/pages/api/submit-lead.ts
+index 6eba320..34c09ce 100644
+--- a/pages/api/submit-lead.ts
++++ b/pages/api/submit-lead.ts
+@@ -1,83 +1,82 @@
+ import type { NextApiRequest, NextApiResponse } from 'next'
++import { saveLeadLocally } from '../../lib/leadsStore'
++
++/**
++ * Endpoint chamado pelo formulário de captura de lead (`useLeadForm`).
++ *
++ * Comportamento atual:
++ * 1. Valida os campos obrigatórios.
++ * 2. Salva o lead localmente (`lib/leadsStore.ts`) — isso SEMPRE acontece,
++ *    é o que garante que o formulário funciona mesmo sem a integração com
++ *    a API de gestão de clientes configurada.
++ * 3. Se `GESTAO_CLIENTES_LEADS_URL` e `GESTAO_CLIENTES_WEBHOOK_SECRET`
++ *    estiverem configurados, também tenta enviar pra lá — mas se isso
++ *    falhar, o lead já foi salvo e a resposta continua sendo de sucesso
++ *    (só loga o erro no servidor, não quebra a experiência do usuário).
++ */
++export default async function handler(req: NextApiRequest, res: NextApiResponse) {
++  res.setHeader('Content-Type', 'application/json')
+ 
+-export default async function handler(
+-  req: NextApiRequest,
+-  res: NextApiResponse
+-) {
+   if (req.method !== 'POST') {
+-    res.setHeader('Content-Type', 'application/json')
+     return res.status(405).json({ error: 'Method not allowed' })
+   }
+ 
+   try {
+-    const {
+-      name,
+-      email,
+-      phone,
+-      plan,
+-      bestTime,
+-      utmSource,
+-      utmMedium,
+-      utmCampaign,
+-      origin,
+-    } = req.body
+-
+-    console.log('[API][submit-lead] Body recebido:', {
+-      name,
+-      email,
+-      phone:
+-        typeof phone === 'string' ? `${phone.slice(0, 4)}****` : typeof phone,
+-      plan,
+-      bestTime,
+-      utmSource,
+-      utmMedium,
+-      utmCampaign,
+-      origin,
+-    })
++    const { name, email, phone, plan, bestTime, utmSource, utmMedium, utmCampaign, origin } = req.body
+ 
+-    // Validação básica
+     if (!name || !email || !phone) {
+-      res.setHeader('Content-Type', 'application/json')
+-      return res
+-        .status(400)
+-        .json({ error: 'Campos obrigatórios: name, email, phone' })
++      return res.status(400).json({ error: 'Campos obrigatórios: name, email, phone' })
+     }
+ 
+-    // Import dinâmico para evitar erro de inicialização do módulo em runtime Edge
+-    const { sendLeadToGestao } = await import('../../lib/gestaoClientesAPI')
+-
+-    // Enviar para o painel de gestão
+-    const result = await sendLeadToGestao({
++    const savedLead = await saveLeadLocally({
+       name,
+       email,
+       phone,
+       plan: plan || undefined,
+       bestTime: bestTime || undefined,
+-      utmParams: {
+-        utm_source: utmSource || undefined,
+-        utm_medium: utmMedium || undefined,
+-        utm_campaign: utmCampaign || undefined,
+-      },
++      utmSource: utmSource || undefined,
++      utmMedium: utmMedium || undefined,
++      utmCampaign: utmCampaign || undefined,
+       origin: origin || 'landing_page_conversao_extrema',
+     })
+ 
+-    res.setHeader('Content-Type', 'application/json')
+-    return res.status(200).json({
+-      success: true,
+-      ...(typeof result === 'object' ? result : {}),
+-    })
++    console.log('[API][submit-lead] Lead salvo localmente:', savedLead.id)
++
++    // Integração com a API de gestão de clientes é OPCIONAL: só roda se as
++    // env vars estiverem configuradas, e uma falha aqui não derruba o
++    // envio do formulário (o lead já está salvo no passo acima).
++    const gestaoConfigured = Boolean(
++      process.env.GESTAO_CLIENTES_LEADS_URL && process.env.GESTAO_CLIENTES_WEBHOOK_SECRET
++    )
++
++    if (gestaoConfigured) {
++      try {
++        const { sendLeadToGestao } = await import('../../lib/gestaoClientesAPI')
++        await sendLeadToGestao({
++          name,
++          email,
++          phone,
++          plan: plan || undefined,
++          bestTime: bestTime || undefined,
++          utmParams: {
++            utm_source: utmSource || undefined,
++            utm_medium: utmMedium || undefined,
++            utm_campaign: utmCampaign || undefined,
++          },
++          origin: origin || 'landing_page_conversao_extrema',
++        })
++        console.log('[API][submit-lead] Lead também enviado para a API de gestão')
++      } catch (gestaoError) {
++        console.error('[API][submit-lead] Falha ao enviar para a API de gestão (lead já salvo local):', gestaoError)
++      }
++    } else {
++      console.log('[API][submit-lead] Integração com API de gestão não configurada — pulando esse passo')
++    }
++
++    return res.status(200).json({ success: true, leadId: savedLead.id })
+   } catch (error) {
+     console.error('[API][submit-lead] Erro:', error)
+-    const errorMessage =
+-      error instanceof Error ? error.message : 'Erro ao processar lead'
+-    try {
+-      res.setHeader('Content-Type', 'application/json')
+-      return res.status(500).json({ error: errorMessage })
+-    } catch {
+-      res.statusCode = 500
+-      res.setHeader('Content-Type', 'application/json')
+-      res.end(JSON.stringify({ error: errorMessage }))
+-      return
+-    }
++    const errorMessage = error instanceof Error ? error.message : 'Erro ao processar lead'
++    return res.status(500).json({ error: errorMessage })
+   }
+ }
