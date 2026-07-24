@@ -118,9 +118,9 @@ export default function Hero() {
               <CountdownTimer targetHours={heroContent.countdown.targetHours} message={heroContent.countdown.message} />
             </div>
 
-            <div className="mt-6 flex justify-center">
+            {/* <div className="mt-6 flex justify-center">
               <VideoModal videoUrl={heroContent.video.url} title={heroContent.video.title} />
-            </div>
+            </div> */}
 
             {/* Indicador de scroll */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
