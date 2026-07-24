@@ -57,7 +57,7 @@ export default function WhatsAppWidget({
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9998]">
+    <div className="fixed right-4 sm:right-6 z-[9998] bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]">
       {/* Tooltip expandido */}
       <div
         className={`absolute bottom-full right-0 mb-4 transition-all duration-300 ${isExpanded
@@ -65,7 +65,7 @@ export default function WhatsAppWidget({
             : 'opacity-0 translate-y-2 pointer-events-none'
           }`}
       >
-        <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-4 w-64 relative">
+        <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-4 w-64 max-w-[calc(100vw-2rem)] relative">
           {/* Arrow */}
           <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45" />
 
@@ -102,7 +102,7 @@ export default function WhatsAppWidget({
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group relative w-16 h-16 bg-[#25D366] hover:bg-[#20BA59] rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 animate-slideInRight"
+        className="group relative w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20BA59] rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 animate-slideInRight"
         aria-label="Abrir WhatsApp"
       >
         {/* Pulse ring */}

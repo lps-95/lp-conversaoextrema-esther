@@ -5,6 +5,22 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Breakpoint extra para telas de celular pequenas/médias (ex: iPhone
+      // SE é ~375px, a maioria dos Android fica entre 360-412px). Sem isso,
+      // tudo abaixo de 640px (sm) cai no mesmo estilo "base", sem diferenciar
+      // aparelho bem pequeno de aparelho médio.
+      screens: {
+        xs: '400px',
+      },
+      // Espaçamentos que respeitam a "área segura" de aparelhos com notch/
+      // ilha dinâmica/barra de gestos (iPhone principalmente). Uso:
+      // pb-safe-bottom, pt-safe-top, etc.
+      spacing: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
       colors: {
         primary: {
           DEFAULT: '#000000',

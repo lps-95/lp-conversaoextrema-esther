@@ -27,7 +27,7 @@ export default function FloatingCTA() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-40 animate-fade-in-up">
+    <div className="fixed left-4 right-4 z-40 animate-fade-in-up bottom-[calc(1rem+env(safe-area-inset-bottom))]">
       <div className="bg-gradient-to-r from-black/95 via-[#0d0c12]/95 to-black/95 backdrop-blur-xl border border-button-primary/30 shadow-2xl rounded-2xl">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Message */}

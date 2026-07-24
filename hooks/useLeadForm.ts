@@ -87,7 +87,6 @@ export function useLeadForm() {
       return
     }
 
-    setStatus('loading')
     track('lead_submit', {
       name,
       email,
@@ -99,50 +98,43 @@ export function useLeadForm() {
       utm_campaign: utmCampaign,
     })
 
-    try {
-      const response = await fetch('/api/submit-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          phone: whatsappNumbers,
-          plan: plan || undefined,
-          bestTime: bestTime || undefined,
-          utmSource: utmSource || undefined,
-          utmMedium: utmMedium || undefined,
-          utmCampaign: utmCampaign || undefined,
-          origin: 'landing_page_conversao_extrema',
-        }),
-      })
+    // A ação principal do formulário é o redirecionamento — acontece na
+    // hora, sem esperar nenhuma resposta de servidor.
+    setStatus('success')
+    redirectToWhatsApp({ name, email, whatsapp, niche, followers, revenue, mainGoal, plan, bestTime })
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erro ao registrar lead')
-      }
+    // Salvar o lead é um registro auxiliar, em segundo plano: se falhar,
+    // não afeta o que o usuário já viu (ele já está indo pro WhatsApp).
+    fetch('/api/submit-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        phone: whatsappNumbers,
+        plan: plan || undefined,
+        bestTime: bestTime || undefined,
+        niche: niche || undefined,
+        followers: followers || undefined,
+        revenue: revenue || undefined,
+        mainGoal: mainGoal || undefined,
+        utmSource: utmSource || undefined,
+        utmMedium: utmMedium || undefined,
+        utmCampaign: utmCampaign || undefined,
+        origin: origin || 'landing_page_conversao_extrema',
+      }),
+    }).catch((err) => console.error('[useLeadForm] Falha ao salvar lead em segundo plano:', err))
 
-      setStatus('success')
-      track('lead_success', { plan, whatsapp })
-
-      const submittedData = { name, email, plan, whatsapp, bestTime }
-
-      // Limpa o formulário
-      setName('')
-      setEmail('')
-      setPlan('')
-      setWhatsapp('')
-      setBestTime('')
-
-      setTimeout(() => redirectToWhatsApp(submittedData), 500)
-    } catch (err) {
-      setStatus('error')
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as Error).message
-          : formContent.validationMessages.genericSubmitError
-      setErrorMessage(message)
-      console.error('❌ Erro ao enviar lead:', err)
-    }
+    // Limpa o formulário
+    setName('')
+    setEmail('')
+    setPlan('')
+    setWhatsapp('')
+    setBestTime('')
+    setNiche('')
+    setFollowers('')
+    setRevenue('')
+    setMainGoal('')
   }
 
   return {

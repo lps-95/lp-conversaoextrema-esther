@@ -71,25 +71,47 @@ export const formContent = {
   /** Número padrão de WhatsApp usado se a env var não estiver configurada */
   defaultWhatsappNumber: '+5548991964517',
 
-  /** Monta a mensagem enviada pro WhatsApp após o envio do formulário */
+  /**
+   * Monta a mensagem enviada pro WhatsApp a partir dos campos que o
+   * cliente realmente preencheu. Campos vazios são simplesmente omitidos
+   * (nada de "—" ou "Não informado") — é um resumo direto do que a pessoa
+   * respondeu no formulário.
+   */
   buildWhatsAppMessage: (data: {
-    name: string
-    email: string
-    plan: string
-    whatsapp: string
-    bestTime: string
+    name?: string
+    email?: string
+    whatsapp?: string
+    niche?: string
+    followers?: string
+    revenue?: string
+    mainGoal?: string
+    plan?: string
+    bestTime?: string
   }) => {
-    const chosenPlan = data.plan || 'Definir após diagnóstico'
+    const followersLabel = formContent.followersOptions.find((o) => o.value === data.followers)?.label
+    const revenueLabel = formContent.revenueOptions.find((o) => o.value === data.revenue)?.label
+    const mainGoalLabel = formContent.mainGoalOptions.find((o) => o.value === data.mainGoal)?.label
+
+    const lines: Array<[string, string | undefined]> = [
+      ['Nome', data.name],
+      ['E-mail', data.email],
+      ['WhatsApp', data.whatsapp],
+      ['Nicho/Área', data.niche],
+      ['Seguidores', followersLabel],
+      ['Faturamento mensal', revenueLabel],
+      ['Principal objetivo', mainGoalLabel],
+      ['Plano de interesse', data.plan],
+      ['Melhor horário para contato', data.bestTime],
+    ]
+
+    const filledLines = lines
+      .filter(([, value]) => Boolean(value && value.trim()))
+      .map(([label, value]) => `${label}: ${value}`)
+
     return [
       'Olá, equipe Esther Social Media! Quero avançar com a mentoria.',
-      `Plano: ${chosenPlan}`,
-      `Nome: ${data.name || '—'}`,
-      `E-mail: ${data.email || '—'}`,
-      `WhatsApp: ${data.whatsapp || '—'}`,
-      data.bestTime ? `Melhor horário: ${data.bestTime}` : null,
+      ...filledLines,
       'Podem me enviar os próximos passos?',
-    ]
-      .filter(Boolean)
-      .join('\n')
+    ].join('\n')
   },
 }
