@@ -109,7 +109,7 @@ export const formContent = {
       .map(([label, value]) => `${label}: ${value}`)
 
     return [
-      'Olá, equipe Esther Social Media! Quero avançar com a mentoria.',
+      'Olá, equipe Esther Social Media! Quero avançar com o pacote.',
       ...filledLines,
       'Podem me enviar os próximos passos?',
     ].join('\n')
