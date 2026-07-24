@@ -42,7 +42,7 @@ export default function Pricing({ onChoosePlan }: Props) {
               <div className='mb-5'>
                 <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full mb-4'>
                   <span className='w-2 h-2 bg-button-primary rounded-full animate-pulse' />
-                  <span className='text-text-secondary text-xs font-semibold uppercase tracking-widest'>Essencial</span>
+                  <span className='text-text-secondary text-xs font-semibold uppercase tracking-widest'>Consultoria Extrema</span>
                 </div>
 
                 <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
@@ -50,23 +50,23 @@ export default function Pricing({ onChoosePlan }: Props) {
                 </h3>
 
                 <div className='flex items-end gap-2 mb-4'>
-                  <span className='text-5xl font-bold text-button-primary'>R$ 1.700</span>
+                  <span className='text-5xl font-bold text-button-primary'>R$ 500,00</span>
                   <span className='text-text-tertiary text-base mb-2'>/mês</span>
                 </div>
 
                 <p className='text-text-secondary text-sm leading-relaxed'>
-                  Recupere 10-15h semanais e conquiste suas primeiras consultas orgânicas
+                Um direcionamento completo do seu Instagram pra te DESTRAVAR de vez
                 </p>
               </div>
 
               <div className='space-y-2.5 mb-6 flex-1'>
                 {[
-                  'Diagnóstico completo do perfil',
-                  'Planejamento estratégico 30 dias',
-                  'Gestão executiva completa',
-                  'Arquitetura de identidade',
-                  'Relatório mensal de performance',
-                  'Suporte via WhatsApp'
+                  'Reunião de 4hrs com intervalo de 1h',
+                  '20 dias de postagens para o seu feed',
+                  'Direcionamento em posicionamento e estética ',
+                  'Introdução ao stories e como começar a ser estratégica',
+                  'PDF da apresentação em mãos para lembrar e rever quando quiser',
+                  'Exercício de direcionamento e criação de persona para memorização'
                 ].map((item, i) => (
                   <div key={i} className='flex items-start gap-2.5'>
                     <div className='w-5 h-5 rounded-full bg-button-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
@@ -106,7 +106,7 @@ export default function Pricing({ onChoosePlan }: Props) {
               <div className='mb-5 mt-2'>
                 <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-accent-gold/20 border border-accent-gold/40 rounded-full mb-4'>
                   <span className='w-2 h-2 bg-accent-gold rounded-full animate-pulse' />
-                  <span className='text-accent-gold text-xs font-semibold uppercase tracking-widest'>Profissional</span>
+                  <span className='text-accent-gold text-xs font-semibold uppercase tracking-widest'>Gestão Extrema</span>
                 </div>
 
                 <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
@@ -121,19 +121,21 @@ export default function Pricing({ onChoosePlan }: Props) {
                 </div>
 
                 <p className='text-text-secondary text-sm leading-relaxed'>
-                  Previsibilidade financeira com 8-15 consultas mensais garantidas
+                  Previsibilidade financeira com 90 dias.
                 </p>
               </div>
 
               <div className='space-y-2.5 mb-6 flex-1'>
                 {[
-                  { text: 'Tudo do plano Essencial', bold: true },
+                  { text: 'Tudo da consultoria extrema', bold: true },
                   { text: 'Sistema de Narrativas 90 dias' },
                   { text: 'Calendário editorial completo' },
                   { text: 'Banco de roteiros anti-bloqueio' },
                   { text: '2 campanhas de lançamento' },
-                  { text: 'Workshop algorítmico exclusivo' },
-                  { text: 'Reunião estratégica mensal' }
+                  { text: 'Stories persuasivos' },
+                  { text: 'Reunião estratégica mensal'},
+                  {text: 'Bônus exclusivos'},
+                
                 ].map((item, i) => (
                   <div key={i} className='flex items-start gap-2.5'>
                     <div className='w-5 h-5 rounded-full bg-accent-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
@@ -169,16 +171,16 @@ export default function Pricing({ onChoosePlan }: Props) {
               <div className='mb-5'>
                 <div className='inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4'>
                   <span className='w-2 h-2 bg-purple-400 rounded-full animate-pulse' />
-                  <span className='text-purple-400 text-xs font-semibold uppercase tracking-widest'>Premium VIP</span>
+                  <span className='text-purple-400 text-xs font-semibold uppercase tracking-widest'>Escolha do seu jeito</span>
                 </div>
 
                 <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>
-                  Domínio Completo
+                  Escolha você mesmo o que deseja
                 </h3>
 
                 <div className='flex items-end gap-2 mb-4'>
-                  <span className='text-5xl font-bold text-purple-400'>R$ 3.800</span>
-                  <span className='text-text-tertiary text-base mb-2'>/mês</span>
+                  <span className='text-5xl font-bold text-purple-400'></span>
+                  {/* <span className='text-text-tertiary text-base mb-2'>/mês</span> */}
                 </div>
 
                 <p className='text-text-secondary text-sm leading-relaxed'>
@@ -188,14 +190,8 @@ export default function Pricing({ onChoosePlan }: Props) {
 
               <div className='space-y-2.5 mb-6 flex-1'>
                 {[
-                  { text: 'Tudo do plano Profissional', bold: true },
-                  { text: 'Diagnóstico presencial de 2h' },
-                  { text: 'Sessão de posicionamento único' },
-                  { text: 'Criação de ofertas premium' },
-                  { text: 'Análise competitiva trimestral' },
-                  { text: 'Consultoria individual 1h/mês' },
-                  { text: 'Banco de recursos vitalício' },
-                  { text: 'Suporte prioritário 24/7' }
+                  { text: 'Pacotes de videos mobile para Reels e Stories', bold: false },
+                  { text: 'Pacotes fotos profissionais em estúdios ou no seu local' },
                 ].map((item, i) => (
                   <div key={i} className='flex items-start gap-2.5'>
                     <div className='w-5 h-5 rounded-full bg-purple-400/20 flex items-center justify-center flex-shrink-0 mt-0.5'>
@@ -225,7 +221,7 @@ export default function Pricing({ onChoosePlan }: Props) {
           </MItem>
         </MStagger>
 
-        <MSection>
+        {/* <MSection>
           <div className='group relative'>
             <div className='absolute -inset-1 bg-gradient-to-r from-button-primary/30 via-accent-gold/30 to-button-primary/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500' />
             <div className='relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 sm:p-8 md:p-10'>
@@ -281,7 +277,7 @@ export default function Pricing({ onChoosePlan }: Props) {
               </div>
             </div>
           </div>
-        </MSection>
+        </MSection> */}
       </div >
     </section >
   )

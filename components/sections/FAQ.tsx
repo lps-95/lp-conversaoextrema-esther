@@ -27,14 +27,14 @@ export default function FAQ({ onTrack }: Props) {
     {
       number: '03',
       question: 'E se meu perfil perder a minha autenticidade?',
-      answer: 'Esse medo é legítimo e nós levamos a sério. Dedicamos as primeiras 2 semanas estudando sua voz, valores, jeitos de falar, posicionamento único - ANTES de criar um único post. Você aprova tudo que sai no ar e tem controle total. Stefania (esteticista) tinha esse medo exato: "Meu perfil é muito pessoal". Hoje ela diz que o perfil está "ainda mais ela". Vanessa (biomédica) pensava que seria corporativo demais. Resultado: clientes dizem que ela passou a ser mais próxima e relatable. Autenticidade + Estratégia = Vendas reais.',
+      answer: 'Esse medo é legítimo e nós levamos a sério. Dedicamos as primeiras 2 semanas estudando sua voz, valores, jeitos de falar, posicionamento único, ANTES de criar um único post. Você aprova tudo que sai no ar e tem controle total. Cleiciane (Psicóloga) tinha esse medo: "Meu perfil é muito pessoal". Hoje ela diz que o perfil está "ainda mais ela". Vanessa (biomédica) pensava que seria corporativo demais. Resultado: clientes dizem que ela passou a ser mais próxima e real. Autenticidade + Estratégia = Vendas reais.',
       color: 'from-purple-500/20 to-pink-500/20',
       icon: '🎯'
     },
     {
       number: '04',
       question: 'Já investi em gestão e não funcionou. Por que seria diferente?',
-      answer: 'A maioria das agências entrega posts bonitos sem foco em vendas. Nós somos diferentes: somos estrategistas de conversão, não criadores de conteúdo. Mostramos o funil completo na primeira reunião e você vê como cada post conecta à jornada de compra. Acompanhamos métricas que importam: consultas geradas, vendas fechadas - não curtidas ou likes vazios. Exemplo: Carla (dona de ótica) gastou R$ 12k com agência que entregou zero vendas. Conosco fechou 2 clientes de R$ 8k cada em 8 semanas. A diferença é estratégia + execução focada em resultado.',
+      answer: 'A maioria das agências entrega posts bonitos sem foco em vendas. Nós somos diferentes: somos estrategistas de conversão, não criadores de conteúdo. Mostramos o funil completo na primeira reunião e você vê como cada post conecta à jornada de compra. Acompanhamos métricas que importam: consultas geradas, vendas fechadas, não curtidas ou likes vazios. Exemplo: Carla (dona de ótica) gastou R$ 12k com agência que entregou zero vendas. Conosco fechou 2 clientes de R$ 8k cada em 8 semanas. A diferença é estratégia + execução focada em resultado.',
       color: 'from-button-primary/20 to-accent-gold/20',
       icon: '💰'
     },
@@ -48,7 +48,7 @@ export default function FAQ({ onTrack }: Props) {
     {
       number: '06',
       question: 'Qual garantia vocês dão? E se não der certo?',
-      answer: 'Garantia Dupla: Se após 90 dias seguindo a estratégia seu perfil não apresentar aumento mensurável em consultas qualificadas e oportunidades de venda, continuamos trabalhando SEM CUSTO ADICIONAL por mais 30 dias até atingir a meta. Você só paga quando vê resultado ou se não quiser continuar. Sua satisfação é nossa prioridade - no mercado há muita promessa vazia. Nós fazemos o oposto: resultados provados.',
+      answer: 'Garantia Dupla: Se após 90 dias seguindo a estratégia seu perfil não apresentar aumento mensurável em consultas qualificadas e oportunidades de venda, continuamos trabalhando SEM CUSTO ADICIONAL por mais 30 dias até atingir a meta. Sua satisfação é nossa prioridade, no mercado há muita promessa vazia. Nós fazemos o oposto: resultados provados.',
       color: 'from-orange-500/20 to-red-500/20',
       icon: '✅'
     }
@@ -124,7 +124,7 @@ export default function FAQ({ onTrack }: Props) {
                         </p>
 
                         {/* Helper text */}
-                        <div className='mt-4 flex items-start gap-2'>
+                        {/* <div className='mt-4 flex items-start gap-2'>
                           <span className='text-green-400 text-lg flex-shrink-0 mt-0.5'>✓</span>
                           <span className='text-sm text-text-tertiary'>
                             {idx === 0 && 'Resultado verificado: Marina passou de 2 para 8-12 consultas mensais em 90 dias'}
@@ -134,7 +134,7 @@ export default function FAQ({ onTrack }: Props) {
                             {idx === 4 && 'Apenas 40 minutos mensais de seu tempo após o primeiro mês'}
                             {idx === 5 && 'Sua satisfação é nossa prioridade - 90 dias de garantia dupla'}
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   )}
