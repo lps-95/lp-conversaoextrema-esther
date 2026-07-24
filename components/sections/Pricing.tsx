@@ -24,7 +24,7 @@ export default function Pricing({ onChoosePlan }: Props) {
               </span>
             </h2>
             <p className='text-text-secondary text-lg max-w-2xl mx-auto mb-4'>
-              Transforme seu perfil invisível em máquina de vendas diárias
+              Transforme seu perfil invisível com estratégia
             </p>
             <div className='inline-block px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full'>
               <p className='text-red-400 text-sm font-medium'>
@@ -184,7 +184,7 @@ export default function Pricing({ onChoosePlan }: Props) {
                 </div>
 
                 <p className='text-text-secondary text-sm leading-relaxed'>
-                  Torne-se A autoridade do mercado com 7 figuras e lista de espera
+                  Feito sob medida pensando em você
                 </p>
               </div>
 

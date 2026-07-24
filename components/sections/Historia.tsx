@@ -17,7 +17,7 @@ export default function Historia({ onTrack }: { onTrack?: (eventName: string, pr
             <h2 className='font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4'>
               Por Que Esther Maia e Não{' '}
               <span className='bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>
-                Uma Outra Agência?
+                Uma Outra Social Media?
               </span>
             </h2>
           </div>
@@ -49,7 +49,7 @@ export default function Historia({ onTrack }: { onTrack?: (eventName: string, pr
               <div className='grid sm:grid-cols-2 gap-4 my-8'>
                 <div className='p-4 sm:p-6 bg-white/5 border border-white/10 rounded-xl'>
                   <p className='text-xs uppercase tracking-widest text-accent-gold font-bold mb-2'>Diferença 1</p>
-                  <p className='text-sm text-text-primary font-semibold'>Não sou agência genérica</p>
+                  <p className='text-sm text-text-primary font-semibold'>Não sou social media genérica</p>
                   <p className='text-xs text-text-tertiary mt-2'>Trabalho exclusivamente com 10-12 clientes por vez, não 50+. Cada estratégia é construída do zero baseada no seu negócio específico, não em template genérico.</p>
                 </div>
                 <div className='p-4 sm:p-6 bg-white/5 border border-white/10 rounded-xl'>
@@ -67,11 +67,11 @@ export default function Historia({ onTrack }: { onTrack?: (eventName: string, pr
                 </li>
                 <li className='flex gap-3'>
                   <span className='text-accent-gold text-xl flex-shrink-0'>✓</span>
-                  <span className='text-text-secondary'>Resposta em até 2 horas (não dias) para dúvidas e ajustes.</span>
+                  <span className='text-text-secondary'>Resposta em até 1 hora (não dias) para dúvidas e ajustes.</span>
                 </li>
                 <li className='flex gap-3'>
                   <span className='text-accent-gold text-xl flex-shrink-0'>✓</span>
-                  <span className='text-text-secondary'>Garantia dupla: Se em 90 dias seu perfil não apresentar aumento mensurável em consultas qualificadas, continuamos trabalhando sem custo até funcionar.</span>
+                  <span className='text-text-secondary'>Garantia dupla: Se em 90 dias seu perfil não apresentar aumento mensurável em consultas qualificadas, continuamos trabalhando sem custo por mais 30 dias.</span>
                 </li>
               </ul>
 
