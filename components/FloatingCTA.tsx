@@ -1,24 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import MagneticButton from './MagneticButton'
+import { useFloatingCtaVisible } from '../hooks/useFloatingCtaVisible'
 
 export default function FloatingCTA() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY
-      const h = window.innerHeight
-      const doc = document.documentElement
-      const nearFooter = y + h >= doc.scrollHeight - 320 // esconde perto do rodapé
-      // Show after scrolling 800px, hide near footer
-      setIsVisible(y > 800 && !nearFooter)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const isVisible = useFloatingCtaVisible()
 
   const scrollToForm = () => {
     document.getElementById('form')?.scrollIntoView({ behavior: 'smooth' })

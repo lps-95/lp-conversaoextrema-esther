@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useFloatingCtaVisible } from '../hooks/useFloatingCtaVisible'
 
 interface WhatsAppWidgetProps {
   phone?: string
@@ -12,6 +13,10 @@ export default function WhatsAppWidget({
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
+  // Quando a barra fixa de baixo (FloatingCTA) está na tela, sobe o botão
+  // do WhatsApp pra não ficar em cima dela; no resto do tempo, fica na
+  // posição normal, mais perto do canto.
+  const floatingCtaVisible = useFloatingCtaVisible()
 
   useEffect(() => {
     // Mostrar após 3 segundos
@@ -57,7 +62,13 @@ export default function WhatsAppWidget({
   if (!isVisible) return null
 
   return (
-    <div className="fixed right-4 sm:right-6 z-[9998] bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]">
+    <div
+      className={`fixed right-4 sm:right-6 z-[9998] transition-[bottom] duration-300 ${
+        floatingCtaVisible
+          ? 'bottom-[calc(11rem+env(safe-area-inset-bottom))] sm:bottom-[calc(6rem+env(safe-area-inset-bottom))]'
+          : 'bottom-[calc(1.5rem+env(safe-area-inset-bottom))]'
+      }`}
+    >
       {/* Tooltip expandido */}
       <div
         className={`absolute bottom-full right-0 mb-4 transition-all duration-300 ${isExpanded
