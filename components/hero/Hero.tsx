@@ -73,7 +73,7 @@ export default function Hero() {
             {/* Parágrafo de validação da dor */}
             <div className="relative group mb-8 sm:mb-10">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 animate-gradient-x" />
-              <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 md:p-8">
+              <div className="relative bg-white/10 backdrop-blur-sm md:backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 md:p-8">
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-text-secondary font-medium">
                   {content.painParagraph.before}
                   <span className="text-text-primary font-bold">{content.painParagraph.highlight1}</span>

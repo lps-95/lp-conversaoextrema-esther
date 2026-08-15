@@ -1,0 +1,12 @@
+# Alvo de navegadores do build. Sem isso, o Next.js usa uma configuração
+# padrão bem ampla que ainda inclui navegadores antigos o suficiente pra
+# precisar de polyfills de coisas como Array.prototype.at, Object.hasOwn
+# etc — funcionalidades que hoje em dia praticamente todo navegador em uso
+# real já suporta nativamente. O PageSpeed Insights sinalizou isso como
+# "JavaScript legado" desnecessário.
+#
+# "defaults and fully supports es6-module" é um jeito prático de dizer
+# "navegadores modernos o suficiente pra rodar ES2020+ nativamente" sem
+# precisar listar versões manualmente.
+defaults and fully supports es6-module
+maintained node versions
