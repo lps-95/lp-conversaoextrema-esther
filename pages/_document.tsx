@@ -12,14 +12,6 @@ export default function Document() {
 
         <meta name="theme-color" content="#D4AF37" />
         <meta name="author" content="Esther Social Media" />
-
-        {/* Pré-conectar para melhor performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
       </Head>
       <body>
         <Main />

@@ -39,8 +39,8 @@ export default function PoliticaDePrivacidade() {
                 Esta página é operada por Esther Maia (Esther Social Media), responsável pelo tratamento
                 dos dados pessoais coletados neste site. Dúvidas ou solicitações sobre seus dados podem
                 ser enviadas para{' '}
-                <a href="mailto:contato@esthersocialmedia.com" className="text-button-primary hover:underline">
-                  contato@esthersocialmedia.com
+                <a href="mailto:esther.lps27@gmail.com" className="text-button-primary hover:underline">
+                  esther.lps27@gmail.com
                 </a>
                 .
               </p>
@@ -108,8 +108,8 @@ export default function PoliticaDePrivacidade() {
               </ul>
               <p className="mt-3">
                 Para exercer qualquer um desses direitos, envie um e-mail para{' '}
-                <a href="mailto:contato@esthersocialmedia.com" className="text-button-primary hover:underline">
-                  contato@esthersocialmedia.com
+                <a href="mailto:esther.lps27@gmail.com" className="text-button-primary hover:underline">
+                  esther.lps27@gmail.com
                 </a>
                 . Cadastros de newsletter também podem ser cancelados diretamente pelo link presente no rodapé
                 de qualquer e-mail enviado.

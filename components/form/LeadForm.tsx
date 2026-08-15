@@ -1,4 +1,5 @@
 import { formContent } from '../../content/form'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useLeadForm } from '../../hooks/useLeadForm'
 import CustomSelect from '../CustomSelect'
 import { MSection } from '../Motion'
@@ -22,6 +23,8 @@ export default function LeadForm({
   form: ReturnType<typeof useLeadForm>
 }) {
   const { fields, setters, handleWhatsAppChange, hiddenFields, status, errorMessage, handleSubmit } = form
+  const { language } = useLanguage()
+  const content = formContent[language]
 
   return (
     <section id="form" className="relative overflow-hidden py-20 bg-gradient-to-b from-black via-[#0d0c12] to-black">
@@ -31,13 +34,24 @@ export default function LeadForm({
         <MSection>
           <div className="text-center mb-10">
             <div className="inline-block px-4 py-2 mb-6 bg-button-primary/10 border border-button-primary/20 rounded-full backdrop-blur-sm">
-              <p className="text-button-primary text-xs font-bold uppercase tracking-widest">{formContent.sectionBadge}</p>
+              <p className="text-button-primary text-xs font-bold uppercase tracking-widest">{content.sectionBadge}</p>
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4 text-text-primary">{formContent.title}</h2>
-            <p className="text-text-secondary text-sm sm:text-base max-w-xl mx-auto">{formContent.subtitle}</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4 text-text-primary">{content.title}</h2>
+            <p className="text-text-secondary text-sm sm:text-base max-w-xl mx-auto">{content.subtitle}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
+            {/* Campo armadilha contra bots — invisível pra pessoas de verdade */}
+            <input
+              type="text"
+              name="website"
+              value={fields.honeypot}
+              onChange={(e) => setters.setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              className="absolute -left-[9999px] w-px h-px opacity-0"
+              aria-hidden="true"
+            />
             {fields.plan && (
               <div className="mb-6 p-3 bg-button-primary/10 border border-button-primary/20 rounded-lg text-center">
                 <p className="text-xs text-text-secondary">
@@ -52,24 +66,24 @@ export default function LeadForm({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <TextField
                 id="name"
-                label="Nome Completo *"
+                label={content.fields.name.label}
                 value={fields.name}
                 onChange={(v) => setters.setName(v)}
-                placeholder="Maria Silva"
+                placeholder={content.fields.name.placeholder}
               />
               <TextField
                 id="email"
-                label="Email *"
+                label={content.fields.email.label}
                 type="email"
                 value={fields.email}
                 onChange={(v) => setters.setEmail(v)}
-                placeholder="maria@exemplo.com"
+                placeholder={content.fields.email.placeholder}
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <div>
-                <FieldLabel htmlFor="whatsapp">WhatsApp *</FieldLabel>
+                <FieldLabel htmlFor="whatsapp">{content.fields.whatsapp.label}</FieldLabel>
                 <input
                   id="whatsapp"
                   type="tel"
@@ -77,53 +91,56 @@ export default function LeadForm({
                   value={fields.whatsapp}
                   onChange={handleWhatsAppChange}
                   required
-                  placeholder="(11) 99999-9999"
+                  placeholder={content.fields.whatsapp.placeholder}
                   className={fieldClassName}
                 />
               </div>
               <TextField
                 id="niche"
-                label="Nicho/Área *"
+                label={content.fields.niche.label}
                 value={fields.niche}
                 onChange={(v) => setters.setNiche(v)}
-                placeholder="Ex: Psicóloga, Coach..."
+                placeholder={content.fields.niche.placeholder}
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <SelectField
                 id="followers"
-                label="Seguidores *"
+                label={content.fields.followers.label}
                 value={fields.followers}
                 onChange={(v) => setters.setFollowers(v)}
-                options={formContent.followersOptions}
+                options={content.followersOptions}
+                placeholder={content.selectPlaceholder}
               />
               <SelectField
                 id="revenue"
-                label="Faturamento Mensal *"
+                label={content.fields.revenue.label}
                 value={fields.revenue}
                 onChange={(v) => setters.setRevenue(v)}
-                options={formContent.revenueOptions}
+                options={content.revenueOptions}
+                placeholder={content.selectPlaceholder}
               />
             </div>
 
             <div className="mb-6">
               <SelectField
                 id="mainGoal"
-                label="Seu Principal Objetivo *"
+                label={content.fields.mainGoal.label}
                 value={fields.mainGoal}
                 onChange={(v) => setters.setMainGoal(v)}
-                options={formContent.mainGoalOptions}
+                options={content.mainGoalOptions}
+                placeholder={content.selectPlaceholder}
               />
             </div>
 
             <div className="mb-6">
-              <FieldLabel htmlFor="bestTime">Melhor Horário para Contato *</FieldLabel>
+              <FieldLabel htmlFor="bestTime">{content.fields.bestTime.label}</FieldLabel>
               <CustomSelect
                 value={fields.bestTime || ''}
                 onChange={setters.setBestTime}
-                placeholder="Selecione..."
-                options={formContent.bestTimeOptions}
+                placeholder={content.selectPlaceholder}
+                options={content.bestTimeOptions}
               />
             </div>
 
@@ -135,7 +152,7 @@ export default function LeadForm({
 
             {status === 'success' && (
               <div className="mb-5 bg-green-500/10 border border-green-500/30 text-green-400 text-sm text-center p-3 rounded-lg">
-                {formContent.successMessage}
+                {content.successMessage}
               </div>
             )}
 
@@ -150,22 +167,22 @@ export default function LeadForm({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
-                  <span>{formContent.submitLoadingLabel}</span>
+                  <span>{content.submitLoadingLabel}</span>
                 </>
               ) : status === 'success' ? (
                 <>
                   <span>✓</span>
-                  <span>{formContent.submitSuccessLabel}</span>
+                  <span>{content.submitSuccessLabel}</span>
                 </>
               ) : (
                 <>
                   <WhatsAppIcon />
-                  <span>{formContent.submitLabel}</span>
+                  <span>{content.submitLabel}</span>
                 </>
               )}
             </button>
 
-            <p className="text-center text-xs text-text-secondary/60 mt-4">{formContent.privacyNote}</p>
+            <p className="text-center text-xs text-text-secondary/60 mt-4">{content.privacyNote}</p>
 
             <input type="hidden" name="utm_medium" value={hiddenFields.utmMedium} readOnly />
             <input type="hidden" name="utm_campaign" value={hiddenFields.utmCampaign} readOnly />
@@ -231,12 +248,14 @@ function SelectField({
   value,
   onChange,
   options,
+  placeholder,
 }: {
   id: string
   label: string
   value: string
   onChange: (value: string) => void
   options: { value: string; label: string }[]
+  placeholder: string
 }) {
   return (
     <div>
@@ -250,7 +269,7 @@ function SelectField({
         className={`${fieldClassName} cursor-pointer`}
       >
         <option value="" className="bg-primary-dark">
-          Selecione...
+          {placeholder}
         </option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value} className="bg-primary-dark">

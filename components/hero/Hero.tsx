@@ -1,4 +1,5 @@
 import { heroContent } from '../../content/hero'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { track } from '../../lib/analytics'
 import CountdownTimer from '../CountdownTimer'
 import MagneticButton from '../MagneticButton'
@@ -19,6 +20,9 @@ import VideoModal from '../VideoModal'
  * sai do servidor já é o final — sem re-render, sem flash, sem CLS.
  */
 export default function Hero() {
+  const { language } = useLanguage()
+  const content = heroContent[language]
+
   return (
     <section id="hero" className="relative overflow-hidden min-h-screen flex items-center">
       {/* Camadas de fundo */}
@@ -52,15 +56,15 @@ export default function Hero() {
             {/* Selo */}
             <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 backdrop-blur-sm">
               <span className="w-2 h-2 bg-accent-gold rounded-full animate-pulse-glow" />
-              <span className="text-sm font-medium text-text-secondary">{heroContent.badge}</span>
+              <span className="text-sm font-medium text-text-secondary">{content.badge}</span>
             </div>
 
             {/* Título principal */}
             <h1 className="font-display text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 sm:mb-8">
-              {heroContent.headline.prefix}
+              {content.headline.prefix}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-button-primary via-accent-gold to-button-primary bg-clip-text text-transparent animate-gradient-x">
-                  {heroContent.headline.highlight}
+                  {content.headline.highlight}
                 </span>
                 <span className="absolute -inset-1 bg-gradient-to-r from-button-primary/20 to-accent-gold/20 blur-xl -z-10 animate-pulse-glow" />
               </span>
@@ -71,15 +75,15 @@ export default function Hero() {
               <div className="absolute -inset-0.5 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 animate-gradient-x" />
               <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 md:p-8">
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-text-secondary font-medium">
-                  {heroContent.painParagraph.before}
-                  <span className="text-text-primary font-bold">{heroContent.painParagraph.highlight1}</span>
-                  {heroContent.painParagraph.middle}
-                  <span className="text-text-primary font-bold">{heroContent.painParagraph.highlight2}</span>
-                  {heroContent.painParagraph.after}
-                  <span className="text-text-primary font-bold">{heroContent.painParagraph.highlight3}</span>
-                  {heroContent.painParagraph.end}
+                  {content.painParagraph.before}
+                  <span className="text-text-primary font-bold">{content.painParagraph.highlight1}</span>
+                  {content.painParagraph.middle}
+                  <span className="text-text-primary font-bold">{content.painParagraph.highlight2}</span>
+                  {content.painParagraph.after}
+                  <span className="text-text-primary font-bold">{content.painParagraph.highlight3}</span>
+                  {content.painParagraph.end}
                 </p>
-                <p className="text-lg sm:text-xl font-bold text-accent-gold mt-4">{heroContent.painClosingLine}</p>
+                <p className="text-lg sm:text-xl font-bold text-accent-gold mt-4">{content.painClosingLine}</p>
               </div>
             </div>
 
@@ -93,7 +97,7 @@ export default function Hero() {
                 >
                   <div className="absolute -inset-1 bg-gradient-to-r from-button-primary via-accent-gold to-button-primary rounded-xl blur-lg opacity-60 group-hover:opacity-100 transition duration-300 animate-gradient-x" />
                   <div className="relative px-6 sm:px-8 md:px-10 lg:px-12 py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-button-primary to-accent-gold rounded-xl font-bold text-sm sm:text-base md:text-lg lg:text-xl text-primary-dark hover:scale-105 transition-transform duration-200 shadow-2xl text-center">
-                    {heroContent.cta.primaryLabel}
+                    {content.cta.primaryLabel}
                     <span className="ml-2">→</span>
                   </div>
                 </a>
@@ -104,22 +108,22 @@ export default function Hero() {
                   onClick={() => {
                     track('cta_click', { id: 'hero_secondary' })
                     document
-                      .getElementById(heroContent.cta.secondaryScrollTargetId)
+                      .getElementById(content.cta.secondaryScrollTargetId)
                       ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }}
                   className="px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl border-2 border-white/30 text-text-primary text-sm sm:text-base font-semibold hover:bg-white/5 hover:border-white/50 transition-all duration-200"
                 >
-                  {heroContent.cta.secondaryLabel}
+                  {content.cta.secondaryLabel}
                 </button>
               </MagneticButton>
             </div>
 
             <div className="mt-8 sm:mt-10">
-              <CountdownTimer targetHours={heroContent.countdown.targetHours} message={heroContent.countdown.message} />
+              <CountdownTimer targetHours={content.countdown.targetHours} message={content.countdown.message} />
             </div>
 
             {/* <div className="mt-6 flex justify-center">
-              <VideoModal videoUrl={heroContent.video.url} title={heroContent.video.title} />
+              <VideoModal videoUrl={content.video.url} title={content.video.title} />
             </div> */}
 
             {/* Indicador de scroll */}

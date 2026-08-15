@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { formContent } from '../content/form'
+import { useLanguage } from '../contexts/LanguageContext'
 import { track } from '../lib/analytics'
 import { redirectToWhatsApp } from '../lib/whatsappRedirect'
+import { useSpamGuard } from './useSpamGuard'
 import { useWhatsAppMask } from './useWhatsAppMask'
 
 type PlanButtonId = keyof typeof formContent.planByButtonId
@@ -17,6 +19,8 @@ type PlanButtonId = keyof typeof formContent.planByButtonId
  *   `content/form.ts` e o layout, sem tocar nesta lógica
  */
 export function useLeadForm() {
+  const { language } = useLanguage()
+  const content = formContent[language]
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [plan, setPlan] = useState('')
@@ -26,6 +30,8 @@ export function useLeadForm() {
   const [followers, setFollowers] = useState('')
   const [revenue, setRevenue] = useState('')
   const [mainGoal, setMainGoal] = useState('')
+  const [honeypot, setHoneypot] = useState('')
+  const { isLikelySpam } = useSpamGuard()
 
   // UTMs e URL de origem, capturados assim que a página carrega
   const [utmSource, setUtmSource] = useState('')
@@ -63,27 +69,32 @@ export function useLeadForm() {
     e.preventDefault()
     setErrorMessage('')
 
+    // Bot: sai silenciosamente, sem redirecionar e sem salvar nada — um
+    // bot não segue o redirecionamento de qualquer forma, então não há
+    // ganho nenhum em fingir sucesso aqui como fazemos na newsletter.
+    if (isLikelySpam(honeypot)) return
+
     // Validação básica dos campos obrigatórios
     if (!name.trim()) {
       setStatus('error')
-      setErrorMessage(formContent.validationMessages.missingName)
+      setErrorMessage(content.validationMessages.missingName)
       return
     }
     if (!email.trim()) {
       setStatus('error')
-      setErrorMessage(formContent.validationMessages.missingEmail)
+      setErrorMessage(content.validationMessages.missingEmail)
       return
     }
     if (!whatsapp.trim()) {
       setStatus('error')
-      setErrorMessage(formContent.validationMessages.missingWhatsapp)
+      setErrorMessage(content.validationMessages.missingWhatsapp)
       return
     }
 
     const whatsappNumbers = whatsapp.replace(/\D/g, '')
     if (whatsappNumbers.length < 10 || whatsappNumbers.length > 13) {
       setStatus('error')
-      setErrorMessage(formContent.validationMessages.invalidWhatsapp)
+      setErrorMessage(content.validationMessages.invalidWhatsapp)
       return
     }
 
@@ -138,8 +149,8 @@ export function useLeadForm() {
   }
 
   return {
-    fields: { name, email, plan, whatsapp, bestTime, niche, followers, revenue, mainGoal },
-    setters: { setName, setEmail, setPlan, setBestTime, setNiche, setFollowers, setRevenue, setMainGoal },
+    fields: { name, email, plan, whatsapp, bestTime, niche, followers, revenue, mainGoal, honeypot },
+    setters: { setName, setEmail, setPlan, setBestTime, setNiche, setFollowers, setRevenue, setMainGoal, setHoneypot },
     handleWhatsAppChange,
     hiddenFields: { utmSource, utmMedium, utmCampaign, origin },
     status,

@@ -13,8 +13,16 @@ create table if not exists newsletter_leads (
   -- comprovar que obteve o consentimento).
   consent_given_at timestamptz not null,
   source text default 'landing_page_conversao_extrema',
+  -- Token único usado no link de cancelamento do e-mail — permite que a
+  -- própria pessoa se descadastre sem precisar de senha/login, mas sem dar
+  -- pra qualquer um apagar o cadastro de outra pessoa adivinhando o link.
+  unsubscribe_token uuid not null default gen_random_uuid(),
   created_at timestamptz not null default now()
 );
+
+-- Se a tabela já existia antes desta coluna existir, rode esta linha
+-- separadamente pra adicionar a coluna sem perder os dados já cadastrados:
+-- alter table newsletter_leads add column if not exists unsubscribe_token uuid not null default gen_random_uuid();
 
 -- Evita cadastrar o mesmo e-mail duas vezes.
 --

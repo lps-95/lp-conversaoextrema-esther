@@ -46,6 +46,18 @@ const nextConfig = {
 
   // Usar Turbopack (padrão no Next.js 16)
   turbopack: {},
+
+  // Quem já tinha o link antigo salvo (ex: compartilhado antes) continua
+  // chegando na política de privacidade certa, só que na versão atual.
+  async redirects() {
+    return [
+      {
+        source: '/politica-privacidade.html',
+        destination: '/politica-de-privacidade',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

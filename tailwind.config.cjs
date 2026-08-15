@@ -47,8 +47,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-playfair)', 'serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -1,46 +1,23 @@
+import { comoFuncionaContent } from '../../content/comofunciona'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { MSection } from '../Motion'
 import ParallaxLayer from '../ParallaxLayer'
 import ScrollReveal from '../ScrollReveal'
 import TiltCard from '../TiltCard'
 
+// Cores dos badges de destaque de cada passo — não dependem de idioma,
+// então ficam aqui (não em content/), uma por índice do passo.
+const TAG_COLORS = [
+  ['bg-red-500/10 border-red-500/30 text-red-400', 'bg-orange-500/10 border-orange-500/30 text-orange-400'],
+  ['bg-blue-500/10 border-blue-500/30 text-blue-400', 'bg-purple-500/10 border-purple-500/30 text-purple-400'],
+  ['bg-green-500/10 border-green-500/30 text-green-400', 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'],
+  ['bg-purple-500/10 border-purple-500/30 text-purple-400', 'bg-pink-500/10 border-pink-500/30 text-pink-400'],
+  ['bg-button-primary/10 border-button-primary/30 text-button-primary', 'bg-accent-gold/10 border-accent-gold/30 text-accent-gold'],
+]
+
 export default function ComoFunciona() {
-  const steps = [
-    {
-      number: '01',
-      emoji: '🔍',
-      title: 'Diagnóstico da Atrofia Digital',
-      description: 'Mapeamos cada ponto onde seu perfil está perdendo dinheiro. Identificamos os vazios de narrativa que transformam visitantes em desistentes. Você recebe um relatório completo mostrando exatamente onde o sangramento de oportunidades acontece.',
-      gradient: 'from-red-500/20 to-orange-500/20'
-    },
-    {
-      number: '02',
-      emoji: '🧩',
-      title: 'Arquitetura de Identidade Magnética',
-      description: 'Reconstruímos sua presença do zero. Bio estratégica, destaques organizados e linha editorial coesa que posiciona você como única escolha lógica. Seu perfil passa a atrair cliente ideal e repelir curioso que nunca compra.',
-      gradient: 'from-blue-500/20 to-purple-500/20'
-    },
-    {
-      number: '03',
-      emoji: '🗺️',
-      title: 'Sistema de Narrativas Vendedoras',
-      description: 'Criamos o planejamento completo de conteúdo baseado em funil invisível. Cada post funciona como capítulo estratégico que acumula desejo de compra. Roteiros prontos, formatos definidos, cronograma claro para os próximos 90 dias.',
-      gradient: 'from-green-500/20 to-emerald-500/20'
-    },
-    {
-      number: '04',
-      emoji: '⚙️',
-      title: 'Gestão Executiva Hands-Off',
-      description: 'Assumimos toda a execução. Criação, edição, publicação e gestão diária do perfil. Você aprova o planejamento e nós fazemos acontecer. Seu perfil trabalha 24 horas vendendo enquanto você foca em atender clientes.',
-      gradient: 'from-purple-500/20 to-pink-500/20'
-    },
-    {
-      number: '05',
-      emoji: '📊',
-      title: 'Otimização Contínua por Dados',
-      description: 'Analisamos métricas que realmente importam. Ajustamos a estratégia com base em performance real. Seu ROI aumenta mês após mês enquanto refinamos a máquina de vendas com precisão cirúrgica.',
-      gradient: 'from-button-primary/20 to-accent-gold/20'
-    }
-  ]
+  const { language } = useLanguage()
+  const content = comoFuncionaContent[language]
 
   return (
     <section id='como-funciona' className='relative overflow-hidden py-20 sm:py-28 bg-gradient-to-b from-black via-[#0d0c12] to-black'>
@@ -52,23 +29,21 @@ export default function ComoFunciona() {
         <MSection>
           <div className='text-center mb-16'>
             <span className='inline-block px-4 py-2 mb-6 text-sm font-semibold bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-full text-blue-400'>
-              ⚡ Metodologia Comprovada
+              {content.badge}
             </span>
             <h2 className='font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4'>
-              Como Funciona o{' '}
+              {content.title.prefix}
               <span className='bg-gradient-to-r from-button-primary to-accent-gold bg-clip-text text-transparent'>
-                Gestão Extrema
+                {content.title.highlight}
               </span>
             </h2>
-            <p className='text-text-secondary text-lg max-w-2xl mx-auto'>
-              5 passos estratégicos que transformam seu perfil invisível em máquina de vendas.
-            </p>
+            <p className='text-text-secondary text-lg max-w-2xl mx-auto'>{content.subtitle}</p>
           </div>
         </MSection>
 
         <div className='space-y-6 lg:space-y-8'>
-          {steps.map((step, idx) => (
-            <ScrollReveal key={idx} direction={idx % 2 === 0 ? 'left' : 'right'} delay={idx * 100}>
+          {content.steps.map((step, idx) => (
+            <ScrollReveal key={step.number} direction={idx % 2 === 0 ? 'left' : 'right'} delay={idx * 100}>
               <TiltCard tiltAmount={5}>
                 <div className='group relative'>
                   {/* Animated border glow */}
@@ -142,36 +117,14 @@ export default function ComoFunciona() {
 
                         {/* Bottom highlights */}
                         <div className='flex flex-wrap gap-2 pt-2'>
-                          {idx === 0 && (
-                            <>
-                              <span className='px-3 py-1 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 text-xs font-medium'>Diagnóstico Profundo</span>
-                              <span className='px-3 py-1 bg-orange-500/10 border border-orange-500/30 rounded-full text-orange-400 text-xs font-medium'>Análise Completa</span>
-                            </>
-                          )}
-                          {idx === 1 && (
-                            <>
-                              <span className='px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-xs font-medium'>Bio Estratégica</span>
-                              <span className='px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs font-medium'>Design Premium</span>
-                            </>
-                          )}
-                          {idx === 2 && (
-                            <>
-                              <span className='px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 text-xs font-medium'>90 Dias de Conteúdo</span>
-                              <span className='px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 text-xs font-medium'>Funil Invisível</span>
-                            </>
-                          )}
-                          {idx === 3 && (
-                            <>
-                              <span className='px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-400 text-xs font-medium'>Gestão Total</span>
-                              <span className='px-3 py-1 bg-pink-500/10 border border-pink-500/30 rounded-full text-pink-400 text-xs font-medium'>Hands-Off</span>
-                            </>
-                          )}
-                          {idx === 4 && (
-                            <>
-                              <span className='px-3 py-1 bg-button-primary/10 border border-button-primary/30 rounded-full text-button-primary text-xs font-medium'>ROI Crescente</span>
-                              <span className='px-3 py-1 bg-accent-gold/10 border border-accent-gold/30 rounded-full text-accent-gold text-xs font-medium'>Otimização Contínua</span>
-                            </>
-                          )}
+                          {step.tags.map((tag, tagIdx) => (
+                            <span
+                              key={tag}
+                              className={`px-3 py-1 border rounded-full text-xs font-medium ${TAG_COLORS[idx][tagIdx]}`}
+                            >
+                              {tag}
+                            </span>
+                          ))}
                         </div>
                       </div>
 

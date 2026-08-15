@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import type { Language } from '../contexts/LanguageContext'
 import { confirmationEmailContent } from '../content/newsletter'
 
 /**
@@ -13,7 +14,12 @@ import { confirmationEmailContent } from '../content/newsletter'
  * disso rodar, então uma falha aqui não desfaz o cadastro — só significa
  * que a pessoa não recebeu o e-mail de boas-vindas).
  */
-export async function sendConfirmationEmail(to: string, name?: string) {
+export async function sendConfirmationEmail(
+  to: string,
+  name: string | undefined,
+  unsubscribeToken: string,
+  language: Language = 'pt'
+) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     throw new Error('Resend não configurado: defina RESEND_API_KEY no .env.local')
@@ -25,9 +31,13 @@ export async function sendConfirmationEmail(to: string, name?: string) {
   // que você verificar seu próprio domínio lá, troque essa env var.
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seu-dominio.com'
+  const unsubscribeUrl = `${siteUrl}/cancelar-inscricao?token=${unsubscribeToken}`
+
   const resend = new Resend(apiKey)
 
-  const { heading, body, footerNote, fromName, subject } = confirmationEmailContent
+  const { heading, body, footerNote, fromName, subject, unsubscribeLabel } = confirmationEmailContent[language]
+  const htmlLang = language === 'pt' ? 'pt-BR' : language
 
   // E-mail HTML precisa de estilo inline e layout em tabela — clientes de
   // e-mail (Gmail, Outlook etc.) ignoram <style> externo e boa parte do
@@ -37,7 +47,7 @@ export async function sendConfirmationEmail(to: string, name?: string) {
   // visual igual à da landing page.
   const html = `
   <!DOCTYPE html>
-  <html lang="pt-BR">
+  <html lang="${htmlLang}">
     <head>
       <meta charset="utf-8" />
       <meta name="color-scheme" content="dark light" />
@@ -86,8 +96,11 @@ export async function sendConfirmationEmail(to: string, name?: string) {
               <!-- Rodapé -->
               <tr>
                 <td style="padding: 24px 8px 0 8px;" align="center">
-                  <p style="margin: 0; font-family: Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #6a6a6a;">
+                  <p style="margin: 0 0 8px 0; font-family: Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #6a6a6a;">
                     ${footerNote}
+                  </p>
+                  <p style="margin: 0; font-family: Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #6a6a6a;">
+                    <a href="${unsubscribeUrl}" style="color: #d4af37; text-decoration: underline;">${unsubscribeLabel}</a>
                   </p>
                 </td>
               </tr>

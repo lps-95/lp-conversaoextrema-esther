@@ -7,6 +7,7 @@ import CustomCursor from './CustomCursor'
 import ExitIntentPopup from './ExitIntentPopup'
 import FloatingCTA from './FloatingCTA'
 import Hero from './hero/Hero'
+import LanguageToggle from './LanguageToggle'
 import LeadForm from './form/LeadForm'
 import ScrollProgress from './ScrollProgress'
 import WhatsAppWidget from './WhatsAppWidget'
@@ -43,6 +44,7 @@ export default function LandingPage() {
   return (
     <div className="bg-gradient-to-br from-black via-[#0d0c12] to-black text-white font-sans">
       <CustomCursor />
+      <LanguageToggle />
       <AnimatedBlobs />
       <ScrollProgress />
       <FloatingCTA />

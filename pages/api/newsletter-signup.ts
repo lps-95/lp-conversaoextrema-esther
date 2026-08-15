@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { Language } from '../../contexts/LanguageContext'
 import { sendConfirmationEmail } from '../../lib/email'
 import { getSupabaseAdmin } from '../../lib/supabaseAdmin'
+
+const VALID_LANGUAGES: Language[] = ['pt', 'en', 'es']
 
 /**
  * Endpoint chamado pelo formulário de newsletter (`useNewsletterSignup`).
@@ -20,7 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { name, email, consent } = req.body
+    const { name, email, consent, language } = req.body
+    const emailLanguage: Language = VALID_LANGUAGES.includes(language) ? language : 'pt'
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {
       return res.status(400).json({ error: 'E-mail inválido' })
@@ -35,20 +39,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const normalizedEmail = email.toLowerCase().trim()
     const supabase = getSupabaseAdmin()
 
-    const { error } = await supabase.from('newsletter_leads').upsert(
-      {
-        name: name || null,
-        email: normalizedEmail,
-        consent_given_at: new Date().toISOString(),
-        source: 'landing_page_conversao_extrema',
-      },
-      { onConflict: 'email' }
-    )
+    const { data, error } = await supabase
+      .from('newsletter_leads')
+      .upsert(
+        {
+          name: name || null,
+          email: normalizedEmail,
+          consent_given_at: new Date().toISOString(),
+          source: 'landing_page_conversao_extrema',
+        },
+        { onConflict: 'email' }
+      )
+      .select('unsubscribe_token')
+      .single()
 
     if (error) throw error
 
     try {
-      await sendConfirmationEmail(normalizedEmail, name || undefined)
+      await sendConfirmationEmail(normalizedEmail, name || undefined, data.unsubscribe_token, emailLanguage)
     } catch (emailError) {
       console.error('[API][newsletter-signup] Cadastro salvo, mas e-mail de confirmação falhou:', emailError)
     }

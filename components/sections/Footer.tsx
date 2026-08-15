@@ -1,3 +1,5 @@
+import { footerContent } from '../../content/footer'
+import { useLanguage } from '../../contexts/LanguageContext'
 import ParallaxLayer from '../ParallaxLayer'
 
 type Props = {
@@ -5,6 +7,9 @@ type Props = {
 }
 
 export default function Footer({ onTrack }: Props) {
+  const { language } = useLanguage()
+  const content = footerContent[language]
+
   return (
     <footer className='relative overflow-hidden bg-gradient-to-b from-black via-[#0a0a0f] to-black border-t border-white/10'>
       <ParallaxLayer speed={0.03} className='absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_50%_20%,rgba(255,214,102,0.08),transparent_50%)]' />
@@ -22,8 +27,7 @@ export default function Footer({ onTrack }: Props) {
                 </h3>
               </div>
               <p className='text-text-secondary text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 max-w-md'>
-                Transformando perfis invisíveis em máquinas de autoridade através do Método Narrativa Vendedora.
-                Pare de perder contratos de 6 figuras para concorrentes com Instagram melhor.
+                {content.brandDescription}
               </p>
               <div className='flex items-center gap-3'>
                 <a
@@ -57,17 +61,10 @@ export default function Footer({ onTrack }: Props) {
             <div>
               <h4 className='font-display text-base sm:text-lg font-bold text-text-primary mb-4 sm:mb-5 flex items-center gap-2'>
                 <span className='text-lg sm:text-xl'>🧭</span>
-                Navegação
+                {content.navTitle}
               </h4>
               <ul className='space-y-2 sm:space-y-3'>
-                {[
-                  { label: 'Início', href: '#hero' },
-                  { label: 'Resultados', href: '#numeros' },
-                  { label: 'Problema', href: '#problema' },
-                  { label: 'Solução', href: '#oportunidade' },
-                  { label: 'Como Funciona', href: '#como-funciona' },
-                  { label: 'Planos', href: '#planos' },
-                ].map((link) => (
+                {content.navLinks.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
@@ -86,7 +83,7 @@ export default function Footer({ onTrack }: Props) {
             <div>
               <h4 className='font-display text-base sm:text-lg font-bold text-text-primary mb-4 sm:mb-5 flex items-center gap-2'>
                 <span className='text-lg sm:text-xl'>📞</span>
-                Contato
+                {content.contactTitle}
               </h4>
               <ul className='space-y-3 sm:space-y-4'>
                 <li>
@@ -97,7 +94,7 @@ export default function Footer({ onTrack }: Props) {
                     onClick={() => onTrack('footer_contact_click', { type: 'whatsapp' })}
                     className='text-text-secondary hover:text-button-primary transition-colors duration-200 block'
                   >
-                    <div className='text-xs sm:text-sm font-medium mb-1 text-text-tertiary'>WhatsApp</div>
+                    <div className='text-xs sm:text-sm font-medium mb-1 text-text-tertiary'>{content.whatsappLabel}</div>
                     <div className='flex items-center gap-2'>
                       <span className='text-green-400 text-base sm:text-lg'>💬</span>
                       <span className='text-sm sm:text-base'>+55 48 99196-4517</span>
@@ -106,11 +103,11 @@ export default function Footer({ onTrack }: Props) {
                 </li>
                 <li>
                   <a
-                    href='mailto:contato@esthersocialmedia.com'
+                    href='mailto:esther.lps27@gmail.com'
                     onClick={() => onTrack('footer_contact_click', { type: 'email' })}
                     className='text-text-secondary hover:text-button-primary transition-colors duration-200 block'
                   >
-                    <div className='text-xs sm:text-sm font-medium mb-1 text-text-tertiary'>E-mail</div>
+                    <div className='text-xs sm:text-sm font-medium mb-1 text-text-tertiary'>{content.emailLabel}</div>
                     <div className='flex items-center gap-2'>
                       <span className='text-blue-400 text-base sm:text-lg'>✉️</span>
                       <span className='text-xs sm:text-sm break-all'>esther.lps27@gmail.com</span>
@@ -129,20 +126,20 @@ export default function Footer({ onTrack }: Props) {
           <div className='max-w-6xl mx-auto px-4 py-6 sm:py-8'>
             <div className='flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-text-tertiary'>
               <p className='text-center sm:text-left'>
-                © {new Date().getFullYear()} Esther Social Media. Todos os direitos reservados.
+                © {new Date().getFullYear()} {content.copyright}
               </p>
               <div className='flex items-center gap-4 sm:gap-6'>
                 <a
-                  href='/politica-privacidade.html'
+                  href='/politica-de-privacidade'
                   className='text-text-primary hover:text-button-primary underline underline-offset-4 decoration-1 transition-colors duration-200 whitespace-nowrap'
                 >
-                  Política de Privacidade
+                  {content.privacyLabel}
                 </a>
                 <a
                   href='/termos-de-uso.html'
                   className='text-text-primary hover:text-button-primary underline underline-offset-4 decoration-1 transition-colors duration-200 whitespace-nowrap'
                 >
-                  Termos de Uso
+                  {content.termsLabel}
                 </a>
               </div>
             </div>
