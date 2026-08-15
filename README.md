@@ -31,21 +31,33 @@ landing pages sem reescrever componentes — normalmente só mexendo em
 ```
 content/                     # Textos, opções de formulário, mensagens — SEM JSX.
 ├── hero.ts                  # Conteúdo da seção Hero
-└── form.ts                  # Labels, opções de select, mensagens de validação
+├── form.ts                  # Formulário de agendamento de sessão
+└── newsletter.ts            # Formulário de newsletter + e-mail de confirmação
 
 hooks/                       # Lógica reutilizável, sem UI
-├── useLeadForm.ts           # Estado + validação + envio do formulário de lead
+├── useLeadForm.ts           # Formulário de agendamento (valida, redireciona pro WhatsApp)
+├── useNewsletterSignup.ts   # Formulário de newsletter (valida, chama a API)
+├── useFloatingCtaVisible.ts # Estado compartilhado entre os elementos flutuantes
 ├── useWhatsAppMask.ts       # Máscara de telefone
 └── useSmoothScroll.ts       # Scroll suave customizado
 
-lib/                         # Funções auxiliares puras
+lib/                         # Funções auxiliares puras (uso em pages/api/*)
 ├── analytics.ts             # Wrapper do Plausible (função track)
-└── whatsappRedirect.ts      # Monta a URL/mensagem de redirecionamento pro WhatsApp
+├── whatsappRedirect.ts      # Monta a URL/mensagem de redirecionamento pro WhatsApp
+├── supabaseAdmin.ts         # Cliente do Supabase (service role — só backend)
+├── leadsStore.ts            # Salva leads do formulário de sessão no Supabase
+└── email.ts                 # Envia o e-mail de confirmação via Resend
+
+pages/api/
+├── submit-lead.ts           # Registra o lead do formulário de sessão (best-effort)
+├── newsletter-signup.ts     # Cadastra na newsletter + dispara e-mail de confirmação
+└── newsletter-delete.ts     # Apaga um cadastro a pedido (LGPD, uso administrativo)
 
 components/
 ├── LandingPage.tsx          # Só COMPÕE as peças abaixo — sem lógica própria
 ├── hero/Hero.tsx            # Seção Hero (usa content/hero.ts)
-├── form/LeadForm.tsx        # Formulário de captura (usa content/form.ts + useLeadForm)
+├── form/LeadForm.tsx        # Formulário de agendamento (usa content/form.ts + useLeadForm)
+├── newsletter/NewsletterSignup.tsx  # Formulário de newsletter (usa content/newsletter.ts)
 ├── Motion.tsx                # Wrappers Framer Motion tipados
 ├── ParallaxLayer.tsx         # Parallax customizado
 └── sections/
@@ -61,8 +73,13 @@ components/
     ├── Pricing.tsx          # Planos e preços
     └── FAQ.tsx              # Perguntas frequentes
 
-docs/                        # Documentação histórica de entregas anteriores
+docs/                        # SQL do Supabase + documentação histórica
 ```
+
+> Este projeto já teve integrações com ActiveCampaign, N8N, RD Station, Zoho,
+> WhatsApp Business API oficial e Vercel KV — foram removidas por não
+> estarem em uso. Se precisar de alguma dessas de novo no futuro, dá pra
+> resgatar no histórico do git.
 
 ### Como usar este projeto como modelo para outra landing page
 

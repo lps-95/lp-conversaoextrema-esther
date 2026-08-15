@@ -18,6 +18,7 @@ const ComoFunciona = dynamic(() => import('./sections/ComoFunciona'), { loading:
 const FAQ = dynamic(() => import('./sections/FAQ'), { loading: () => null })
 const Footer = dynamic(() => import('./sections/Footer'), { loading: () => null })
 const Historia = dynamic(() => import('./sections/Historia'), { loading: () => null })
+const NewsletterSignup = dynamic(() => import('./newsletter/NewsletterSignup'), { loading: () => null })
 const NumbersProof = dynamic(() => import('./sections/NumbersProof'), { loading: () => null })
 const Pricing = dynamic(() => import('./sections/Pricing'), { loading: () => null })
 const Problem = dynamic(() => import('./sections/Problem'), { loading: () => null })
@@ -71,6 +72,10 @@ export default function LandingPage() {
       <FAQ onTrack={track} />
 
       <LeadForm form={form} />
+
+      {/* Captação de leads pra newsletter/materiais — finalidade separada
+          do formulário de agendamento acima, com seu próprio consentimento */}
+      <NewsletterSignup />
 
       <Footer onTrack={track} />
     </div>

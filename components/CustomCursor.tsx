@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Particle {
   id: number
@@ -14,7 +14,13 @@ export default function CustomCursor() {
   const [position, setPosition] = useState({ x: -100, y: -100 })
   const [particles, setParticles] = useState<Particle[]>([])
   const [isPointer, setIsPointer] = useState(false)
-  const [particleId, setParticleId] = useState(0)
+  // Contador de id das partículas. Precisa ser um `ref`, não `state`: o
+  // `handleMouseMove` roda várias vezes seguidas antes do React
+  // re-renderizar, então ler um valor de `state` nesse meio tempo sempre
+  // devolvia o mesmo número — gerando partículas com id repetido (o
+  // aviso "two children with the same key" que você viu no console). Um
+  // `ref` é atualizado na hora, sem esperar re-render.
+  const particleIdRef = useRef(0)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -44,12 +50,13 @@ export default function CustomCursor() {
       const now = Date.now()
       if (now - lastParticleTime > 30) {
         lastParticleTime = now
+        const newId = particleIdRef.current++
         setParticles((prev) => {
           // Manter máximo de 20 partículas
           const updated = [
             ...prev,
             {
-              id: particleId,
+              id: newId,
               x: e.clientX,
               y: e.clientY,
               scale: 1,
@@ -58,7 +65,6 @@ export default function CustomCursor() {
           ]
           return updated.length > 20 ? updated.slice(-20) : updated
         })
-        setParticleId((prev) => prev + 1)
       }
     }
 

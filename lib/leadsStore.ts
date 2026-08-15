@@ -1,20 +1,15 @@
-import { randomUUID } from 'crypto'
-import { existsSync, mkdirSync } from 'fs'
-import { appendFile } from 'fs/promises'
-import path from 'path'
+import { getSupabaseAdmin } from './supabaseAdmin'
 
 /**
- * Armazenamento simples de leads em arquivo local (JSON Lines), usado como
- * registro auxiliar do que foi enviado — best effort, nunca bloqueia o
- * redirecionamento pro WhatsApp.
+ * Salva um lead do formulário de agendamento de sessão na tabela
+ * `session_leads` do Supabase.
  *
- * ⚠️ Em ambientes serverless (Vercel etc.) o sistema de arquivos é
- * efêmero, então isso não persiste em produção lá. Funciona bem localmente
- * e em servidores próprios com disco persistente.
+ * Antes isso gravava num arquivo local (`data/leads.jsonl`) — funcionava
+ * rodando localmente, mas não em produção na Vercel, onde o sistema de
+ * arquivos é temporário e é apagado a cada novo acesso. Usar o mesmo
+ * Supabase da newsletter resolve isso (e já estava configurado).
  */
-
-export interface StoredLead {
-  id: string
+export interface SessionLead {
   name: string
   email: string
   phone: string
@@ -28,31 +23,32 @@ export interface StoredLead {
   utmMedium?: string
   utmCampaign?: string
   origin?: string
-  createdAt: string
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const LEADS_FILE = path.join(DATA_DIR, 'leads.jsonl')
+export async function saveSessionLead(lead: SessionLead) {
+  const supabase = getSupabaseAdmin()
 
-function ensureDataDir() {
-  if (!existsSync(DATA_DIR)) {
-    mkdirSync(DATA_DIR, { recursive: true })
-  }
-}
+  const { data, error } = await supabase
+    .from('session_leads')
+    .insert({
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      plan: lead.plan || null,
+      best_time: lead.bestTime || null,
+      niche: lead.niche || null,
+      followers: lead.followers || null,
+      revenue: lead.revenue || null,
+      main_goal: lead.mainGoal || null,
+      utm_source: lead.utmSource || null,
+      utm_medium: lead.utmMedium || null,
+      utm_campaign: lead.utmCampaign || null,
+      origin: lead.origin || 'landing_page_conversao_extrema',
+    })
+    .select('id')
+    .single()
 
-/** Salva um lead como uma linha JSON no arquivo `data/leads.jsonl`. */
-export async function saveLeadLocally(
-  lead: Omit<StoredLead, 'id' | 'createdAt'>
-): Promise<StoredLead> {
-  ensureDataDir()
+  if (error) throw error
 
-  const record: StoredLead = {
-    id: randomUUID(),
-    createdAt: new Date().toISOString(),
-    ...lead,
-  }
-
-  await appendFile(LEADS_FILE, JSON.stringify(record) + '\n', 'utf-8')
-
-  return record
+  return data
 }
