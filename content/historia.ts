@@ -23,13 +23,13 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     title: { prefix: 'Por Que Esther Maia e Não ', highlight: 'Uma Outra Social Media?' },
     intro: 'Eu não sou mais uma social media que agenda posts bonitos.',
     body1:
-      'Sou estrategista digital especializada em Arquitetura de Conversão para negócios de alto ticket. Existem milhares de agências que entregam conteúdo visualmente bonito. Mas 95% delas desconhecem completamente como estruturar um perfil como máquina de vendas.',
+      'Sou estrategista digital especializada em Arquitetura de Conversão para negócios de alto ticket. Existem milhares de agências que entregam conteúdo visualmente bonito. Mas a maioria delas desconhece completamente como estruturar um perfil como máquina de vendas.',
     storyLabel: 'Minha História:',
     story:
       'Passei 4 anos vendo empresárias competentes perderem contratos para concorrentes menos qualificados apenas porque o Instagram delas parecia amador. Tentei todas as fórmulas que o mercado ensina — postar mais, viralizar, seguir trends — e vi que nada funcionava porque o problema não era criatividade, era ausência de funil estratégico.',
     insight: 'Foi aí que entendi o padrão invisível.',
     body2:
-      'Criei o Método Ressonância Direcional depois de estudar 200+ perfis de autoridades e identificar exatamente o que separa quem vende de quem posta. Não é sorte. Não é viralização. É arquitetura estratégica que transforma cada post em um degrau de uma escada que leva do seguidor até a compra.',
+      'Criei o Método Ressonância Direcional depois de estudar dezenas de perfis de autoridades e identificar exatamente o que separa quem vende de quem posta. Não é sorte. Não é viralização. É arquitetura estratégica que transforma cada post em um degrau de uma escada que leva do seguidor até a compra.',
     diff1: {
       label: 'Diferença 1',
       title: 'Não sou social media genérica',
@@ -44,7 +44,7 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     commitments: [
       'Você não será só mais um número na carteira de clientes. Você terá minha atenção estratégica dedicada.',
       'Resposta em até 1 hora (não dias) para dúvidas e ajustes.',
-      'Garantia dupla: Se em 90 dias seu perfil não apresentar aumento mensurável em consultas qualificadas, continuamos trabalhando sem custo por mais 30 dias.',
+      'Compromisso de entrega: se algum item do cronograma combinado não sair no prazo, ajustamos ou compensamos sem custo adicional.',
     ],
     result:
       'Resultado: Clientes que chegam aquecidas, perfis que vendem 24h, e você finalmente sendo reconhecida como A autoridade do seu nicho.',
@@ -55,13 +55,13 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     title: { prefix: 'Why Esther Maia And Not ', highlight: 'Another Social Media Manager?' },
     intro: "I'm not just another social media manager scheduling pretty posts.",
     body1:
-      'I am a digital strategist specialized in Conversion Architecture for high-ticket businesses. There are thousands of agencies delivering visually beautiful content. But 95% of them have no idea how to structure a profile as a sales machine.',
+      'I am a digital strategist specialized in Conversion Architecture for high-ticket businesses. There are thousands of agencies delivering visually beautiful content. But most of them have no idea how to structure a profile as a sales machine.',
     storyLabel: 'My Story:',
     story:
       "I spent 4 years watching competent business owners lose clients to less qualified competitors just because their Instagram looked amateur. I tried every formula the market teaches — post more, go viral, follow trends — and saw that nothing worked because the problem wasn't creativity, it was the absence of a strategic funnel.",
     insight: "That's when I understood the invisible pattern.",
     body2:
-      "I created the Directional Resonance Method after studying 200+ authority profiles and identifying exactly what separates those who sell from those who just post. It's not luck. It's not going viral. It's strategic architecture that turns every post into a step on a staircase leading from follower to purchase.",
+      "I created the Directional Resonance Method after studying dozens of authority profiles and identifying exactly what separates those who sell from those who just post. It's not luck. It's not going viral. It's strategic architecture that turns every post into a step on a staircase leading from follower to purchase.",
     diff1: {
       label: 'Difference 1',
       title: "I'm not a generic social media manager",
@@ -76,7 +76,7 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     commitments: [
       "You won't be just another number in a client roster. You'll get my dedicated strategic attention.",
       'Response within 1 hour (not days) for questions and adjustments.',
-      "Double guarantee: if in 90 days your profile doesn't show a measurable increase in qualified consultations, we keep working at no extra cost for 30 more days.",
+      "Delivery commitment: if any item on the agreed schedule slips, we adjust or make it right at no extra cost.",
     ],
     result:
       "Result: clients who arrive warmed up, a profile that sells 24/7, and you finally being recognized as THE authority in your niche.",
@@ -87,13 +87,13 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     title: { prefix: 'Por Qué Esther Maia Y No ', highlight: 'Otra Social Media?' },
     intro: 'Ya no soy solo una social media que agenda publicaciones bonitas.',
     body1:
-      'Soy estratega digital especializada en Arquitectura de Conversión para negocios de alto ticket. Existen miles de agencias que entregan contenido visualmente bonito. Pero el 95% de ellas no tiene idea de cómo estructurar un perfil como máquina de ventas.',
+      'Soy estratega digital especializada en Arquitectura de Conversión para negocios de alto ticket. Existen miles de agencias que entregan contenido visualmente bonito. Pero la mayoría de ellas no tiene idea de cómo estructurar un perfil como máquina de ventas.',
     storyLabel: 'Mi Historia:',
     story:
       'Pasé 4 años viendo a empresarias competentes perder clientes ante competidoras menos calificadas solo porque su Instagram parecía amateur. Probé todas las fórmulas que enseña el mercado —publicar más, volverse viral, seguir tendencias— y vi que nada funcionaba porque el problema no era la creatividad, era la ausencia de un embudo estratégico.',
     insight: 'Fue ahí cuando entendí el patrón invisible.',
     body2:
-      'Creé el Método Resonancia Direccional después de estudiar más de 200 perfiles de autoridades e identificar exactamente qué separa a quien vende de quien solo publica. No es suerte. No es viralización. Es arquitectura estratégica que convierte cada publicación en un escalón que lleva del seguidor a la compra.',
+      'Creé el Método Resonancia Direccional después de estudiar decenas de perfiles de autoridades e identificar exactamente qué separa a quien vende de quien solo publica. No es suerte. No es viralización. Es arquitectura estratégica que convierte cada publicación en un escalón que lleva del seguidor a la compra.',
     diff1: {
       label: 'Diferencia 1',
       title: 'No soy una social media genérica',
@@ -108,7 +108,7 @@ export const historiaContent: Record<Language, HistoriaContent> = {
     commitments: [
       'No serás solo un número más en la cartera de clientas. Tendrás mi atención estratégica dedicada.',
       'Respuesta en hasta 1 hora (no días) para dudas y ajustes.',
-      'Garantía doble: si en 90 días tu perfil no muestra un aumento medible en consultas calificadas, seguimos trabajando sin costo por 30 días más.',
+      'Compromiso de entrega: si algún punto del cronograma acordado no sale en el plazo, lo ajustamos o compensamos sin costo adicional.',
     ],
     result:
       'Resultado: clientas que llegan predispuestas, un perfil que vende 24 horas, y tú finalmente reconocida como LA autoridad de tu nicho.',

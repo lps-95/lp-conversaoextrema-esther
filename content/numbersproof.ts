@@ -1,41 +1,41 @@
 import type { Language } from '../contexts/LanguageContext'
 
-interface Testimonial {
-  title: string
-  quote: string
-  author: string
-  role: string
-  result: string
-  before: string
-  after: string
-  stars: number
-  gradient: string
-  verification: string
-  objectiveNeutralized: string
-}
-
 interface NumbersProofContent {
   badge: string
   title: { prefix: string; highlight: string }
   subtitle: { prefix: string; highlight: string }
   subtitle2Prefix: string
-  subtitle2Title: { prefix: string; highlight: string }
-  subtitle2: string
+  screenshotsTitle: { prefix: string; highlight: string }
+  screenshotsSubtitle: string
   footnote: string
-  beforeLabel: string
-  afterLabel: string
-  defaultVerification: string
-  testimonials: Testimonial[]
+  screenshotAlt: string
 }
 
-/** Nomes reais dos clientes — mantidos iguais nos três idiomas de propósito. */
-const gradients = [
-  'from-rose-500/20 to-red-500/20',
-  'from-orange-500/20 to-amber-500/20',
-  'from-emerald-500/20 to-teal-500/20',
-  'from-indigo-500/20 to-violet-500/20',
-  'from-sky-500/20 to-blue-500/20',
-  'from-fuchsia-500/20 to-pink-500/20',
+/**
+ * Prints reais de conversas com clientes (WhatsApp/e-mail), tirados de
+ * `public/feedbacks/`. Substituem os depoimentos fabricados que existiam
+ * aqui antes — texto e números "de resultado" que ninguém confirmou.
+ *
+ * Um print de conversa real é uma prova muito mais forte (e muito mais
+ * defensável, inclusive perante o Meta) do que um card de depoimento bonito
+ * com nome e estatística que não dá pra verificar. Se novos prints forem
+ * adicionados em `public/feedbacks/`, só incluir o nome do arquivo na lista
+ * abaixo — não precisa mexer no componente.
+ */
+export const feedbackScreenshots: string[] = [
+  '1.jpg',
+  '2.jpg',
+  '3.jpg',
+  '4.jpg',
+  '5.jpg',
+  '6.jpg',
+  '7.jpg',
+  '8.jpg',
+  '9.jpg',
+  '10.jpg',
+  '11.jpg',
+  '12.jpg',
+  '13.jpg',
 ]
 
 export const numbersProofContent: Record<Language, NumbersProofContent> = {
@@ -44,275 +44,29 @@ export const numbersProofContent: Record<Language, NumbersProofContent> = {
     title: { prefix: 'Enquanto Você Pensa, Outras ', highlight: 'Já Estão Ganhando' },
     subtitle: { prefix: 'Transformações comprovadas em até ', highlight: '90 dias' },
     subtitle2Prefix: ' — com processo leve e direção clara.',
-    subtitle2Title: { prefix: 'Objeções Mais Comuns E Como ', highlight: 'Foram Destruídas' },
-    subtitle2: 'Histórias reais de clientes que tinham as mesmas dúvidas que você tem agora',
-    footnote: '*Resultados variam conforme nicho, oferta e execução — aqui você já começa com estratégia e direção.',
-    beforeLabel: 'Antes',
-    afterLabel: 'Depois',
-    defaultVerification: 'Verificado',
-    testimonials: [
-      {
-        title: 'Medo de Aparecer em Vídeo',
-        quote: 'Eu travava toda vez que ligava a câmera. A Esther estruturou roteiros onde eu só precisava responder perguntas simples. Em duas semanas eu já gravava sem ansiedade e os vídeos começaram a trazer pacientes reais.',
-        author: 'Carla Nogueira',
-        role: 'Fisioterapeuta',
-        result: '3 → 11 consultas/mês',
-        before: 'Zero constância e sem vídeos',
-        after: 'Roteiros guiados + constância',
-        stars: 5,
-        gradient: gradients[0],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Medo de câmera eliminado',
-      },
-      {
-        title: 'Perfil Bonito Mas Sem Venda',
-        quote: 'Meu Instagram parecia organizado, mas não gerava nenhum cliente. A Esther refez minha bio, destaques e funil. Em 30 dias fechei meus primeiros 4 atendimentos pelo direct.',
-        author: 'Renata Lima',
-        role: 'Nutricionista',
-        result: '0 → 4 clientes em 30 dias',
-        before: 'Perfil estético sem estratégia',
-        after: 'Funil estruturado',
-        stars: 5,
-        gradient: gradients[1],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Estética sem conversão',
-      },
-      {
-        title: 'Medo de Investir em Tráfego',
-        quote: 'Sempre achei que anúncio era jogar dinheiro fora. A Esther explicou tudo de forma simples e começamos com orçamento baixo. O primeiro mês já pagou o investimento.',
-        author: 'Patrícia Rocha',
-        role: 'Dermatologista',
-        result: 'ROI positivo no 1º mês',
-        before: 'Zero anúncios',
-        after: 'Tráfego validado',
-        stars: 5,
-        gradient: gradients[2],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Risco percebido reduzido',
-      },
-      {
-        title: 'Agenda Instável',
-        quote: 'Tinha semanas cheias e outras vazias. Com a estratégia da Esther hoje tenho previsibilidade e fila de espera.',
-        author: 'Juliana Pires',
-        role: 'Psicóloga',
-        result: 'Agenda cheia em 60 dias',
-        before: 'Oscilação semanal',
-        after: 'Fluxo constante',
-        stars: 5,
-        gradient: gradients[3],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Previsibilidade de faturamento',
-      },
-      {
-        title: 'Não Sabia O Que Postar',
-        quote: 'Eu perdia horas pensando em conteúdo. Hoje recebo calendário pronto e só aprovo.',
-        author: 'Mariana Torres',
-        role: 'Biomédica',
-        result: '3 meses de conteúdo organizado',
-        before: 'Bloqueio criativo',
-        after: 'Planejamento mensal',
-        stars: 5,
-        gradient: gradients[4],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Clareza total de conteúdo',
-      },
-      {
-        title: 'Queria Vender Sem Ser Forçada',
-        quote: 'Não queria virar aquele perfil empurrando oferta. A Esther criou um posicionamento que vende educando. Hoje fecho atendimentos sem parecer vendedora.',
-        author: 'Ana Beatriz Souza',
-        role: 'Esteticista Avançada',
-        result: 'Fechamentos semanais',
-        before: 'Medo de vender',
-        after: 'Venda natural',
-        stars: 5,
-        gradient: gradients[5],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Venda sem pressão',
-      },
-    ],
+    screenshotsTitle: { prefix: 'Prints Reais De ', highlight: 'Conversas Com Clientes' },
+    screenshotsSubtitle: 'Sem atriz, sem roteiro — só o que as clientes mandaram mesmo, do jeito que mandaram.',
+    footnote: '*Nomes e números foram borrados nas conversas para preservar a privacidade das clientes.',
+    screenshotAlt: 'Print de conversa real com cliente',
   },
   en: {
     badge: '⭐ Real Results',
     title: { prefix: 'While You Think It Over, Others ', highlight: 'Are Already Winning' },
     subtitle: { prefix: 'Proven transformations within ', highlight: '90 days' },
     subtitle2Prefix: ' — with a light process and clear direction.',
-    subtitle2Title: { prefix: 'The Most Common Objections And How They ', highlight: 'Were Destroyed' },
-    subtitle2: 'Real stories from clients who had the same doubts you have right now',
-    footnote: '*Results vary based on niche, offer, and execution — here you already start with strategy and direction.',
-    beforeLabel: 'Before',
-    afterLabel: 'After',
-    defaultVerification: 'Verified',
-    testimonials: [
-      {
-        title: 'Afraid to Show Up on Video',
-        quote: "I used to freeze every time I turned on the camera. Esther built scripts where I only had to answer simple questions. Within two weeks I was recording without anxiety, and the videos started bringing in real patients.",
-        author: 'Carla Nogueira',
-        role: 'Physical Therapist',
-        result: '3 → 11 appointments/mo',
-        before: 'Zero consistency and no videos',
-        after: 'Guided scripts + consistency',
-        stars: 5,
-        gradient: gradients[0],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Camera fear eliminated',
-      },
-      {
-        title: 'Pretty Profile, No Sales',
-        quote: "My Instagram looked organized, but it wasn't generating any clients. Esther rebuilt my bio, highlights, and funnel. Within 30 days I closed my first 4 clients through DMs.",
-        author: 'Renata Lima',
-        role: 'Nutritionist',
-        result: '0 → 4 clients in 30 days',
-        before: 'Pretty profile, no strategy',
-        after: 'Structured funnel',
-        stars: 5,
-        gradient: gradients[1],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Aesthetics without conversion, fixed',
-      },
-      {
-        title: 'Afraid to Invest in Ads',
-        quote: "I always thought ads were throwing money away. Esther explained everything simply and we started with a small budget. The first month already paid for the investment.",
-        author: 'Patrícia Rocha',
-        role: 'Dermatologist',
-        result: 'Positive ROI in month 1',
-        before: 'No ads at all',
-        after: 'Validated ad strategy',
-        stars: 5,
-        gradient: gradients[2],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Perceived risk reduced',
-      },
-      {
-        title: 'Unpredictable Schedule',
-        quote: "I had some full weeks and some empty ones. With Esther's strategy I now have predictability and a waitlist.",
-        author: 'Juliana Pires',
-        role: 'Psychologist',
-        result: 'Fully booked in 60 days',
-        before: 'Weekly ups and downs',
-        after: 'Steady flow of clients',
-        stars: 5,
-        gradient: gradients[3],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Revenue predictability',
-      },
-      {
-        title: "Didn't Know What to Post",
-        quote: "I used to lose hours trying to figure out content. Now I get a ready-made calendar and just approve it.",
-        author: 'Mariana Torres',
-        role: 'Biomedical Scientist',
-        result: '3 months of content, organized',
-        before: 'Creative block',
-        after: 'Monthly planning',
-        stars: 5,
-        gradient: gradients[4],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Total content clarity',
-      },
-      {
-        title: 'Wanted to Sell Without Feeling Pushy',
-        quote: "I didn't want to become one of those profiles pushing offers. Esther created a positioning that sells through educating. Now I close clients without feeling like a salesperson.",
-        author: 'Ana Beatriz Souza',
-        role: 'Advanced Esthetician',
-        result: 'Weekly closings',
-        before: 'Afraid to sell',
-        after: 'Natural, low-pressure sales',
-        stars: 5,
-        gradient: gradients[5],
-        verification: 'Verified result',
-        objectiveNeutralized: 'Selling without pressure',
-      },
-    ],
+    screenshotsTitle: { prefix: 'Real ', highlight: 'Client Conversations' },
+    screenshotsSubtitle: 'No actors, no script — just what clients actually sent, exactly as they sent it.',
+    footnote: '*Names and numbers have been blurred in the conversations to protect client privacy.',
+    screenshotAlt: 'Real client conversation screenshot',
   },
   es: {
     badge: '⭐ Resultados Reales',
     title: { prefix: 'Mientras Lo Piensas, Otras ', highlight: 'Ya Están Ganando' },
     subtitle: { prefix: 'Transformaciones comprobadas en hasta ', highlight: '90 días' },
     subtitle2Prefix: ' — con un proceso ligero y una dirección clara.',
-    subtitle2Title: { prefix: 'Las Objeciones Más Comunes Y Cómo ', highlight: 'Fueron Destruidas' },
-    subtitle2: 'Historias reales de clientas que tenían las mismas dudas que tú tienes ahora',
-    footnote: '*Los resultados varían según el nicho, la oferta y la ejecución — aquí ya empiezas con estrategia y dirección.',
-    beforeLabel: 'Antes',
-    afterLabel: 'Después',
-    defaultVerification: 'Verificado',
-    testimonials: [
-      {
-        title: 'Miedo a Aparecer en Video',
-        quote: 'Me bloqueaba cada vez que encendía la cámara. Esther estructuró guiones donde solo tenía que responder preguntas simples. En dos semanas ya grababa sin ansiedad y los videos empezaron a traer pacientes reales.',
-        author: 'Carla Nogueira',
-        role: 'Fisioterapeuta',
-        result: '3 → 11 consultas/mes',
-        before: 'Sin constancia y sin videos',
-        after: 'Guiones guiados + constancia',
-        stars: 5,
-        gradient: gradients[0],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Miedo a la cámara eliminado',
-      },
-      {
-        title: 'Perfil Bonito Pero Sin Ventas',
-        quote: 'Mi Instagram se veía organizado, pero no generaba ningún cliente. Esther rehizo mi bio, destacados y embudo. En 30 días cerré mis primeros 4 clientes por mensaje directo.',
-        author: 'Renata Lima',
-        role: 'Nutricionista',
-        result: '0 → 4 clientes en 30 días',
-        before: 'Perfil estético sin estrategia',
-        after: 'Embudo estructurado',
-        stars: 5,
-        gradient: gradients[1],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Estética sin conversión, resuelta',
-      },
-      {
-        title: 'Miedo a Invertir en Publicidad',
-        quote: 'Siempre pensé que la publicidad era tirar el dinero. Esther explicó todo de forma sencilla y empezamos con un presupuesto bajo. El primer mes ya pagó la inversión.',
-        author: 'Patrícia Rocha',
-        role: 'Dermatóloga',
-        result: 'ROI positivo en el primer mes',
-        before: 'Sin publicidad',
-        after: 'Publicidad validada',
-        stars: 5,
-        gradient: gradients[2],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Riesgo percibido reducido',
-      },
-      {
-        title: 'Agenda Inestable',
-        quote: 'Tenía semanas llenas y otras vacías. Con la estrategia de Esther ahora tengo previsibilidad y lista de espera.',
-        author: 'Juliana Pires',
-        role: 'Psicóloga',
-        result: 'Agenda llena en 60 días',
-        before: 'Oscilación semanal',
-        after: 'Flujo constante',
-        stars: 5,
-        gradient: gradients[3],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Previsibilidad de ingresos',
-      },
-      {
-        title: 'No Sabía Qué Publicar',
-        quote: 'Perdía horas pensando en contenido. Hoy recibo un calendario listo y solo lo apruebo.',
-        author: 'Mariana Torres',
-        role: 'Bioméloga',
-        result: '3 meses de contenido organizado',
-        before: 'Bloqueo creativo',
-        after: 'Planificación mensual',
-        stars: 5,
-        gradient: gradients[4],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Claridad total de contenido',
-      },
-      {
-        title: 'Quería Vender Sin Sentirse Forzada',
-        quote: 'No quería convertirme en ese perfil empujando ofertas. Esther creó un posicionamiento que vende educando. Hoy cierro clientas sin parecer vendedora.',
-        author: 'Ana Beatriz Souza',
-        role: 'Esteticista Avanzada',
-        result: 'Cierres semanales',
-        before: 'Miedo a vender',
-        after: 'Venta natural',
-        stars: 5,
-        gradient: gradients[5],
-        verification: 'Resultado verificado',
-        objectiveNeutralized: 'Venta sin presión',
-      },
-    ],
+    screenshotsTitle: { prefix: 'Conversaciones Reales Con ', highlight: 'Clientas' },
+    screenshotsSubtitle: 'Sin actrices, sin guion — solo lo que las clientas realmente enviaron, tal como lo enviaron.',
+    footnote: '*Se difuminaron nombres y números en las conversaciones para proteger la privacidad de las clientas.',
+    screenshotAlt: 'Captura real de conversación con clienta',
   },
 }
