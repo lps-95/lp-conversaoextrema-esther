@@ -28,7 +28,17 @@ interface HeroContent {
   }
   painClosingLine: string
   cta: { primaryLabel: string; secondaryLabel: string; secondaryScrollTargetId: string }
-  countdown: { targetHours: number; message: string }
+  /**
+   * Sinal único de escassez, repetido com a mesma redação no Hero, no
+   * FloatingCTA e na seção de Planos. Antes o Hero tinha seu próprio
+   * contador regressivo (24h, guardado em localStorage) — como o prazo
+   * reiniciava a cada novo visitante, a "oferta expira em 24h" nunca era
+   * verdade de fato, e ter 3 sinais de urgência diferentes ao mesmo tempo
+   * (contador do Hero + contador do popup de saída + "vagas/mês") parecia
+   * fabricado. Ficou só este, que é uma informação real (capacidade
+   * mensal), não um relógio artificial.
+   */
+  scarcityMessage: string
   video: { url: string; title: string }
 }
 
@@ -54,7 +64,7 @@ export const heroContent: Record<Language, HeroContent> = {
       secondaryLabel: 'Ver Resultados Reais',
       secondaryScrollTargetId: 'prova-numeros',
     },
-    countdown: { targetHours: 24, message: 'Vagas limitadas - Oferta expira em:' },
+    scarcityMessage: 'Vagas limitadas — apenas 8 novos projetos por mês',
     video: { url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'Como Funciona a Transformação' },
   },
   en: {
@@ -78,7 +88,7 @@ export const heroContent: Record<Language, HeroContent> = {
       secondaryLabel: 'See Real Results',
       secondaryScrollTargetId: 'prova-numeros',
     },
-    countdown: { targetHours: 24, message: 'Limited spots - Offer expires in:' },
+    scarcityMessage: 'Limited spots — only 8 new projects per month',
     video: { url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'How The Transformation Works' },
   },
   es: {
@@ -102,7 +112,7 @@ export const heroContent: Record<Language, HeroContent> = {
       secondaryLabel: 'Ver Resultados Reales',
       secondaryScrollTargetId: 'prova-numeros',
     },
-    countdown: { targetHours: 24, message: 'Cupos limitados - La oferta termina en:' },
+    scarcityMessage: 'Cupos limitados — solo 8 proyectos nuevos por mes',
     video: { url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'Cómo Funciona La Transformación' },
   },
 }

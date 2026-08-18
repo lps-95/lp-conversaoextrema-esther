@@ -6,7 +6,6 @@ interface ExitIntentPopupProps {
 
 export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutos
   const [hasShown, setHasShown] = useState(false)
 
   useEffect(() => {
@@ -44,23 +43,6 @@ export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
     }
   }, [hasShown, isVisible])
 
-  // Timer de urgência
-  useEffect(() => {
-    if (!isVisible) return
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleClose()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [isVisible])
-
   const handleClose = () => {
     setIsVisible(false)
     onClose?.()
@@ -79,9 +61,6 @@ export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
       ; (window as any).plausible('exit_intent_cta_click')
     }
   }
-
-  const minutes = Math.floor(timeLeft / 60)
-  const seconds = timeLeft % 60
 
   if (!isVisible) return null
 
@@ -130,12 +109,12 @@ export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
             Você está a <strong className="text-button-primary">um clique</strong> de transformar seu Instagram em uma máquina de vendas automática.
           </p>
 
-          {/* Benefits list */}
+          {/* Benefits list — mesma promessa da seção de formulário, sem inventar nada de grátis */}
           <div className="space-y-3 mb-6">
             {[
-              '✅ Primeira consultoria GRÁTIS',
-              '✅ Diagnóstico completo do seu perfil',
-              '✅ Plano personalizado em 24h'
+              '✅ Diagnóstico personalizado do seu perfil',
+              '✅ Resposta em até 24h',
+              '✅ Sem compromisso pra conversar'
             ].map((benefit, i) => (
               <div key={i} className="flex items-center gap-3 text-sm text-text-primary">
                 <span className="text-button-primary text-lg">{benefit.split(' ')[0]}</span>
@@ -144,14 +123,16 @@ export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
             ))}
           </div>
 
-          {/* Timer */}
+          {/* Escassez — mesma mensagem usada no Hero e no FloatingCTA, não um contador
+              separado: ter um relógio só neste popup, diferente do resto da página,
+              é o tipo de coisa que faz uma visitante mais atenta desconfiar da oferta. */}
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
             <div className="flex items-center justify-center gap-2 text-red-400">
-              <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
               </svg>
-              <span className="font-bold text-lg">
-                Esta oferta expira em: {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              <span className="font-bold text-base sm:text-lg text-center">
+                Vagas limitadas — apenas 8 novos projetos por mês
               </span>
             </div>
           </div>
@@ -173,7 +154,7 @@ export default function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
             onClick={handleClose}
             className="w-full text-text-tertiary hover:text-text-secondary text-sm transition-colors"
           >
-            Não, obrigado. Prefiro continuar perdendo vendas.
+            Agora não, obrigada
           </button>
         </div>
       </div>

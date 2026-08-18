@@ -32,6 +32,7 @@ interface PricingContent {
   premium: {
     tag: string
     title: string
+    priceLabel: string
     description: string
     features: PlanFeature[]
     cta: string
@@ -62,7 +63,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     },
     professional: {
       ribbon: '⭐ Mais Escolhido',
-      tag: 'Gestão Extrema',
+      tag: 'Plano Profissional',
       title: 'Sistema Completo',
       price: 'R$ 2.400',
       period: '/mês',
@@ -82,6 +83,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     premium: {
       tag: 'Escolha do seu jeito',
       title: 'Escolha você mesmo o que deseja',
+      priceLabel: 'Sob Consulta',
       description: 'Feito sob medida pensando em você',
       features: [
         { text: 'Pacotes de videos mobile para Reels e Stories' },
@@ -113,7 +115,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     },
     professional: {
       ribbon: '⭐ Most Popular',
-      tag: 'Gestão Extrema',
+      tag: 'Professional Plan',
       title: 'Complete System',
       price: 'R$ 2,400',
       period: '/mo',
@@ -133,6 +135,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     premium: {
       tag: 'Build your own',
       title: 'Choose exactly what you need',
+      priceLabel: 'Custom Pricing',
       description: 'Custom-built with you in mind',
       features: [
         { text: 'Mobile video packages for Reels and Stories' },
@@ -164,7 +167,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     },
     professional: {
       ribbon: '⭐ Más Elegido',
-      tag: 'Gestão Extrema',
+      tag: 'Plan Profesional',
       title: 'Sistema Completo',
       price: 'R$ 2.400',
       period: '/mes',
@@ -184,6 +187,7 @@ export const pricingContent: Record<Language, PricingContent> = {
     premium: {
       tag: 'Elige a tu manera',
       title: 'Elige tú misma lo que necesitas',
+      priceLabel: 'Bajo Consulta',
       description: 'Hecho a la medida pensando en ti',
       features: [
         { text: 'Paquetes de videos móviles para Reels e Historias' },

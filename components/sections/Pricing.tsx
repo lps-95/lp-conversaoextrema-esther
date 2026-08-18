@@ -155,7 +155,7 @@ export default function Pricing({ onChoosePlan }: Props) {
                 <h3 className='font-display text-2xl font-bold text-text-primary mb-3'>{content.premium.title}</h3>
 
                 <div className='flex items-end gap-2 mb-4'>
-                  <span className='text-5xl font-bold text-purple-400'></span>
+                  <span className='text-3xl font-bold text-purple-400'>{content.premium.priceLabel}</span>
                 </div>
 
                 <p className='text-text-secondary text-sm leading-relaxed'>{content.premium.description}</p>

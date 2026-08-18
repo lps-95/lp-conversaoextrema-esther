@@ -25,6 +25,8 @@ interface FormContent {
   sectionBadge: string
   title: string
   subtitle: string
+  optionalToggleShow: string
+  optionalToggleHide: string
   submitLabel: string
   submitLoadingLabel: string
   submitSuccessLabel: string
@@ -59,6 +61,8 @@ const contentByLanguage: Record<Language, FormContent> = {
     sectionBadge: 'Solicite sua sessão',
     title: 'Comece Sua Transformação',
     subtitle: 'Receba um diagnóstico personalizado do seu perfil em até 24 horas',
+    optionalToggleShow: '+ Quer agilizar o atendimento? Conte um pouco mais (opcional, 30 segundos)',
+    optionalToggleHide: '– Ocultar perguntas opcionais',
     submitLabel: 'Solicitar Sessão Estratégica',
     submitLoadingLabel: 'Processando...',
     submitSuccessLabel: 'Sucesso!',
@@ -69,11 +73,11 @@ const contentByLanguage: Record<Language, FormContent> = {
       name: { label: 'Nome Completo *', placeholder: 'Maria Silva' },
       email: { label: 'Email *', placeholder: 'maria@exemplo.com' },
       whatsapp: { label: 'WhatsApp *', placeholder: '(11) 99999-9999' },
-      niche: { label: 'Nicho/Área *', placeholder: 'Ex: Psicóloga, Coach...' },
-      followers: { label: 'Seguidores *' },
-      revenue: { label: 'Faturamento Mensal *' },
-      mainGoal: { label: 'Seu Principal Objetivo *' },
-      bestTime: { label: 'Melhor Horário para Contato *' },
+      niche: { label: 'Nicho/Área', placeholder: 'Ex: Psicóloga, Coach...' },
+      followers: { label: 'Seguidores' },
+      revenue: { label: 'Faturamento Mensal' },
+      mainGoal: { label: 'Seu Principal Objetivo' },
+      bestTime: { label: 'Melhor Horário para Contato' },
     },
     validationMessages: {
       missingName: 'Por favor, preencha seu nome',
@@ -114,6 +118,8 @@ const contentByLanguage: Record<Language, FormContent> = {
     sectionBadge: 'Request your session',
     title: 'Start Your Transformation',
     subtitle: 'Get a personalized diagnosis of your profile within 24 hours',
+    optionalToggleShow: '+ Want faster, more tailored follow-up? Tell us a bit more (optional, 30 seconds)',
+    optionalToggleHide: '– Hide optional questions',
     submitLabel: 'Request Strategy Session',
     submitLoadingLabel: 'Processing...',
     submitSuccessLabel: 'Success!',
@@ -124,11 +130,11 @@ const contentByLanguage: Record<Language, FormContent> = {
       name: { label: 'Full Name *', placeholder: 'Jane Smith' },
       email: { label: 'Email *', placeholder: 'jane@example.com' },
       whatsapp: { label: 'WhatsApp *', placeholder: '+1 555 123 4567' },
-      niche: { label: 'Niche/Field *', placeholder: 'e.g. Coach, Therapist...' },
-      followers: { label: 'Followers *' },
-      revenue: { label: 'Monthly Revenue *' },
-      mainGoal: { label: 'Your Main Goal *' },
-      bestTime: { label: 'Best Time To Contact You *' },
+      niche: { label: 'Niche/Field', placeholder: 'e.g. Coach, Therapist...' },
+      followers: { label: 'Followers' },
+      revenue: { label: 'Monthly Revenue' },
+      mainGoal: { label: 'Your Main Goal' },
+      bestTime: { label: 'Best Time To Contact You' },
     },
     validationMessages: {
       missingName: 'Please enter your name',
@@ -169,6 +175,8 @@ const contentByLanguage: Record<Language, FormContent> = {
     sectionBadge: 'Solicita tu sesión',
     title: 'Comienza Tu Transformación',
     subtitle: 'Recibe un diagnóstico personalizado de tu perfil en menos de 24 horas',
+    optionalToggleShow: '+ ¿Quieres agilizar la atención? Cuéntanos un poco más (opcional, 30 segundos)',
+    optionalToggleHide: '– Ocultar preguntas opcionales',
     submitLabel: 'Solicitar Sesión Estratégica',
     submitLoadingLabel: 'Procesando...',
     submitSuccessLabel: '¡Listo!',
@@ -179,11 +187,11 @@ const contentByLanguage: Record<Language, FormContent> = {
       name: { label: 'Nombre Completo *', placeholder: 'María García' },
       email: { label: 'Correo Electrónico *', placeholder: 'maria@ejemplo.com' },
       whatsapp: { label: 'WhatsApp *', placeholder: '+52 55 1234 5678' },
-      niche: { label: 'Nicho/Área *', placeholder: 'Ej: Psicóloga, Coach...' },
-      followers: { label: 'Seguidores *' },
-      revenue: { label: 'Facturación Mensual *' },
-      mainGoal: { label: 'Tu Principal Objetivo *' },
-      bestTime: { label: 'Mejor Horario Para Contactarte *' },
+      niche: { label: 'Nicho/Área', placeholder: 'Ej: Psicóloga, Coach...' },
+      followers: { label: 'Seguidores' },
+      revenue: { label: 'Facturación Mensual' },
+      mainGoal: { label: 'Tu Principal Objetivo' },
+      bestTime: { label: 'Mejor Horario Para Contactarte' },
     },
     validationMessages: {
       missingName: 'Por favor, ingresa tu nombre',

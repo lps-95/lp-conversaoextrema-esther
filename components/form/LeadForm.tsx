@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { formContent } from '../../content/form'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useLeadForm } from '../../hooks/useLeadForm'
@@ -25,6 +26,11 @@ export default function LeadForm({
   const { fields, setters, handleWhatsAppChange, hiddenFields, status, errorMessage, handleSubmit } = form
   const { language } = useLanguage()
   const content = formContent[language]
+  // Perguntas de qualificação (nicho, seguidores, faturamento, objetivo, horário) começam
+  // escondidas — só nome, e-mail e WhatsApp são obrigatórios pra enviar. Isso reduz a
+  // fricção percebida do formulário pra quem chega frio de um anúncio; quem quiser dar
+  // mais contexto (e ter um atendimento mais direcionado) pode expandir.
+  const [showOptional, setShowOptional] = useState(false)
 
   return (
     <section id="form" className="relative overflow-hidden py-20 bg-gradient-to-b from-black via-[#0d0c12] to-black">
@@ -81,68 +87,82 @@ export default function LeadForm({
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <div>
-                <FieldLabel htmlFor="whatsapp">{content.fields.whatsapp.label}</FieldLabel>
-                <input
-                  id="whatsapp"
-                  type="tel"
-                  name="whatsapp"
-                  value={fields.whatsapp}
-                  onChange={handleWhatsAppChange}
-                  required
-                  placeholder={content.fields.whatsapp.placeholder}
-                  className={fieldClassName}
-                />
+            <div className="mb-5">
+              <FieldLabel htmlFor="whatsapp">{content.fields.whatsapp.label}</FieldLabel>
+              <input
+                id="whatsapp"
+                type="tel"
+                name="whatsapp"
+                value={fields.whatsapp}
+                onChange={handleWhatsAppChange}
+                required
+                placeholder={content.fields.whatsapp.placeholder}
+                className={fieldClassName}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowOptional((v) => !v)}
+              className="w-full mb-5 text-left text-sm font-semibold text-button-primary hover:text-accent-gold transition-colors"
+            >
+              {showOptional ? content.optionalToggleHide : content.optionalToggleShow}
+            </button>
+
+            {showOptional && (
+              <div className="animate-fade-in-up">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                  <TextField
+                    id="niche"
+                    label={content.fields.niche.label}
+                    value={fields.niche}
+                    onChange={(v) => setters.setNiche(v)}
+                    placeholder={content.fields.niche.placeholder}
+                    required={false}
+                  />
+                  <SelectField
+                    id="followers"
+                    label={content.fields.followers.label}
+                    value={fields.followers}
+                    onChange={(v) => setters.setFollowers(v)}
+                    options={content.followersOptions}
+                    placeholder={content.selectPlaceholder}
+                    required={false}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                  <SelectField
+                    id="revenue"
+                    label={content.fields.revenue.label}
+                    value={fields.revenue}
+                    onChange={(v) => setters.setRevenue(v)}
+                    options={content.revenueOptions}
+                    placeholder={content.selectPlaceholder}
+                    required={false}
+                  />
+                  <SelectField
+                    id="mainGoal"
+                    label={content.fields.mainGoal.label}
+                    value={fields.mainGoal}
+                    onChange={(v) => setters.setMainGoal(v)}
+                    options={content.mainGoalOptions}
+                    placeholder={content.selectPlaceholder}
+                    required={false}
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <FieldLabel htmlFor="bestTime">{content.fields.bestTime.label}</FieldLabel>
+                  <CustomSelect
+                    value={fields.bestTime || ''}
+                    onChange={setters.setBestTime}
+                    placeholder={content.selectPlaceholder}
+                    options={content.bestTimeOptions}
+                  />
+                </div>
               </div>
-              <TextField
-                id="niche"
-                label={content.fields.niche.label}
-                value={fields.niche}
-                onChange={(v) => setters.setNiche(v)}
-                placeholder={content.fields.niche.placeholder}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-              <SelectField
-                id="followers"
-                label={content.fields.followers.label}
-                value={fields.followers}
-                onChange={(v) => setters.setFollowers(v)}
-                options={content.followersOptions}
-                placeholder={content.selectPlaceholder}
-              />
-              <SelectField
-                id="revenue"
-                label={content.fields.revenue.label}
-                value={fields.revenue}
-                onChange={(v) => setters.setRevenue(v)}
-                options={content.revenueOptions}
-                placeholder={content.selectPlaceholder}
-              />
-            </div>
-
-            <div className="mb-6">
-              <SelectField
-                id="mainGoal"
-                label={content.fields.mainGoal.label}
-                value={fields.mainGoal}
-                onChange={(v) => setters.setMainGoal(v)}
-                options={content.mainGoalOptions}
-                placeholder={content.selectPlaceholder}
-              />
-            </div>
-
-            <div className="mb-6">
-              <FieldLabel htmlFor="bestTime">{content.fields.bestTime.label}</FieldLabel>
-              <CustomSelect
-                value={fields.bestTime || ''}
-                onChange={setters.setBestTime}
-                placeholder={content.selectPlaceholder}
-                options={content.bestTimeOptions}
-              />
-            </div>
+            )}
 
             {errorMessage && (
               <div className="mb-5 text-red-400 text-sm text-center p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
@@ -217,6 +237,7 @@ function TextField({
   onChange,
   placeholder,
   type = 'text',
+  required = true,
 }: {
   id: string
   label: string
@@ -224,6 +245,7 @@ function TextField({
   onChange: (value: string) => void
   placeholder: string
   type?: string
+  required?: boolean
 }) {
   return (
     <div>
@@ -234,7 +256,7 @@ function TextField({
         name={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required
+        required={required}
         placeholder={placeholder}
         className={fieldClassName}
       />
@@ -249,6 +271,7 @@ function SelectField({
   onChange,
   options,
   placeholder,
+  required = true,
 }: {
   id: string
   label: string
@@ -256,6 +279,7 @@ function SelectField({
   onChange: (value: string) => void
   options: { value: string; label: string }[]
   placeholder: string
+  required?: boolean
 }) {
   return (
     <div>
@@ -265,7 +289,7 @@ function SelectField({
         name={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required
+        required={required}
         className={`${fieldClassName} cursor-pointer`}
       >
         <option value="" className="bg-primary-dark">

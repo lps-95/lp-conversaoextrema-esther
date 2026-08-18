@@ -1,7 +1,6 @@
 import { heroContent } from '../../content/hero'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { track } from '../../lib/analytics'
-import CountdownTimer from '../CountdownTimer'
 import MagneticButton from '../MagneticButton'
 import ParallaxLayer from '../ParallaxLayer'
 import VideoModal from '../VideoModal'
@@ -118,8 +117,12 @@ export default function Hero() {
               </MagneticButton>
             </div>
 
-            <div className="mt-8 sm:mt-10">
-              <CountdownTimer targetHours={content.countdown.targetHours} message={content.countdown.message} />
+            <div className="mt-8 sm:mt-10 flex justify-center sm:justify-start">
+              <div className="inline-flex items-center gap-2 py-3 px-5 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 border border-red-500/30 rounded-xl backdrop-blur-sm">
+                <span className="text-red-400 text-sm sm:text-base font-semibold uppercase tracking-wide">
+                  ⚡ {content.scarcityMessage}
+                </span>
+              </div>
             </div>
 
             {/* <div className="mt-6 flex justify-center">
