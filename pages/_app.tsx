@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { useEffect, useRef } from 'react'
 import ConsentBanner, { loadPlausible } from '../components/ConsentBanner'
 import { LanguageProvider } from '../contexts/LanguageContext'
+import { loadMetaPixel } from '../lib/metaPixel'
 import '../styles/globals.css'
 
 const PLAUSIBLE_DOMAIN =
@@ -45,6 +46,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
     if (consent === 'accepted') {
       loadPlausible(PLAUSIBLE_DOMAIN)
+      loadMetaPixel()
     }
   }, [])
 

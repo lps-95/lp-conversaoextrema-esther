@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { loadMetaPixel } from '../lib/metaPixel'
 
 export function loadPlausible(domain: string) {
   if (!domain) return
@@ -30,6 +31,7 @@ export default function ConsentBanner() {
       loadPlausible(
         process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || 'seu-dominio.com'
       )
+      loadMetaPixel()
     } catch (e) { }
     setVisible(false)
   }

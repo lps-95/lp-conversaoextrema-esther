@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useFloatingCtaVisible } from '../hooks/useFloatingCtaVisible'
+import { trackPixelEvent } from '../lib/metaPixel'
 
 interface WhatsAppWidgetProps {
   phone?: string
@@ -48,6 +49,7 @@ export default function WhatsAppWidget({
     if (typeof window !== 'undefined' && (window as any).plausible) {
       ; (window as any).plausible('whatsapp_widget_click')
     }
+    trackPixelEvent('Contact', { content_name: 'whatsapp_widget' })
   }
 
   const handleMouseEnter = () => {

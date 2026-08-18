@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { formContent } from '../content/form'
 import { useLanguage } from '../contexts/LanguageContext'
 import { track } from '../lib/analytics'
+import { trackPixelEvent } from '../lib/metaPixel'
 import { redirectToWhatsApp } from '../lib/whatsappRedirect'
 import { useSpamGuard } from './useSpamGuard'
 import { useWhatsAppMask } from './useWhatsAppMask'
@@ -104,6 +105,16 @@ export function useLeadForm() {
       plan,
       whatsapp,
       bestTime,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+    })
+
+    // Evento de conversão do Pixel do Meta — esta é a ação que a campanha
+    // de anúncios está tentando otimizar (lead qualificado, pronto pra
+    // seguir pro WhatsApp).
+    trackPixelEvent('Lead', {
+      content_name: plan || 'formulario_landing_page',
       utm_source: utmSource,
       utm_medium: utmMedium,
       utm_campaign: utmCampaign,
