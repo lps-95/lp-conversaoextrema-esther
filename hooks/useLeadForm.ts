@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { formContent } from '../content/form'
 import { useLanguage } from '../contexts/LanguageContext'
 import { track } from '../lib/analytics'
-import { trackPixelEvent } from '../lib/metaPixel'
+import { getFbCookies, setAdvancedMatching, trackPixelEvent } from '../lib/metaPixel'
 import { redirectToWhatsApp } from '../lib/whatsappRedirect'
 import { useSpamGuard } from './useSpamGuard'
 import { useWhatsAppMask } from './useWhatsAppMask'
@@ -110,15 +110,31 @@ export function useLeadForm() {
       utm_campaign: utmCampaign,
     })
 
+    // Advanced Matching: reenvia o init do Pixel com os dados de contato que
+    // o visitante acabou de informar. O SDK do Pixel faz o hash no
+    // navegador antes de mandar pro Meta — melhora a qualidade de
+    // correspondência do evento (Event Match Quality).
+    setAdvancedMatching({ email, phone: whatsappNumbers, firstName: name.split(' ')[0] })
+
+    // Um único id de evento, compartilhado entre o Pixel (navegador) e a
+    // API de Conversões (servidor, ver /api/submit-lead) — é o que permite
+    // o Meta deduplicar as duas chamadas do mesmo evento em vez de contar
+    // a conversão duas vezes.
+    const eventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+
     // Evento de conversão do Pixel do Meta — esta é a ação que a campanha
     // de anúncios está tentando otimizar (lead qualificado, pronto pra
     // seguir pro WhatsApp).
-    trackPixelEvent('Lead', {
-      content_name: plan || 'formulario_landing_page',
-      utm_source: utmSource,
-      utm_medium: utmMedium,
-      utm_campaign: utmCampaign,
-    })
+    trackPixelEvent(
+      'Lead',
+      {
+        content_name: plan || 'formulario_landing_page',
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+      },
+      eventId
+    )
 
     // A ação principal do formulário é o redirecionamento — acontece na
     // hora, sem esperar nenhuma resposta de servidor.
@@ -127,6 +143,9 @@ export function useLeadForm() {
 
     // Salvar o lead é um registro auxiliar, em segundo plano: se falhar,
     // não afeta o que o usuário já viu (ele já está indo pro WhatsApp).
+    // Também carrega o `eventId` e os cookies do Pixel (_fbp/_fbc) pra API
+    // de Conversões do servidor conseguir deduplicar e casar o evento.
+    const { fbp, fbc } = getFbCookies()
     fetch('/api/submit-lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -144,6 +163,9 @@ export function useLeadForm() {
         utmMedium: utmMedium || undefined,
         utmCampaign: utmCampaign || undefined,
         origin: origin || 'landing_page_conversao_extrema',
+        eventId,
+        fbp,
+        fbc,
       }),
     }).catch((err) => console.error('[useLeadForm] Falha ao salvar lead em segundo plano:', err))
 
