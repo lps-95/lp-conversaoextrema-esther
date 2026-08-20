@@ -9,7 +9,7 @@ interface WhatsAppWidgetProps {
 
 export default function WhatsAppWidget({
   phone = '5548991964517',
-  message = 'Olá! Vim da landing page e gostaria de saber mais sobre a mentoria.'
+  message = 'Olá! Vim da landing page e estou com algumas duvidas.'
 }: WhatsAppWidgetProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
