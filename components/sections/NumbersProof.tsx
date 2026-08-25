@@ -1,54 +1,85 @@
 import Image from 'next/image'
 import { useState } from 'react'
-import { feedbackScreenshots, numbersProofContent } from '../../content/numbersproof'
+import { feedbackScreenshots, numbersProofContent, type FeedbackScreenshot } from '../../content/numbersproof'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { MItem, MSection, MStagger } from '../Motion'
 import ParallaxLayer from '../ParallaxLayer'
 import ScrollReveal from '../ScrollReveal'
 
+const INITIAL_COUNT = 6
+
 /**
- * Card de print individual. Aspect-ratio fixo (não conhecemos as dimensões
- * de cada print) com `object-cover` no thumbnail — clique abre o print
- * inteiro (`object-contain`) num lightbox simples, sem dependências.
+ * Card de print individual. Cada print tem uma proporção diferente (são
+ * capturas de tela reais, não um asset desenhado) — por isso o card usa a
+ * largura/altura reais da imagem (`shot.width/height`) em vez de forçar um
+ * aspect-ratio fixo. Isso evita cortar ou esticar o print, e o layout em
+ * colunas (`columns-*` no container) reorganiza os cards conforme a altura
+ * de cada um, como um mural, sem buracos nem sobreposição.
  */
 function ScreenshotCard({
-  file,
+  shot,
   idx,
   alt,
+  badgeLabel,
   onOpen,
 }: {
-  file: string
+  shot: FeedbackScreenshot
   idx: number
   alt: string
+  badgeLabel: string
   onOpen: (file: string, alt: string) => void
 }) {
   return (
-    <MItem key={file}>
+    <MItem className="mb-4 sm:mb-5 break-inside-avoid">
       <ScrollReveal direction="up" delay={(idx % 6) * 70}>
-        <button
-          type="button"
-          onClick={() => onOpen(file, alt)}
-          className="
-            group relative block w-full
-            aspect-[9/16]
-            rounded-2xl overflow-hidden
-            border border-white/20
-            bg-white/5 backdrop-blur-xl
-            hover:scale-[1.03] hover:border-button-primary/50
-            transition-all duration-300 will-change-transform
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-button-primary
-          "
-          aria-label={`${alt} ${idx + 1}`}
-        >
-          <Image
-            src={`/feedbacks/${file}`}
-            alt={`${alt} ${idx + 1}`}
-            fill
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
-            className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </button>
+        <div className="group relative">
+          {/* Glow de borda, mesmo padrão usado nos outros cards premium da página */}
+          <div className="absolute -inset-0.5 bg-gradient-to-br from-button-primary/50 to-accent-gold/50 rounded-2xl blur opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
+
+          <button
+            type="button"
+            onClick={() => onOpen(shot.file, alt)}
+            className="
+              relative block w-full overflow-hidden
+              rounded-2xl border border-white/10
+              bg-white/5 backdrop-blur-xl
+              group-hover:border-button-primary/40
+              transition-all duration-300
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-button-primary
+            "
+            aria-label={`${alt} ${idx + 1}`}
+          >
+            {/* Barra de contexto: mesma função de um "chip" — avisa que é uma
+                conversa real antes de qualquer coisa, sem depender de legenda por print */}
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10 bg-white/[0.04]">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" aria-hidden="true" />
+              <span className="text-[11px] font-medium tracking-wide text-text-tertiary">
+                {badgeLabel}
+              </span>
+              <svg
+                className="ml-auto w-3.5 h-3.5 text-button-primary/80"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+
+            <Image
+              src={`/feedbacks/${shot.file}`}
+              alt={`${alt} ${idx + 1}`}
+              width={shot.width}
+              height={shot.height}
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 260px"
+              className="block w-full h-auto transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+          </button>
+        </div>
       </ScrollReveal>
     </MItem>
   )
@@ -90,6 +121,10 @@ export default function NumbersProof() {
   const { language } = useLanguage()
   const content = numbersProofContent[language]
   const [openScreenshot, setOpenScreenshot] = useState<{ file: string; alt: string } | null>(null)
+  const [showAll, setShowAll] = useState(false)
+
+  const hasMore = feedbackScreenshots.length > INITIAL_COUNT
+  const visibleScreenshots = showAll ? feedbackScreenshots : feedbackScreenshots.slice(0, INITIAL_COUNT)
 
   return (
     <section
@@ -134,20 +169,45 @@ export default function NumbersProof() {
           </div>
         </MSection>
 
-        <MStagger className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 mb-12">
-          {feedbackScreenshots.map((file, idx) => (
+        <MStagger className="columns-2 sm:columns-3 lg:columns-4 gap-4 sm:gap-5">
+          {visibleScreenshots.map((shot, idx) => (
             <ScreenshotCard
-              key={file}
-              file={file}
+              key={shot.file}
+              shot={shot}
               idx={idx}
               alt={content.screenshotAlt}
+              badgeLabel={content.screenshotBadgeLabel}
               onOpen={(f, a) => setOpenScreenshot({ file: f, alt: a })}
             />
           ))}
         </MStagger>
 
+        {hasMore && (
+          <div className="text-center mt-2 mb-10 sm:mb-12">
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              className="
+                group inline-flex items-center gap-2 px-6 py-3
+                rounded-full border border-white/15 bg-white/5 backdrop-blur-xl
+                text-sm font-semibold text-text-secondary
+                hover:text-button-primary hover:border-button-primary/40
+                transition-all duration-300
+              "
+            >
+              {showAll ? content.showLessLabel : content.showMoreLabel}
+              <span
+                className={`inline-block transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              >
+                ↓
+              </span>
+            </button>
+          </div>
+        )}
+
         <MSection>
-          <div className="text-center mt-10 sm:mt-12">
+          <div className="text-center">
             <p className="text-text-tertiary text-sm">{content.footnote}</p>
           </div>
         </MSection>
